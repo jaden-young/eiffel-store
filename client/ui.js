@@ -1,10 +1,10 @@
-/**
- * Created by seba on 2017-03-03.
- */
 let cy = require('cytoscape');
-let cydagre = require('cytoscape-dagre');
 
-cydagre( cytoscape ); // register extension
+let cydagre = require('cytoscape-dagre');
+cydagre(cytoscape); // register extension
+
+// let panzoom = require('cytoscape-panzoom');
+// panzoom(cytoscape); // register extension
 
 /**
  * Renders a graph using Vis, with provided graph
@@ -53,6 +53,7 @@ function renderGraph(graph, container, onClick) {
     });
 
     cy.on('tap', 'node', onClick);
+    // cy.panzoom(defaults);
 }
 
-export { renderGraph }
+export {renderGraph}

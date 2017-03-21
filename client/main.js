@@ -1,8 +1,7 @@
-import { Template } from 'meteor/templating';
-import { ReactiveVar } from 'meteor/reactive-var';
-import { renderGraph } from './ui.js';
+import {Template} from "meteor/templating";
+import {renderGraph} from "./ui.js";
 
-import './main.html';
+import "./main.html";
 
 Template.graph.onCreated(() => {
     console.log('template created');
@@ -16,6 +15,7 @@ Template.graph.onCreated(() => {
 
 // Attempt to asynchronously fetch graph from server
 function showAggregation(from, to, limit, callback) {
+    console.log('rendering aggregation');
     Meteor.call('getAggregatedGraph', from, to, limit, (error, graph) => {
         if (error) {
             console.log(error);
@@ -32,6 +32,7 @@ function showAggregation(from, to, limit, callback) {
 
 // Attempt to asynchronously fetch graph from server
 function showEventchain(nodeId) {
+    console.log('rendering event chain');
     Meteor.call('getNodeAncestorGraph', nodeId, function (error, graph) {
         if (error) {
             console.log(error);
