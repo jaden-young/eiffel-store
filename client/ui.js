@@ -17,10 +17,6 @@ panzoom(cytoscape, $); // register extension
  * on how to to use Vis.
  */
 function renderGraph(graph, container, onClick) {
-
-
-
-    // console.log(jQuery.fn.jquery);
     let cy = cytoscape({
 
         container: container,
@@ -53,7 +49,10 @@ function renderGraph(graph, container, onClick) {
         layout: {
             name: 'dagre',
             rankDir: 'LR'
-        }
+        },
+
+        // Higher = faster zoom
+        wheelSensitivity: 0.075,
     });
 
     // Settings for panzoom
@@ -84,7 +83,6 @@ function renderGraph(graph, container, onClick) {
     };
 
     cy.panzoom(defaults);
-
 
     cy.on('tap', 'node', onClick);
 }
