@@ -1,4 +1,6 @@
-let cy = require('cytoscape');
+// let $ = jQuery.noConflict();
+
+let cytoscape = require('cytoscape');
 
 let cydagre = require('cytoscape-dagre');
 cydagre(cytoscape); // register extension
@@ -16,7 +18,7 @@ cydagre(cytoscape); // register extension
  * on how to to use Vis.
  */
 function renderGraph(graph, container, onClick) {
-
+    // console.log(jQuery.fn.jquery);
     let cy = cytoscape({
 
         container: container,
@@ -53,7 +55,7 @@ function renderGraph(graph, container, onClick) {
     });
 
     cy.on('tap', 'node', onClick);
-    // cy.panzoom(defaults);
+    // cytoscape.panzoom(defaults);
 }
 
 export {renderGraph}
