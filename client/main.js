@@ -1,8 +1,7 @@
-import { Template } from 'meteor/templating';
-import { ReactiveVar } from 'meteor/reactive-var';
-import { renderGraph } from './ui.js';
+import {Template} from "meteor/templating";
+import {renderGraph} from "./ui.js";
 
-import './main.html';
+import "./main.html";
 
 Template.graph.onCreated(() => {
     console.log('template created');

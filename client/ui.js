@@ -1,11 +1,10 @@
 import cytoscape from "cytoscape";
 import cydagre from "cytoscape-dagre";
 import "cytoscape-panzoom/cytoscape.js-panzoom.css";
-import "cytoscape-panzoom/font-awesome-4.0.3/css/font-awesome.css";
 import panzoom from "cytoscape-panzoom";
 
 cydagre(cytoscape); // register extension
-panzoom( cytoscape, $ ); // register extension
+panzoom(cytoscape, $); // register extension
 
 // TODO: Is comment section below still valid? If not, remove. /Joanthan W
 /**
