@@ -40,8 +40,53 @@ function renderGraph(graph, container, onClick) {
                 style: {
                     'width': 3,
                     'line-color': '#ccc',
-                    'target-arrow-color': '#ccc',
-                    'target-arrow-shape': 'triangle'
+                    'curve-style': 'bezier', // To make sure egde arrows are supported
+                    'source-arrow-color': '#ccc',
+                    'source-arrow-shape': 'triangle'
+                }
+            },
+
+            {
+                selector: 'node[id ^= "TCS"]', // All nodes with ID starting with TCS
+                style: {
+                    'background-color': '#466641',
+                    'label': 'data(id)',
+                    'shape': 'rectangle',
+                    'height': 50,
+                    'width': 100
+                }
+            },
+
+            {
+                selector: 'node[id ^= "TCF"]', // All nodes with ID starting with TCF
+                style: {
+                    'background-color': '#466641',
+                    'label': 'data(id)',
+                    'shape': 'rectangle',
+                    'height': 50,
+                    'width': 100
+                }
+            },
+
+            {
+                selector: 'node[id ^= "TSS"]', // All nodes with ID starting with TSS
+                style: {
+                    'background-color': '#3d5966',
+                    'label': 'data(id)',
+                    'shape': 'rectangle',
+                    'height': 50,
+                    'width': 100
+                }
+            },
+
+            {
+                selector: 'node[id ^= "TSF"]', // All nodes with ID starting with TSF
+                style: {
+                    'background-color': '#3d5966',
+                    'label': 'data(id)',
+                    'shape': 'rectangle',
+                    'height': 50,
+                    'width': 100
                 }
             }
         ],
