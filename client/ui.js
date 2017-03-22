@@ -10,11 +10,10 @@ panzoom(cytoscape, $); // register extension
 /**
  * Renders a graph using Vis, with provided graph
  * in the provided DOM element.
- * Expects provided graph to be in Vis syntax and
- * that an element with id 'network' exists in the DOM.
+ * Expects provided graph to be in Cytoscape syntax.
  *
- * See http://visjs.org/docs/network/ on notes
- * on how to to use Vis.
+ * See http://js.cytoscape.org/ on notes
+ * on how to to use Cytoscape.
  */
 function renderGraph(graph, container, onClick) {
     let cy = cytoscape({
