@@ -66,6 +66,28 @@ function renderGraph(graph, container, onClick) {
                     'height': 50,
                     'width': 100
                 }
+            },
+
+            {
+                selector: 'node[id ^= "TSS"]', // All nodes with ID starting with TSS
+                style: {
+                    'background-color': '#3d5966',
+                    'label': 'data(id)',
+                    'shape': 'rectangle',
+                    'height': 50,
+                    'width': 100
+                }
+            },
+
+            {
+                selector: 'node[id ^= "TSF"]', // All nodes with ID starting with TSF
+                style: {
+                    'background-color': '#3d5966',
+                    'label': 'data(id)',
+                    'shape': 'rectangle',
+                    'height': 50,
+                    'width': 100
+                }
             }
         ],
 
