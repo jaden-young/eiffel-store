@@ -30,7 +30,7 @@ function renderGraph(graph, container, onClick) {
             {
                 selector: 'node',
                 style: {
-                    'background-color': '#666',
+                    'background-color': '#666', 
                     'label': 'data(id)'
                 }
             },
