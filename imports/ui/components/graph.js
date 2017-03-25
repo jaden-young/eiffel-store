@@ -6,9 +6,8 @@ import panzoom from "cytoscape-panzoom";
 cydagre(cytoscape); // register extension
 panzoom(cytoscape, $); // register extension
 
-// TODO: Is comment section below still valid? If not, remove. /Joanthan W
 /**
- * Renders a graph using Vis, with provided graph
+ * Renders a graph using Cytoscape, with provided graph
  * in the provided DOM element.
  * Expects provided graph to be in Cytoscape syntax.
  *

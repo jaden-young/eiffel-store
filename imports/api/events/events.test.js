@@ -8,7 +8,10 @@ import { faker } from 'meteor/practicalmeteor:faker';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 
 import { Events } from './events.js';
-import { getAggregatedGraph } from './methods';
+import {
+    getAggregatedGraph,
+    getEventAncestorGraph }
+    from './methods';
 
 
 if (Meteor.isServer) {
@@ -27,7 +30,7 @@ if (Meteor.isServer) {
 
     // Helper function for the factory creating dummy data
     function randomData() {
-        let randomEiffelEvent = function() {
+        let randomEiffelEvent = function () {
             // Just a few of the many events
             let events = [
                 'ED',
@@ -106,6 +109,23 @@ if (Meteor.isServer) {
 
             // There are more events then the limit, so the limit should be reached
             assert.equal(aggregatedEvents.length, limit);
+        });
+    });
+
+    describe('getEventAncestorGraph', function () {
+
+        beforeEach(function () {
+            resetDatabase();
+        });
+
+
+        it('fetches ancestors recursively', function () {
+            let ancestor1 = Factory.create('event', {meta: {id: 1}});
+            let ancestor2 = Factory.create('event', {links: [{target: 1}], meta: {id: 2}});
+            let child = Factory.create('event', {links: [{target: 2}], meta: {id: 3}});
+            let graph = getEventAncestorGraph.call({ eventId: child.meta.id });
+
+            assert.equal(true, false); // Unfinished
         });
     });
 }
