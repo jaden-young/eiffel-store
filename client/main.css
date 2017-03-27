@@ -2,7 +2,33 @@
     width: 100%;
     height: 900px;
     display: block;
-    border: 2px solid black;
+    border: 2px solid lightslategray;
+}
+
+.input-container label{
+    display: inline-block;
+    float: left;
+    clear: left;
+    width: 150px;
+    text-align: right;
+    margin: 4px;
+}
+.input-container input {
+    display: inline-block;
+    float: left;
+    width: 75px;
+}
+
+.input-container {
+    height: 15px;
+    padding: 25px;
+}
+
+.section {
+    margin: 25px;
+    padding: 50px;
+    padding-bottom: 80px;
+    border: 2px solid slategray;
 }
 
 #cy-help-button {
