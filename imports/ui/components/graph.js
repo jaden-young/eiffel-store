@@ -58,11 +58,13 @@ function renderGraph(graph, container, onClick) {
             {
                 selector: 'node[id ^= "TCF"]', // All nodes with ID starting with TCF
                 style: {
-                    'background-color': '#466641',
+                    //'background-color': '#466641',
                     'label': 'data(id)',
                     'shape': 'rectangle',
                     'height': 50,
-                    'width': 100
+                    'width': 100,
+                    'background-image': 'red.png',
+                    'background-fit': 'cover'
                     //data(verdict.pass)
                 }
             },
