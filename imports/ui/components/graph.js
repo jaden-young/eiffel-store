@@ -6,15 +6,13 @@ import panzoom from "cytoscape-panzoom";
 cydagre(cytoscape); // register extension
 panzoom(cytoscape, $); // register extension
 
-// TODO: Is comment section below still valid? If not, remove. /Joanthan W
 /**
- * Renders a graph using Vis, with provided graph
+ * Renders a graph using Cytoscape, with provided graph
  * in the provided DOM element.
- * Expects provided graph to be in Vis syntax and
- * that an element with id 'network' exists in the DOM.
+ * Expects provided graph to be in Cytoscape syntax.
  *
- * See http://visjs.org/docs/network/ on notes
- * on how to to use Vis.
+ * See http://js.cytoscape.org/ on notes
+ * on how to to use Cytoscape.
  */
 function renderGraph(graph, container, onClick) {
     let cy = cytoscape({
@@ -40,7 +38,7 @@ function renderGraph(graph, container, onClick) {
                 style: {
                     'width': 3,
                     'line-color': '#ccc',
-                    'curve-style': 'bezier', // To make sure egde arrows are supported
+                    'curve-style': 'bezier', // To make sure edge arrows are supported
                     'source-arrow-color': '#ccc',
                     'source-arrow-shape': 'triangle'
                 }
