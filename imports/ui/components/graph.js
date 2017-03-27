@@ -38,7 +38,7 @@ function renderGraph(graph, container, onClick) {
                 style: {
                     'width': 3,
                     'line-color': '#ccc',
-                    'curve-style': 'bezier', // To make sure egde arrows are supported
+                    'curve-style': 'bezier', // To make sure edge arrows are supported
                     'source-arrow-color': '#ccc',
                     'source-arrow-shape': 'triangle'
                 }

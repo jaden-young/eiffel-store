@@ -9,10 +9,6 @@ import './aggregation.html';
 import { getAggregatedGraph } from '/imports/api/events/methods.js';
 
 Template.aggregation.rendered = () => {
-    console.log('aggregation template created');
-    console.log($);
-    console.log($('#date-from'));
-
     // Runs when document is ready
     $(() => {
         console.log('document is loaded');
@@ -29,31 +25,25 @@ Template.aggregation.rendered = () => {
         toInput.val(defaultTo);
         limitInput.val(defaultLimit);
 
-        console.log('set defaults');
         // Set up datepicker;
         datepickers.datepicker({
             changeMonth: true,
             changeYear: true
         });
 
-        console.log('datepickers done');
         let onChange = () => {
             let from = Date.parse(fromInput.val()),
                 to = Date.parse(toInput.val()),
                 limit = parseInt(limitInput.val());
 
-            console.log('dates changed', from, to, limit);
             showAggregation(from, to, limit);
         };
-        console.log('on change bound');
 
         datepickers.on('change', onChange);
         limitInput.on('change', onChange);
 
         // Trigger on change to fetch and render graph
         fromInput.trigger('change');
-
-        console.log('completed setting up aggregation')
     });
 };
 
@@ -68,6 +58,7 @@ function showAggregation(from, to, limit) {
             let onClick = (event) => {
                 console.log(event);//.cyTarget.id());
             };
+            console.log('rendering aggregation, now', graph);
             renderGraph(graph, container, onClick);
         }
     });

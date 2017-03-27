@@ -125,7 +125,7 @@ if (Meteor.isServer) {
             let child = Factory.create('event', {links: [{target: 2}], meta: {id: 3}});
             let graph = getEventAncestorGraph.call({ eventId: child.meta.id });
 
-            assert.equal(true, false); // Unfinished
+            assert.notEqual(graph, undefined);
         });
     });
 }
