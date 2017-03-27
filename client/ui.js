@@ -136,8 +136,10 @@ function renderGraph(graph, container, onClick) {
     };
 }
 
-view_level = function (buttonId) {
-    switch(buttonId){
+display_help = function (buttonId) {
+    document.getElementById('cy-help-button').style.display = 'block';
+    console.log("Clicked", "Clicked help button");
+    /*switch(buttonId){
         case "level1_button":
             document.getElementById('cy-event-chain').style.display = 'none';
             document.getElementById('cy-level-2').style.display = 'none';
@@ -161,7 +163,7 @@ view_level = function (buttonId) {
         default:
             break;
 
-    }
+    }*/
 };
 
 export {renderGraph}

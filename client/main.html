@@ -11,4 +11,23 @@
 <template name="graph">
     <div id="cy-aggregation" class="cy"></div>
     <div id="cy-event-chain" class="cy"></div>
+    <input id="help-button" onclick="view_help(this.id)" type="button" value="?"/> <!--? will be displayed on button-->
+    <div id="cy-help-button" class="cy">
+        <h1>?</h1>
+    </div>
 </template>
+
+<!--<template name="graph">
+    <input id="level1_button" onclick="view_level(this.id)" type="button" value="Aggregation level"/>
+    <input id="level2_button" onclick="view_level(this.id)" type="button" value="Level 2"/>
+    <input id="level3_button" onclick="view_level(this.id)" type="button" value="Event level"/>
+    <div id="cy-aggregation" class="cy">
+        <h1>Level 1</h1>
+    </div>
+    <div id="cy-level-2" class="cy">
+        <h1>Level 2</h1>
+    </div>
+    <div id="cy-event-chain" class="cy">
+        <h1>Level 3</h1>
+    </div>
+</template>-->
