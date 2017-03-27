@@ -130,6 +130,10 @@ function renderGraph(graph, container, onClick) {
     cy.panzoom(defaults);
 
     cy.on('tap', 'node', onClick);
+
+    document.getElementById("btnAdd").onclick = function() {
+        add("text");
+    };
 }
 
 export {renderGraph}
