@@ -1,10 +1,14 @@
 import cytoscape from "cytoscape";
 import cydagre from "cytoscape-dagre";
+
 import "cytoscape-panzoom/cytoscape.js-panzoom.css";
 import panzoom from "cytoscape-panzoom";
 
+import cyqtip from "cytoscape-qtip";
+
 cydagre(cytoscape); // register extension
 panzoom(cytoscape, $); // register extension
+cyqtip( cytoscape ); // register extension
 
 /**
  * Renders a graph using Cytoscape, with provided graph
