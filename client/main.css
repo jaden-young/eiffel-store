@@ -4,3 +4,7 @@
     display: block;
     border: 2px solid black;
 }
+
+#cy-help-button {
+    display: none;
+}
