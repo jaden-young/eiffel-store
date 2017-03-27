@@ -32,13 +32,26 @@ export const getAggregatedGraph = new ValidatedMethod({
         let nodes = [];
         let groupedEvents = _.groupBy(events, (event) => event.data.customData[0].value);
         _.each(groupedEvents, (events, group) => {
-            nodes.push({
-                data: {
-                    id: group,
-                    label: group,
-                    events: events
-                }
-            });
+            if (group.startsWith("TCF")) {
+                nodes.push({
+                   data: {
+                       id: group,
+                       events: events,
+                       verdict: _.countBy(events, function(event){
+                           return event.data.outcome.verdict === "PASSED" ? 'pass' : 'fail';
+                       } )
+                   }
+                });
+            }
+            else {
+                nodes.push({
+                    data: {
+                        id: group,
+                        label: group,
+                        events: events
+                    }
+                });
+            }
 
             // Save the links from events -> group and group -> events to reconstruct group -> group later
             let links = _.reduce(events, (memo, event) => memo.concat(event.links), []);

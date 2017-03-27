@@ -63,6 +63,7 @@ function renderGraph(graph, container, onClick) {
                     'shape': 'rectangle',
                     'height': 50,
                     'width': 100
+                    //data(verdict.pass)
                 }
             },
 
