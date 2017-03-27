@@ -139,31 +139,6 @@ function renderGraph(graph, container, onClick) {
 display_help = function (buttonId) {
     document.getElementById('cy-help-button').style.display = 'block';
     console.log("Clicked", "Clicked help button");
-    /*switch(buttonId){
-        case "level1_button":
-            document.getElementById('cy-event-chain').style.display = 'none';
-            document.getElementById('cy-level-2').style.display = 'none';
-            document.getElementById('cy-aggregation').style.display = 'block';
-            console.log('Clicked', 'Clicked button 1');
-            break;
-        case "level2_button":
-            document.getElementById('cy-aggregation').style.display = 'none';
-            document.getElementById('cy-event-chain').style.display = 'none';
-            document.getElementById('cy-level-2').style.display = 'block';
-            console.log('Clicked', 'Clicked button 2')
-            break;
-
-        case "level3_button":
-            document.getElementById('cy-aggregation').style.display = 'none';
-            document.getElementById('cy-level-2').style.display = 'none';
-            document.getElementById('cy-event-chain').style.display = 'block';
-            console.log('Clicked', 'Clicked button 3');
-            break;
-
-        default:
-            break;
-
-    }*/
 };
 
 export {renderGraph}
