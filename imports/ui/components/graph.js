@@ -47,7 +47,7 @@ function renderGraph(graph, container, onClick) {
             {
                 selector: 'node[id ^= "TCS"]', // All nodes with ID starting with TCS
                 style: {
-                    'background-color': '#466641',
+                    'background-color': '#af0020',
                     'label': 'data(id)',
                     'shape': 'rectangle',
                     'height': 50,
@@ -58,14 +58,17 @@ function renderGraph(graph, container, onClick) {
             {
                 selector: 'node[id ^= "TCF"]', // All nodes with ID starting with TCF
                 style: {
-                    //'background-color': '#466641',
-                    'label': 'data(id)',
+                    'background-color': '#af0020',
+                    'label': 'data(events.length)',
                     'shape': 'rectangle',
                     'height': 50,
                     'width': 100,
-                    'background-image': 'red.png',
-                    'background-fit': 'cover'
-                    //data(verdict.pass)
+                    'background-image': '/images/green.png',
+                    'background-height': '100%',
+                    'background-width': function(data){
+                        return '50%'},
+                        //return data(events.length).toString() + '%'},
+                    'background-position-x':'0px'
                 }
             },
 

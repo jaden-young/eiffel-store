@@ -37,6 +37,7 @@ export const getAggregatedGraph = new ValidatedMethod({
                    data: {
                        id: group,
                        events: events,
+                       length: _.size(events),
                        verdict: _.countBy(events, function(event){
                            return event.data.outcome.verdict === "PASSED" ? 'pass' : 'fail';
                        } )
