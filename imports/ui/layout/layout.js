@@ -35,7 +35,8 @@ viewLevel = function (level) {
 };
 
 display_help = function () {
-    //document.getElementById('cy-help-button').style.display = 'block';
+    document.getElementById('cy_help_popup').style.display = 'block';
+
     console.log("Clicked help button"); //Need to call for a help display here instead!
 };
 

@@ -38,7 +38,15 @@
     display: inline-block;
     float: right;
     width: 75px;
-    font-weight: bold;  
+    font-weight: bold;
+}
+
+#cy_help_popup {
+    display: none;
+    float: right;
+    width: 100px;
+    height: 100px;
+    background-color: blue;
 }
 
 #aggregation.section{
