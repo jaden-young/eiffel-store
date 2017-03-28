@@ -35,9 +35,12 @@ viewLevel = function (level) {
 };
 
 display_help = function () {
-    document.getElementById('cy_help_popup').style.display = 'block';
-
-    console.log("Clicked help button"); //Need to call for a help display here instead!
+    if (document.getElementById('cy_help_popup').style.display === 'none'){
+        document.getElementById('cy_help_popup').style.display = 'block';
+    } else {
+        document.getElementById('cy_help_popup').style.display = 'none';
+    }
+    console.log("Clicked help button");
 };
 
 /**
@@ -59,6 +62,7 @@ Template.layout.events({
         viewLevel(3);
     },
     'click #cy_help_button' : function(event){
+        event.preventDefault();
         display_help();
     }
 });
