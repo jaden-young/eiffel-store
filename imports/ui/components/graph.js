@@ -45,7 +45,7 @@ function renderGraph(graph, container, onClick) {
             },
 
             {
-                selector: 'node[id ^= "TCS"]', // All nodes with ID starting with TCS
+                selector: 'node[id ^= "TCS"]', // All nodes with ID starting with TCS(Test Case Started)
                 style: {
                     'background-color': '#af0020',
                     'label': 'data(id)',
@@ -56,7 +56,7 @@ function renderGraph(graph, container, onClick) {
             },
 
             {
-                selector: 'node[id ^= "TCF"]', // All nodes with ID starting with TCF
+                selector: 'node[id ^= "TCF"]', // All nodes with ID starting with TCF(Test Case Finished)
                 style: {
                     'background-color': '#af0020',
                     'label': 'data(id)',
@@ -73,7 +73,7 @@ function renderGraph(graph, container, onClick) {
             },
 
             {
-                selector: 'node[id ^= "TSS"]', // All nodes with ID starting with TSS
+                selector: 'node[id ^= "TSS"]', // All nodes with ID starting with TSS(Test Suite Started)
                 style: {
                     'background-color': '#3d5966',
                     'label': 'data(id)',
@@ -84,7 +84,7 @@ function renderGraph(graph, container, onClick) {
             },
 
             {
-                selector: 'node[id ^= "TSF"]', // All nodes with ID starting with TSF
+                selector: 'node[id ^= "TSF"]', // All nodes with ID starting with TSF(Test Suite Finished)
                 style: {
                     'background-color': '#af0020',
                     'label': 'data(id)',
@@ -92,6 +92,12 @@ function renderGraph(graph, container, onClick) {
                     'border-style': 'double', // solid, dotted, dashed, or double.
                     'border-width': '6px', // The size of the node’s border.
                     'border-color': '#000',
+                    'background-position-x':'0px',
+                    'background-image': '/images/green.png',
+                    'background-height': '100%',
+                    'background-width': function(ele){
+                        return (ele.data("passed") * 100).toString() + '%';
+                    },
                     'height': 50,
                     'width': 100
                 }

@@ -32,7 +32,7 @@ export const getAggregatedGraph = new ValidatedMethod({
         let nodes = [];
         let groupedEvents = _.groupBy(events, (event) => event.data.customData[0].value);
         _.each(groupedEvents, (events, group) => {
-            if (group.startsWith("TCF")) {
+            if (group.startsWith("TCF") || group.startsWith("TSF")) {
                 nodes.push({
                    data: {
                        id: group,
