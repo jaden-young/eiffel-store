@@ -38,9 +38,9 @@ export const getAggregatedGraph = new ValidatedMethod({
                        id: group,
                        events: events,
                        length: _.size(events),
-                       verdict: _.countBy(events, function(event){
-                           return event.data.outcome.verdict === "PASSED" ? 'pass' : 'fail';
-                       } )
+                       passed: _.reduce(events, function(memo, event){
+                           return event.data.outcome.verdict === "PASSED" ? memo + (1/this) : memo;
+                       }, 0, _.size(events)) // Calculating rate of passed tests
                    }
                 });
             }
