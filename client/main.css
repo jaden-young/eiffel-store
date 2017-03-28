@@ -5,6 +5,8 @@
     border: 2px solid lightslategray;
 }
 
+
+
 .input-container label{
     display: inline-block;
     float: left;
@@ -29,4 +31,9 @@
     padding: 50px;
     padding-bottom: 80px;
     border: 2px solid slategray;
+    display: none;      /* Hide sections per default */
+}
+
+#aggregation.section{
+    display:block;      /* Show only aggregation graph */
 }

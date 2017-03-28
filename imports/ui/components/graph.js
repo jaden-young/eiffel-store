@@ -132,6 +132,7 @@ function renderGraph(graph, container, onClick) {
     cy.panzoom(defaults);
 
     cy.on('tap', 'node', onClick);
+    cy.nodes().ungrabify();     //Makes nodes ungrabbable
 }
 
 export {renderGraph}
