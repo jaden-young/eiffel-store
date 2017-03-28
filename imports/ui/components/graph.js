@@ -77,7 +77,7 @@ function renderGraph(graph, container, onClick) {
                 style: {
                     'background-color': '#3d5966',
                     'label': 'data(id)',
-                    'shape': 'rectangle',
+                    'shape': 'roundrectangle',
                     'height': 50,
                     'width': 100
                 }
@@ -86,9 +86,12 @@ function renderGraph(graph, container, onClick) {
             {
                 selector: 'node[id ^= "TSF"]', // All nodes with ID starting with TSF
                 style: {
-                    'background-color': '#3d5966',
+                    'background-color': '#af0020',
                     'label': 'data(id)',
                     'shape': 'rectangle',
+                    'border-style': 'double', // solid, dotted, dashed, or double.
+                    'border-width': '6px', // The size of the node’s border.
+                    'border-color': '#000',
                     'height': 50,
                     'width': 100
                 }
