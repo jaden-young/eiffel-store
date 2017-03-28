@@ -31,7 +31,7 @@
     border: 2px solid slategray;
 }
 
-.cy-help-button {
+#cy-help-button {
     display: inline-block;
     float: left;
     width: 75px;

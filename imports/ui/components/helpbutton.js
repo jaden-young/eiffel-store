@@ -10,7 +10,3 @@ Template.aggregation.rendered = () => {
     });
 }
 
-display_help = function (buttonId) {
-    document.getElementById('cy-help-button').style.display = 'block';
-    console.log("Clicked", "Clicked help button");
-};
