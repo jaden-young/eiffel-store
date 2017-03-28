@@ -33,20 +33,23 @@
     border: 2px solid slategray;
     display: none; /* Hide sections per default */
 }
-
-#cy_help_button {
+/* This could be a general CSS for all buttons possibly. */
+/*#cy_help_button {
     display: inline-block;
     float: right;
     width: 75px;
     font-weight: bold;
-}
+}*/
 
 #cy_help_popup {
     display: none;
-    float: right;
+    left: 250px; /* align 150px from left wall. Could use float: right if top right corner is used.
+    /*float: right;*/
+    vertical-align: bottom;
+    position: absolute;
     width: 100px;
     height: 100px;
-    background-color: blue;
+    background-color: cyan;
 }
 
 #aggregation.section{
