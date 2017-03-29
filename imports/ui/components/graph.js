@@ -45,10 +45,9 @@ function renderGraph(graph, container, onClick) {
             },
 
             {
-                selector: 'node[id ^= "TCS"]', // All nodes with ID starting with TCS(Test Case Started)
+                selector: 'node[id ^= "TC"]', // All nodes with ID starting with TC(Test Case)
                 style: {
                     'background-color': '#af0020',
-                    'label': 'data(id)',
                     'shape': 'rectangle',
                     'height': 50,
                     'width': 100
@@ -58,11 +57,6 @@ function renderGraph(graph, container, onClick) {
             {
                 selector: 'node[id ^= "TCF"]', // All nodes with ID starting with TCF(Test Case Finished)
                 style: {
-                    'background-color': '#af0020',
-                    'label': 'data(id)',
-                    'shape': 'rectangle',
-                    'height': 50,
-                    'width': 100,
                     'background-image': '/images/green.png',
                     'background-height': '100%',
                     'background-width': function(ele){
@@ -73,11 +67,13 @@ function renderGraph(graph, container, onClick) {
             },
 
             {
-                selector: 'node[id ^= "TSS"]', // All nodes with ID starting with TSS(Test Suite Started)
+                selector: 'node[id ^= "TS"]', // All nodes with ID starting with TS(Test Suite)
                 style: {
-                    'background-color': '#3d5966',
-                    'label': 'data(id)',
-                    'shape': 'roundrectangle',
+                    'background-color': '#af0020',
+                    'shape': 'rectangle',
+                    'border-style': 'double', // solid, dotted, dashed, or double.
+                    'border-width': '6px', // The size of the node’s border.
+                    'border-color': '#000',
                     'height': 50,
                     'width': 100
                 }
@@ -86,20 +82,12 @@ function renderGraph(graph, container, onClick) {
             {
                 selector: 'node[id ^= "TSF"]', // All nodes with ID starting with TSF(Test Suite Finished)
                 style: {
-                    'background-color': '#af0020',
-                    'label': 'data(id)',
-                    'shape': 'rectangle',
-                    'border-style': 'double', // solid, dotted, dashed, or double.
-                    'border-width': '6px', // The size of the node’s border.
-                    'border-color': '#000',
                     'background-position-x':'0px',
                     'background-image': '/images/green.png',
                     'background-height': '100%',
                     'background-width': function(ele){
                         return (ele.data("passed") * 100).toString() + '%';
-                    },
-                    'height': 50,
-                    'width': 100
+                    }
                 }
             }
         ],
