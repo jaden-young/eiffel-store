@@ -35,6 +35,26 @@ viewLevel = function (level) {
 };
 
 /**
+ * Callback function for keydown events. Displays/hides <div>'s containing the different levels
+ */
+$(document).keydown(function (e) {
+    switch (e.which) {
+        case 49: // Nummer 1
+            viewLevel(1);
+            break;
+        case 50: // Nummer 2
+            viewLevel(2);
+            break;
+        case 51: // Nummer 3
+            viewLevel(3);
+            break;
+        default:
+            return; // exit this handler for other keys
+    }
+    e.preventDefault(); // prevent the default action (scroll / move caret)
+});
+
+/**
  *  Meteor event handler to handle events in the layout-template
  */
 Template.layout.events({
@@ -52,4 +72,10 @@ Template.layout.events({
         event.preventDefault();
         viewLevel(3);
     }
+
+    /*
+    'keydown #aggregation' : function(event){
+        event.preventDefault();
+        console.log('Keydown', 'It worked!');
+    }*/
 });
