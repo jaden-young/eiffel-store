@@ -46,8 +46,8 @@ function renderGraph(graph, container, onClick) {
                     'width': 3,
                     'line-color': '#ccc',
                     'curve-style': 'bezier', // To make sure edge arrows are supported
-                    'source-arrow-color': '#ccc',
-                    'source-arrow-shape': 'triangle'
+                    'target-arrow-color': '#ccc',
+                    'target-arrow-shape': 'triangle'
                 }
             },
 
@@ -125,7 +125,7 @@ function renderGraph(graph, container, onClick) {
 
         layout: {
             name: 'dagre',
-            rankDir: 'LR'
+            rankDir: 'RL'
         },
 
         // Higher = faster zoom
