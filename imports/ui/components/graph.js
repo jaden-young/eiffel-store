@@ -49,6 +49,30 @@ function renderGraph(graph, container, onClick) {
             },
 
             {
+                selector: 'node[id ^= "CLM"]', // All nodes with ID == CLM (Confidence level)
+                style: {
+                    'background-color': '#fff',
+                    'border-width': '1px', // The size of the node’s border.
+                    'border-color': '#000',
+                    'width': '70px',
+                    'height': '70x',
+                    'pie-size': '100%',
+                    'pie-1-background-size': function(ele){
+                        return (ele.data("passed") * 100 / ele.data("length") ).toString() + '%';
+                    },
+                    'pie-1-background-color': '#22b14c',
+                    'pie-2-background-size': function(ele){
+                        return (ele.data("failed") * 100 / ele.data("length") ).toString() + '%';
+                    },
+                    'pie-2-background-color': '#af0020',
+                    'pie-3-background-size': function(ele){
+                        return (ele.data("inconclusive") * 100 / ele.data("length") ).toString() + '%';
+                    },
+                    'pie-3-background-color': '#666'
+                }
+            },
+
+            {
                 selector: 'node[id ^= "TC"]', // All nodes with ID starting with TC(Test Case)
                 style: {
                     'background-color': '#af0020',
