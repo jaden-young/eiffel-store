@@ -10,6 +10,7 @@
     right: 30px;
     top: 100px;
     z-index:1000;
+    width: 150px;
 
 
 }
@@ -17,16 +18,46 @@
 TODO: Change all buttons to inherit properties from same class
  */
 #level1_button{
-    display:block;
+    background-color: #383DDD; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    width:100%;
+
 }
 #level2_button{
-    display:block;
+    background-color: #4AB4F4; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    width:100%;
 }
 #level3_button{
-    display:block;
+    background-color: #38DDB7; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    width:100%;
 }
+
+
+
+
 body{
     scroll-behavior: smooth;
+    background-color: whitesmoke;
 }
 
 .input-container label{
@@ -49,11 +80,11 @@ body{
 }
 
 .section {
-    /*margin: 25px; */
+    margin: 25px;
     width:90%;
     /*padding: 50px; */
     padding-bottom: 80px;
-    border: 2px solid slategray;
+    /*border: 2px solid slategray; */
     display: block;      /* Hide sections per default */
 }
 
