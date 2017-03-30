@@ -67,6 +67,10 @@ TODO: Change all buttons to inherit properties from same class
     padding:1px;
 }
 
+hr{
+    width:45%;
+}
+
 
 
 body{
