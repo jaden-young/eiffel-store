@@ -32,13 +32,27 @@ export const getAggregatedGraph = new ValidatedMethod({
         let nodes = [];
         let groupedEvents = _.groupBy(events, (event) => event.data.customData[0].value);
         _.each(groupedEvents, (events, group) => {
-            nodes.push({
-                data: {
-                    id: group,
-                    label: group,
-                    events: events
-                }
-            });
+            if (group.startsWith("TCF") || group.startsWith("TSF")) {
+                nodes.push({
+                   data: {
+                       id: group,
+                       events: events,
+                       length: _.size(events),
+                       passed: _.reduce(events, function(memo, event){
+                           return event.data.outcome.verdict === "PASSED" ? memo + (1/this) : memo;
+                       }, 0, _.size(events)) // Calculating rate of passed tests
+                   }
+                });
+            }
+            else {
+                nodes.push({
+                    data: {
+                        id: group,
+                        label: group,
+                        events: events
+                    }
+                });
+            }
 
             // Save the links from events -> group and group -> events to reconstruct group -> group later
             let links = _.reduce(events, (memo, event) => memo.concat(event.links), []);

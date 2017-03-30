@@ -32,7 +32,7 @@ function renderGraph(graph, container, onClick) {
             {
                 selector: 'node',
                 style: {
-                    'background-color': '#666',
+                    'background-color': '#666', 
                     'label': 'data(id)'
                 }
             },
@@ -49,10 +49,9 @@ function renderGraph(graph, container, onClick) {
             },
 
             {
-                selector: 'node[id ^= "TCS"]', // All nodes with ID starting with TCS
+                selector: 'node[id ^= "TC"]', // All nodes with ID starting with TC(Test Case)
                 style: {
-                    'background-color': '#466641',
-                    'label': 'data(id)',
+                    'background-color': '#af0020',
                     'shape': 'rectangle',
                     'height': 50,
                     'width': 100
@@ -60,35 +59,39 @@ function renderGraph(graph, container, onClick) {
             },
 
             {
-                selector: 'node[id ^= "TCF"]', // All nodes with ID starting with TCF
+                selector: 'node[id ^= "TCF"]', // All nodes with ID starting with TCF(Test Case Finished)
                 style: {
-                    'background-color': '#466641',
-                    'label': 'data(id)',
+                    'background-image': '/images/green.png',
+                    'background-height': '100%',
+                    'background-width': function(ele){
+                        return (ele.data("passed") * 100).toString() + '%';
+                    },
+                    'background-position-x':'0px'
+                }
+            },
+
+            {
+                selector: 'node[id ^= "TS"]', // All nodes with ID starting with TS(Test Suite)
+                style: {
+                    'background-color': '#af0020',
                     'shape': 'rectangle',
+                    'border-style': 'double', // solid, dotted, dashed, or double.
+                    'border-width': '6px', // The size of the node’s border.
+                    'border-color': '#000',
                     'height': 50,
                     'width': 100
                 }
             },
 
             {
-                selector: 'node[id ^= "TSS"]', // All nodes with ID starting with TSS
+                selector: 'node[id ^= "TSF"]', // All nodes with ID starting with TSF(Test Suite Finished)
                 style: {
-                    'background-color': '#3d5966',
-                    'label': 'data(id)',
-                    'shape': 'rectangle',
-                    'height': 50,
-                    'width': 100
-                }
-            },
-
-            {
-                selector: 'node[id ^= "TSF"]', // All nodes with ID starting with TSF
-                style: {
-                    'background-color': '#3d5966',
-                    'label': 'data(id)',
-                    'shape': 'rectangle',
-                    'height': 50,
-                    'width': 100
+                    'background-position-x':'0px',
+                    'background-image': '/images/green.png',
+                    'background-height': '100%',
+                    'background-width': function(ele){
+                        return (ele.data("passed") * 100).toString() + '%';
+                    }
                 }
             }
         ],
