@@ -44,6 +44,24 @@ export const getAggregatedGraph = new ValidatedMethod({
                    }
                 });
             }
+            else if(group.startsWith("CLM")){
+                nodes.push({
+                    data: {
+                        id: group,
+                        events: events,
+                        length: _.size(events),
+                        passed: _.reduce(events, function (memo, event) {
+                            return event.data.value === "SUCCESS" ? memo + 1 : memo;
+                        }, 0), // Calculating number of passed tests
+                        failed: _.reduce(events, function (memo, event) {
+                            return event.data.value === "FAILURE" ? memo + 1 : memo;
+                        }, 0),
+                        inconclusive: _.reduce(events, function (memo, event) {
+                            return event.data.value === "INCONCLUSIVE" ? memo + 1 : memo;
+                        }, 0)
+                    }
+                });
+            }
             else {
                 nodes.push({
                     data: {

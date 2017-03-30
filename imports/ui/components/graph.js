@@ -18,6 +18,9 @@ cyqtip( cytoscape ); // register extension
  * See http://js.cytoscape.org/ on notes
  * on how to to use Cytoscape.
  */
+const PASS_COLOR = '#22b14c';
+const FAIL_COLOR = '#af0020';
+const ELSE_COLOR = '#666';
 function renderGraph(graph, container, onClick) {
     let cy = cytoscape({
 
@@ -32,7 +35,7 @@ function renderGraph(graph, container, onClick) {
             {
                 selector: 'node',
                 style: {
-                    'background-color': '#666', 
+                    'background-color': ELSE_COLOR,
                     'label': 'data(id)'
                 }
             },
@@ -49,9 +52,33 @@ function renderGraph(graph, container, onClick) {
             },
 
             {
+                selector: 'node[id ^= "CLM"]', // All nodes with ID == CLM (Confidence level)
+                style: {
+                    'background-color': '#fff',
+                    'border-width': '1px', // The size of the node’s border.
+                    'border-color': '#000',
+                    'width': '70px',
+                    'height': '70x',
+                    'pie-size': '100%',
+                    'pie-1-background-size': function(ele){
+                        return (ele.data("passed") * 100 / ele.data("length") ).toString() + '%';
+                    },
+                    'pie-1-background-color': PASS_COLOR,
+                    'pie-2-background-size': function(ele){
+                        return (ele.data("failed") * 100 / ele.data("length") ).toString() + '%';
+                    },
+                    'pie-2-background-color': FAIL_COLOR,
+                    'pie-3-background-size': function(ele){
+                        return (ele.data("inconclusive") * 100 / ele.data("length") ).toString() + '%';
+                    },
+                    'pie-3-background-color': ELSE_COLOR
+                }
+            },
+
+            {
                 selector: 'node[id ^= "TC"]', // All nodes with ID starting with TC(Test Case)
                 style: {
-                    'background-color': '#af0020',
+                    'background-color': FAIL_COLOR,
                     'shape': 'rectangle',
                     'height': 50,
                     'width': 100
@@ -73,7 +100,7 @@ function renderGraph(graph, container, onClick) {
             {
                 selector: 'node[id ^= "TS"]', // All nodes with ID starting with TS(Test Suite)
                 style: {
-                    'background-color': '#af0020',
+                    'background-color': FAIL_COLOR,
                     'shape': 'rectangle',
                     'border-style': 'double', // solid, dotted, dashed, or double.
                     'border-width': '6px', // The size of the node’s border.
