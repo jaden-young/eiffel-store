@@ -27,7 +27,7 @@ Template.layout.events({
     'click #level1_button' : function(event) {
         event.preventDefault();
         document.getElementById('aggregation').style.display = 'block';
-        document.querySelector('#pageTop').scrollIntoView({ //Should be aggregation.section for it to scroll right
+        document.querySelector('#aggregation.section').scrollIntoView({
             behavior: 'smooth'
         });
     },
