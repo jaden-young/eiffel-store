@@ -23,6 +23,7 @@ h1{
     text-transform: none;
     font-weight: 100;
     margin-bottom: 0;
+    margin-left: 25px;
 }
 /*
 TODO: Change all buttons to inherit properties from same class
