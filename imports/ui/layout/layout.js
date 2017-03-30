@@ -34,6 +34,15 @@ viewLevel = function (level) {
     }
 };
 
+display_help = function () {
+    if (document.getElementById('cy_help_popup').style.display === 'none'){
+        document.getElementById('cy_help_popup').style.display = 'block';
+    } else {
+        document.getElementById('cy_help_popup').style.display = 'none';
+    }
+    console.log("Clicked help button");
+};
+
 /**
  * Callback function for keydown events. Displays/hides <div>'s containing the different levels
  */
@@ -71,6 +80,10 @@ Template.layout.events({
     'click #level3_button' : function(event){
         event.preventDefault();
         viewLevel(3);
+    },
+    'click #cy_help_button' : function(event){
+        event.preventDefault();
+        display_help();
     }
 
     /*
