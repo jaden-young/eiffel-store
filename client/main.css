@@ -40,16 +40,20 @@
     width: 75px;
     font-weight: bold;
 }*/
-
+#cy_help_button {
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+}
 #cy_help_popup {
     display: none;
-    left: 250px; /* align 150px from left wall. Could use float: right if top right corner is used.
+    left: 250px; /* align 150px from left wall. Could use float: right if top right corner is used.*/
     /*float: right;*/
     vertical-align: bottom;
     position: absolute;
     width: 100px;
     height: 100px;
-    background-color: cyan;
+    background-color: rgba(0, 255, 255, 0.25);
 }
 
 #aggregation.section{
