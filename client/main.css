@@ -2,7 +2,7 @@
     width: 90%;
     height: 900px;
     display: block;
-    border: 2px solid lightslategray;
+    border: 2px solid lightblue;
 }
 
 #buttons{
@@ -14,6 +14,15 @@
     margin: 1px;
 
 
+}
+
+h1{
+    font-family:Georgia,serif;
+    color:#4E443C;
+    font-variant: small-caps;
+    text-transform: none;
+    font-weight: 100;
+    margin-bottom: 0;
 }
 /*
 TODO: Change all buttons to inherit properties from same class
@@ -28,6 +37,7 @@ TODO: Change all buttons to inherit properties from same class
     display: block;
     font-size: 16px;
     width:100%;
+    margin: 1px;
 
 }
 #level2_button{
@@ -40,6 +50,7 @@ TODO: Change all buttons to inherit properties from same class
     display: block;
     font-size: 16px;
     width:100%;
+    margin: 1px;
 }
 #level3_button{
     background-color: #38DDB7; /* Green */
@@ -51,14 +62,13 @@ TODO: Change all buttons to inherit properties from same class
     display: block;
     font-size: 16px;
     width:100%;
+    margin: 1px;
 }
 
-.button{
-    padding:1px;
-}
 
 hr{
     width:45%;
+    margin-left: 25px;
 }
 
 
@@ -93,8 +103,33 @@ body{
     /*padding: 50px; */
     padding-bottom: 80px;
     /*border: 2px solid slategray; */
-    display: block;      /* Hide sections per default */
-    /*background-color:lightgray; */
+     /* Hide sections per default */
+}
+/* This could be a general CSS for all buttons possibly. */
+/*#cy_help_button {
+    display: inline-block;
+    float: right;
+    width: 75px;
+    font-weight: bold;
+}*/
+#cy_help_button {
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    left: 220px;
+    top: 0px;
+    vertical-align: bottom;
+    position: absolute;
+}
+#cy_help_popup {
+    display: none;
+    left: 250px; /* align 150px from left wall. Could use float: right if top right corner is used.*/
+    /*float: right;*/
+    vertical-align: bottom;
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background-color: rgba(0, 255, 255, 0.25);
 }
 
 #aggregation.section{

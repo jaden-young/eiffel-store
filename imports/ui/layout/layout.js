@@ -12,27 +12,6 @@ import '../components/eventchain.html';
  * Shows the level provided
  * @param level Level to be viewed
  */
-viewLevel = function (level) {
-    switch (level) {
-        case 1:
-            document.getElementById('eventchain').style.display = 'none';
-            document.getElementById('details').style.display = 'none';
-            document.getElementById('aggregation').style.display = 'block';
-            break;
-        case 2:
-            document.getElementById('aggregation').style.display = 'none';
-            document.getElementById('eventchain').style.display = 'none';
-            document.getElementById('details').style.display = 'block';
-            break;
-        case 3:
-            document.getElementById('aggregation').style.display = 'none';
-            document.getElementById('details').style.display = 'none';
-            document.getElementById('eventchain').style.display = 'block';
-            break;
-        default:
-            break;
-    }
-};
 
 /**
  *  Meteor event handler to handle events in the layout-template
