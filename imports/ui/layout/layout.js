@@ -8,17 +8,31 @@ import '../components/details.html';
 import '../components/eventchain.html';
 
 
-
-
-display_help = function () {
-    if (document.getElementById('cy_help_popup').style.display === 'none'){
-        document.getElementById('cy_help_popup').style.display = 'block';
-    } else {
-        document.getElementById('cy_help_popup').style.display = 'none';
+/**
+ * Shows the level provided
+ * @param level Level to be viewed
+ */
+viewLevel = function (level) {
+    switch (level) {
+        case 1:
+            document.getElementById('eventchain').style.display = 'none';
+            document.getElementById('details').style.display = 'none';
+            document.getElementById('aggregation').style.display = 'block';
+            break;
+        case 2:
+            document.getElementById('aggregation').style.display = 'none';
+            document.getElementById('eventchain').style.display = 'none';
+            document.getElementById('details').style.display = 'block';
+            break;
+        case 3:
+            document.getElementById('aggregation').style.display = 'none';
+            document.getElementById('details').style.display = 'none';
+            document.getElementById('eventchain').style.display = 'block';
+            break;
+        default:
+            break;
     }
-    console.log("Clicked help button");
 };
-
 
 /**
  *  Meteor event handler to handle events in the layout-template
@@ -47,10 +61,5 @@ Template.layout.events({
             behavior: 'smooth'
         });
 
-    },
-    'click #cy_help_button' : function(event){
-        event.preventDefault();
-        display_help();
     }
-
 });

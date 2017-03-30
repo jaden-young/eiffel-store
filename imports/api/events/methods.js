@@ -32,45 +32,13 @@ export const getAggregatedGraph = new ValidatedMethod({
         let nodes = [];
         let groupedEvents = _.groupBy(events, (event) => event.data.customData[0].value);
         _.each(groupedEvents, (events, group) => {
-            if (group.startsWith("TCF") || group.startsWith("TSF")) {
-                nodes.push({
-                   data: {
-                       id: group,
-                       events: events,
-                       length: _.size(events),
-                       passed: _.reduce(events, function(memo, event){
-                           return event.data.outcome.verdict === "PASSED" ? memo + (1/this) : memo;
-                       }, 0, _.size(events)) // Calculating rate of passed tests
-                   }
-                });
-            }
-            else if(group.startsWith("CLM")){
-                nodes.push({
-                    data: {
-                        id: group,
-                        events: events,
-                        length: _.size(events),
-                        passed: _.reduce(events, function (memo, event) {
-                            return event.data.value === "SUCCESS" ? memo + 1 : memo;
-                        }, 0), // Calculating number of passed tests
-                        failed: _.reduce(events, function (memo, event) {
-                            return event.data.value === "FAILURE" ? memo + 1 : memo;
-                        }, 0),
-                        inconclusive: _.reduce(events, function (memo, event) {
-                            return event.data.value === "INCONCLUSIVE" ? memo + 1 : memo;
-                        }, 0)
-                    }
-                });
-            }
-            else {
-                nodes.push({
-                    data: {
-                        id: group,
-                        label: group,
-                        events: events
-                    }
-                });
-            }
+            nodes.push({
+                data: {
+                    id: group,
+                    label: group,
+                    events: events
+                }
+            });
 
             // Save the links from events -> group and group -> events to reconstruct group -> group later
             let links = _.reduce(events, (memo, event) => memo.concat(event.links), []);
