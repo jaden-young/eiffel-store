@@ -56,8 +56,7 @@ function showAggregation(from, to, limit) {
         } else {
             let container = document.getElementById('cy-aggregation');
             let onClick = (event) => {
-                console.log(event.cyTarget.data());
-
+                console.log(event);//.cyTarget.id());
             };
             console.log('rendering aggregation, now', graph);
             renderGraph(graph, container, onClick);

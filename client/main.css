@@ -105,48 +105,8 @@ body{
     /*border: 2px solid lightgray; */
     display: block;      /* Hide sections per default */
     /*background-color:lightgray; */
-
-}
-#cy_help_button {
-    border-radius: 50%;
-    width: 25px;
-    height: 25px;
-}
-#cy_help_popup {
-    display: none;
-    left: 250px; /* align 150px from left wall. Could use float: right if top right corner is used.*/
-    /*float: right;*/
-    vertical-align: bottom;
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    background-color: rgba(0, 255, 255, 0.25);
 }
 
 #aggregation.section{
     display:block;      /* Show only aggregation graph */
-}
-
-#level_buttons {
-    width: 180px;
-    height: 20px;
-    vertical-align: middle;
-    position: relative;
-}
-
-.levelButton {
-    display: block;
-    width: 100%;
-    height: 100%;
-    vertical-align: middle;
-    text-align: center;
-    margin: 1px;
-    /*border: black; */
-    border-bottom-color: black;
-    background-color: cornflowerblue;
-    font-weight: bold;
-}
-
-ul {
-    list-style-type: none;
 }
