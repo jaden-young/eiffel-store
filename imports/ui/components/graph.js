@@ -1,14 +1,14 @@
 import cytoscape from "cytoscape";
 import cydagre from "cytoscape-dagre";
-
 import "cytoscape-panzoom/cytoscape.js-panzoom.css";
 import panzoom from "cytoscape-panzoom";
-
 import cyqtip from "cytoscape-qtip";
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
 
 cydagre(cytoscape); // register extension
 panzoom(cytoscape, $); // register extension
 cyqtip( cytoscape ); // register extension
+
 
 /**
  * Renders a graph using Cytoscape, with provided graph
@@ -133,6 +133,9 @@ function renderGraph(graph, container, onClick) {
 
     cy.on('tap', 'node', onClick);
     cy.nodes().ungrabify();     //Makes nodes ungrabbable
+
+
+
 }
 
 export {renderGraph}
