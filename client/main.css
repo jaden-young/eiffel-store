@@ -7,7 +7,7 @@
 
 #buttons{
     position:fixed;
-    right: 30px;
+    right: 50px;
     top: 100px;
     z-index:1000;
     width: 150px;
@@ -52,6 +52,9 @@ TODO: Change all buttons to inherit properties from same class
     width:100%;
 }
 
+.button{
+    padding:1px;
+}
 
 
 
@@ -86,6 +89,7 @@ body{
     padding-bottom: 80px;
     /*border: 2px solid slategray; */
     display: block;      /* Hide sections per default */
+    background-color:lightgray;
 }
 
 #aggregation.section{
