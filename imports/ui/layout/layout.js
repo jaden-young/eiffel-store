@@ -40,16 +40,26 @@ viewLevel = function (level) {
 Template.layout.events({
     'click #level1_button' : function(event) {
         event.preventDefault();
-        viewLevel(1);
+        document.getElementById('aggregation').style.display = 'block';
+        document.querySelector('#aggregation.section').scrollIntoView({
+            behavior: 'smooth'
+        });
     },
 
     'click #level2_button' : function (event) {
         event.preventDefault();
-        viewLevel(2);
+        document.getElementById('details').style.display = 'block';
+        document.querySelector('#details.section').scrollIntoView({
+            behavior: 'smooth'
+        });
     },
 
     'click #level3_button' : function(event){
         event.preventDefault();
-        viewLevel(3);
+        document.getElementById('details').style.display = 'block';
+        document.querySelector('#eventchain.section').scrollIntoView({
+            behavior: 'smooth'
+        });
+
     }
 });

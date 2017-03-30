@@ -1,11 +1,33 @@
 .cy {
-    width: 100%;
+    width: 90%;
     height: 900px;
     display: block;
     border: 2px solid lightslategray;
 }
 
+#buttons{
+    position:fixed;
+    right: 30px;
+    top: 100px;
+    z-index:1000;
 
+
+}
+/*
+TODO: Change all buttons to inherit properties from same class
+ */
+#level1_button{
+    display:block;
+}
+#level2_button{
+    display:block;
+}
+#level3_button{
+    display:block;
+}
+body{
+    scroll-behavior: smooth;
+}
 
 .input-container label{
     display: inline-block;
@@ -27,11 +49,12 @@
 }
 
 .section {
-    margin: 25px;
-    padding: 50px;
+    /*margin: 25px; */
+    width:90%;
+    /*padding: 50px; */
     padding-bottom: 80px;
     border: 2px solid slategray;
-    display: none;      /* Hide sections per default */
+    display: block;      /* Hide sections per default */
 }
 
 #aggregation.section{
