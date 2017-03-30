@@ -11,7 +11,15 @@
     top: 100px;
     z-index:1000;
     width: 150px;
-
+}
+h1{
+    font-family:Georgia,serif;
+    color:#4E443C;
+    font-variant: small-caps;
+    text-transform: none;
+    font-weight: 100;
+    margin-bottom: 0;
+    margin-left:25px;
 
 }
 /*
@@ -27,7 +35,7 @@ TODO: Change all buttons to inherit properties from same class
     display: block;
     font-size: 16px;
     width:100%;
-
+    margin: 1px;
 }
 #level2_button{
     background-color: #4AB4F4; /* Green */
@@ -39,6 +47,8 @@ TODO: Change all buttons to inherit properties from same class
     display: block;
     font-size: 16px;
     width:100%;
+    margin: 1px;
+
 }
 #level3_button{
     background-color: #38DDB7; /* Green */
@@ -50,6 +60,7 @@ TODO: Change all buttons to inherit properties from same class
     display: block;
     font-size: 16px;
     width:100%;
+    margin: 1px;
 }
 
 .button{
@@ -61,6 +72,8 @@ TODO: Change all buttons to inherit properties from same class
 body{
     scroll-behavior: smooth;
     background-color: whitesmoke;
+    font-family: 'Roboto', sans-serif;
+
 }
 
 .input-container label{
@@ -82,14 +95,16 @@ body{
     padding: 25px;
 }
 
+
+
 .section {
     margin: 25px;
     width:90%;
     /*padding: 50px; */
     padding-bottom: 80px;
-    /*border: 2px solid slategray; */
+    /*border: 2px solid lightgray; */
     display: block;      /* Hide sections per default */
-    background-color:lightgray;
+    /*background-color:lightgray; */
 }
 
 #aggregation.section{
