@@ -12,14 +12,12 @@
     z-index:1000;
     width: 150px;
     margin: 1px;
-
-
 }
 
 table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
-    width: 90%%;
+    width: 90%;
 }
 
 td, th {
@@ -130,13 +128,24 @@ body{
     font-weight: bold;
 }*/
 #cy_help_button {
-    border-radius: 50%;
+ /*   border-radius: 50%;
     width: 30px;
     height: 30px;
     left: 220px;
     top: 0px;
     vertical-align: bottom;
-    position: absolute;
+    position: absolute; */
+
+    background-color: #38DDB7; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    width:100%;
+    margin: 1px;
 }
 #cy_help_popup {
     display: none;

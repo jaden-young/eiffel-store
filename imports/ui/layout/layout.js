@@ -41,5 +41,10 @@ Template.layout.events({
             behavior: 'smooth'
         });
 
+    },
+
+    'click #cy_help_button' : function(event){
+        event.preventDefault();
+        document.getElementById('cy_help_popup').style.display = 'block';
     }
 });
