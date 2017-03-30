@@ -42,8 +42,12 @@
 }*/
 #cy_help_button {
     border-radius: 50%;
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
+    left: 220px;
+    top: 0px;
+    vertical-align: bottom;
+    position: absolute;
 }
 #cy_help_popup {
     display: none;
