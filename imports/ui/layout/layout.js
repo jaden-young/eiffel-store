@@ -47,4 +47,5 @@ Template.layout.events({
         event.preventDefault();
         document.getElementById('cy_help_popup').style.display = 'block';
     }
+
 });

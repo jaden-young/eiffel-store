@@ -17,7 +17,8 @@
 table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
-    width: 90%;
+    width: 95%;
+    height: 100%
 }
 
 td, th {
@@ -110,11 +111,13 @@ body{
 .input-container {
     height: 15px;
     padding: 25px;
+
 }
 
 .section {
     margin: 25px;
     width:90%;
+    /*height:100%; */
     /*padding: 50px; */
     padding-bottom: 80px;
     /*border: 2px solid slategray; */
@@ -136,7 +139,7 @@ body{
     vertical-align: bottom;
     position: absolute; */
 
-    background-color: #38DDB7; /* Green */
+    background-color: #3FFA58; /* Green */
     border: none;
     color: white;
     padding: 15px 32px;
@@ -160,4 +163,5 @@ body{
 
 #aggregation.section{
     display:block;      /* Show only aggregation graph */
+
 }
