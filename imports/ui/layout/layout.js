@@ -40,12 +40,11 @@ Template.layout.events({
 
     'click #cy_help_button' : function(event){
         event.preventDefault();
-        if(document.getElementById('cy_help_popup)').style.display === 'block'){
-            document.getElementById('cy_help_popup)').style.display = 'none';
-        }else{
+        if(document.getElementById('cy_help_popup').style.display === 'block'){
+            document.getElementById('cy_help_popup').style.display = 'none';
+        }else if (document.getElementById('cy_help_popup').style.display === 'none'){
             document.getElementById('cy_help_popup').style.display = 'block';
         }
-        //document.getElementById('cy_help_popup').style.display = 'block';
     }
 
 });
