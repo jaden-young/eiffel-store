@@ -42,7 +42,8 @@ Template.layout.events({
         event.preventDefault();
         if(document.getElementById('cy_help_popup').style.display === 'block'){
             document.getElementById('cy_help_popup').style.display = 'none';
-        }else if (document.getElementById('cy_help_popup').style.display === 'none'){
+        }else{
+
             document.getElementById('cy_help_popup').style.display = 'block';
         }
     }
