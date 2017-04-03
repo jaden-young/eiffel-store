@@ -138,14 +138,23 @@ body{
     margin: 1px;
 }
 #cy_help_popup {
-    display: none;
-    left: 250px; /* align 250px from left wall. Could use float: right if top right corner is used.*/
-    /*float: right;*/
-    vertical-align: bottom;
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    background-color: rgba(0, 255, 255, 0.25);
+    position:fixed;
+    right: 25px;
+    top: 325px;
+    z-index:1000;
+    width: 225px;
+    height:400px;
+    margin: 1px;
+    background-color: #8DECD6;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: 300;
+    display:none;
+
+}
+h2{
+    text-align:center;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: 400;
 }
 
 #aggregation.section{

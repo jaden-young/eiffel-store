@@ -46,6 +46,8 @@ Template.layout.events({
 
             document.getElementById('cy_help_popup').style.display = 'block';
         }
-    }
+    },
+
+ 
 
 });
