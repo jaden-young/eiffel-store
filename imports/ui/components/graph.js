@@ -2,6 +2,7 @@ import cytoscape from "cytoscape";
 import cydagre from "cytoscape-dagre";
 
 import "cytoscape-panzoom/cytoscape.js-panzoom.css";
+import "font-awesome/css/font-awesome.css";
 import panzoom from "cytoscape-panzoom";
 
 import cyqtip from "cytoscape-qtip";
