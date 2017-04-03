@@ -164,6 +164,8 @@ function renderGraph(graph, container, onClick) {
 
     cy.on('tap', 'node', onClick);
     cy.nodes().ungrabify();     //Makes nodes ungrabbable
+    cy.maxZoom(10); //same setting as panzoom for Krav 2
+    cy.minZoom(0.1); //same setting as panzoom for Krav 2
 }
 
 export {renderGraph}
