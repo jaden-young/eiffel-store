@@ -9,7 +9,6 @@
     "cytoscape": "^2.7.16",
     "cytoscape-dagre": "^1.4.0",
     "cytoscape-panzoom": "^2.4.1",
-    "cytoscape-qtip": "^2.6.1",
     "jquery": "^3.2.1",
     "meteor-node-stubs": "^0.2.6"
   }
