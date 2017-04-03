@@ -24,11 +24,3 @@ insecure@1.0.7                # Allow all DB writes from clients (for prototypin
 alethes:lodash@0.7.1            # For functional programming
 maxkfranz:cytoscape@2.4.9       # For rendering graphs
 maxkfranz:cytoscape-dagre@1.1.1 # For DAG layouts
-mizzao:jquery-ui                # Primarily for datepicker
-practicalmeteor:mocha           # Test driver
-practicalmeteor:chai            # Unit test framework
-dburles:factory
-practicalmeteor:faker
-xolvio:cleaner
-mdg:validated-method
-iron:router
