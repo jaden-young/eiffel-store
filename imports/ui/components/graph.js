@@ -150,7 +150,7 @@ function renderGraph(graph, container) {
             event: 'mouseout'
         },
         style: {
-            classes: 'qtip-bootstrap qtip-shadow',
+            classes: 'qtip-viswiz qtip-shadow',
             tip: {
                 width: 16,
                 height: 8
