@@ -133,7 +133,7 @@ function renderGraph(graph, container) {
         wheelSensitivity: 0.075,
     });
 
-    cy.elements().qtip({
+    cy.nodes().qtip({
         content: function () {
             return 'Example qTip on ele ' + this.id() + '<p>man kan ha html i denna ruta</p>' // Ändra här för att ändra vad som ska vara i den
         },
