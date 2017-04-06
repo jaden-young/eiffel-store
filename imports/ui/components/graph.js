@@ -4,12 +4,12 @@ import cydagre from "cytoscape-dagre";
 import "cytoscape-panzoom/cytoscape.js-panzoom.css";
 import "font-awesome/css/font-awesome.css";
 import panzoom from "cytoscape-panzoom";
-
+// import "/styles/jquery.qtip.min.css";
 import cyqtip from "cytoscape-qtip";
 
 cydagre(cytoscape); // register extension
 panzoom(cytoscape, $); // register extension
-cyqtip( cytoscape ); // register extension
+cyqtip(cytoscape); // register extension
 
 /**
  * Renders a graph using Cytoscape, with provided graph
@@ -22,7 +22,7 @@ cyqtip( cytoscape ); // register extension
 const PASS_COLOR = '#22b14c';
 const FAIL_COLOR = '#af0020';
 const ELSE_COLOR = '#666';
-function renderGraph(graph, container, onClick) {
+function renderGraph(graph, container) {
     let cy = cytoscape({
 
         container: container,
@@ -61,15 +61,15 @@ function renderGraph(graph, container, onClick) {
                     'width': '70px',
                     'height': '70x',
                     'pie-size': '100%',
-                    'pie-1-background-size': function(ele){
+                    'pie-1-background-size': function (ele) {
                         return (ele.data("passed") * 100 / ele.data("length") ).toString() + '%';
                     },
                     'pie-1-background-color': PASS_COLOR,
-                    'pie-2-background-size': function(ele){
+                    'pie-2-background-size': function (ele) {
                         return (ele.data("failed") * 100 / ele.data("length") ).toString() + '%';
                     },
                     'pie-2-background-color': FAIL_COLOR,
-                    'pie-3-background-size': function(ele){
+                    'pie-3-background-size': function (ele) {
                         return (ele.data("inconclusive") * 100 / ele.data("length") ).toString() + '%';
                     },
                     'pie-3-background-color': ELSE_COLOR
@@ -91,10 +91,10 @@ function renderGraph(graph, container, onClick) {
                 style: {
                     'background-image': '/images/green.png',
                     'background-height': '100%',
-                    'background-width': function(ele){
+                    'background-width': function (ele) {
                         return (ele.data("passed") * 100).toString() + '%';
                     },
-                    'background-position-x':'0px'
+                    'background-position-x': '0px'
                 }
             },
 
@@ -114,10 +114,10 @@ function renderGraph(graph, container, onClick) {
             {
                 selector: 'node[id ^= "TSF"]', // All nodes with ID starting with TSF(Test Suite Finished)
                 style: {
-                    'background-position-x':'0px',
+                    'background-position-x': '0px',
                     'background-image': '/images/green.png',
                     'background-height': '100%',
-                    'background-width': function(ele){
+                    'background-width': function (ele) {
                         return (ele.data("passed") * 100).toString() + '%';
                     }
                 }
@@ -131,6 +131,31 @@ function renderGraph(graph, container, onClick) {
 
         // Higher = faster zoom
         wheelSensitivity: 0.075,
+    });
+
+    cy.elements().qtip({
+        content: function () {
+            return 'Example qTip on ele ' + this.id() + '<p>man kan ha html i denna ruta</p>' // Ändra här för att ändra vad som ska vara i den
+        },
+        position: {
+            my: 'center center',
+            at: 'center center',
+        },
+        show: {
+            event: 'mouseover',
+            // event: 'click', om den ska trigga på klick istället
+            solo: true,
+        },
+        hide: {
+            event: 'mouseout'
+        },
+        style: {
+            classes: 'qtip-bootstrap qtip-shadow',
+            tip: {
+                width: 16,
+                height: 8
+            }
+        },
     });
 
     // Settings for panzoom
@@ -162,7 +187,6 @@ function renderGraph(graph, container, onClick) {
 
     cy.panzoom(defaults);
 
-    cy.on('tap', 'node', onClick);
     cy.nodes().ungrabify();     //Makes nodes ungrabbable
     cy.maxZoom(10); //same setting as panzoom for Krav 2
     cy.minZoom(0.1); //same setting as panzoom for Krav 2
