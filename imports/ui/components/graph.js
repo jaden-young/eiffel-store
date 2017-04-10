@@ -92,7 +92,7 @@ function renderGraph(graph, container) {
                     'background-image': '/images/green.png',
                     'background-height': '100%',
                     'background-width': function (ele) {
-                        return (ele.data("passed") * 100).toString() + '%';
+                        return (ele.data("passed") * 100 / ele.data("length") ).toString() + '%';
                     },
                     'background-position-x': '0px'
                 }
@@ -118,8 +118,8 @@ function renderGraph(graph, container) {
                     'background-image': '/images/green.png',
                     'background-height': '100%',
                     'background-width': function (ele) {
-                        return (ele.data("passed") * 100).toString() + '%';
-                    }
+                        return (ele.data("passed") * 100 / ele.data("length") ).toString() + '%';
+                    },
                 }
             }
         ],
@@ -164,12 +164,13 @@ function renderGraph(graph, container) {
             at: 'top center',
         },
         show: {
-            event: 'mouseover',
-            // event: 'click', om den ska trigga på klick istället
+            //event: 'mouseover',
+            event: 'click', //om den ska trigga på klick istället
             solo: true,
         },
         hide: {
-            event: 'mouseout'
+            //event: 'mouseout'
+            event: 'unfocus'
         },
         style: {
             classes: 'qtip-viswiz qtip-shadow',
