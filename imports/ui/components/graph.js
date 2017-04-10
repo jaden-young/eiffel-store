@@ -81,6 +81,9 @@ function renderGraph(graph, container) {
                 style: {
                     'background-color': FAIL_COLOR,
                     'shape': 'rectangle',
+                    'border-style': 'solid',
+                    'border-width': '1px',
+                    'border-color': '#000',
                     'height': 50,
                     'width': 100
                 }
@@ -120,6 +123,50 @@ function renderGraph(graph, container) {
                     'background-width': function (ele) {
                         return (ele.data("passed") * 100).toString() + '%';
                     }
+                }
+            },
+
+            {
+                selector: 'node[id ^= "CDef"]', // All nodes with ID starting with CD (Composition Defined)
+                style: {
+                    'background-color': ELSE_COLOR,
+                    'shape': 'polygon',
+                    'shape-polygon-points': '-0.1 1 -0.17 0.77 -0.32 0.72 -0.53 0.87 -0.68 0.77 -0.6 0.53 -0.68 0.38 -0.94 0.39 -1 0.22 -0.79 0.08 -0.79 -0.08 -1 -0.22 -0.94 -0.39 -0.68 -0.38 -0.6 -0.53 -0.68 -0.77 -0.53 -0.87 -0.32 -0.72 -0.17 -0.77 -0.1 -1 0.1 -1 0.17 -0.77 0.32 -0.72 0.53 -0.87 0.68 -0.77 0.6 -0.53 0.68 -0.38 0.94 -0.39 1 -0.22 0.79 -0.08 0.79 0.08 1 0.22 0.94 0.39 0.68 0.38 0.6 0.53 0.68 0.77 0.53 0.87 0.32 0.72 0.17 0.77 0.1 1',
+                    'border-style': 'solid', // solid, dotted, dashed, or double.
+                    'border-width': '1px',
+                    'border-color': '#000',
+                    'height': 70,
+                    'width': 70,
+                    'pie-size': '40%',
+                    'pie-1-background-size': '100%',
+                    'pie-1-background-color': '#fff',
+                }
+            },
+
+            {
+                selector: 'node[id ^= "Act"]', // All nodes with ID starting with Act (Activity)
+                style: {
+                    'background-color': '#ffd908',
+                    'shape': 'triangle',
+                    'border-style': 'solid', // solid, dotted, dashed, or double.
+                    'border-width': '6px',
+                    'border-color': '#f14c53',
+                    'height': 60,
+                    'width': 70,
+                }
+            },
+
+            {
+                selector: 'node[id ^= "Art"]', // All nodes with ID starting with (Artifact)
+                style: {
+                    'background-color': ELSE_COLOR,
+                    'shape': 'polygon',
+                    'shape-polygon-points': '-0.3 0 -0.95 -0.48 -0.88 -0.64 -0.77 -0.78 -0.63 -0.89 -0.46 -0.96 -0.28 -1 -0.09 0 -0.99 0.11 -0.95 0.3 0 -0.88 0.48 -0.77 0.64 -0.63 0.78 -0.46 0.89 -0.28 0.96 -0.09 0 1 0.11 0.99 0.3 0 0.95 0.48 0.88 0.64 0.77 0.78 0.63 0.89 0.46 0.96 0.28 1 0.09 0 1 -0.09 0 0.96 -0.28 0.89 -0.46 0.78 -0.63 0.64 -0.77 0.48 -0.88 0.3 0 -0.95 0.3 0 0.5 0 0 0.6 -0.5 0 -0.3 0',
+                    'border-style': 'solid', // solid, dotted, dashed, or double.
+                    'border-width': '1px',
+                    'border-color': '#000',
+                    'height': 70,
+                    'width': 70,
                 }
             }
         ],
