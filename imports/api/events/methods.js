@@ -61,7 +61,8 @@ export const getAggregatedGraph = new ValidatedMethod({
                         }, 0),
                         inconclusive: _.reduce(events, function (memo, event) {
                             return event.data.value === "INCONCLUSIVE" ? memo + 1 : memo;
-                        }, 0)
+                        }, 0),
+                        name: events[0].dataname,
                     }
                 });
             }
