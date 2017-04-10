@@ -133,14 +133,31 @@ function renderGraph(graph, container) {
         wheelSensitivity: 0.075,
     });
 
+    function getTooltipContent(node_data) {
+        node_id = node_data('id');
+
+        switch(node_id){
+            case 'TCF':
+                return '<h4 id="tt_header">' + this.id()  + '</h4>' +           // Tooltip-header (Node-ID)
+                    '<button id="tt_button"> Show details </button>' +          // Button will take user to level 2 - 'details'
+                    '<table id="tt_table" border="2"><tr><th>Status</th><th>#</th><th>%</th></tr>' +    // Table-header
+                    '<tr><td>Passed</td><td>' + node_data("passed") + '</td><td>' + node_data('passed')/node_data("length") +'</td></tr>' + // Row 1 - PASSED
+                    '<tr><td>Failed</td><td>' + node_data("failed") + '</td><td>' + node_data('failed')/node_data("length") +'</td></tr>' + // Row 2 - FAILED
+                    '<tr><td>Other</td><td>' + node_data("inconclusive") + '</td><td>' + node_data('inconclusive')/node_data("length") +'</td></tr></table>'; // Row 3 - OTHER
+
+            case 'CLM':
+                return '<h4 id="tt_header">' + this.id()  + '</h4>' +
+                    '<button id="tt_button"> Show all events </button>' +
+                    '<table id="tt_table" border="2"><tr><th>Status</th><th>#</th><th>%</th></tr>' +
+                    '<tr><td>Passed</td><td>' + node_data("passed") + '</td><td>' + node_data('passed')/node_data("length") +'</td></tr>' +
+                    '<tr><td>Failed</td><td>' + node_data("failed") + '</td><td>' + node_data('failed')/node_data("length") +'</td></tr>' +
+                    '<tr><td>Inconclusive</td><td>' + node_data("inconclusive") + '</td><td>' + node_data('inconclusive')/node_data("length") +'</td></tr></table>';
+        }
+    }
+
     cy.nodes().qtip({
         content: function () {
-            return '<h4 id="tt_header">' + this.id()  + '</h4>' +
-                '<button id="tt_button"> Show details </button>' +
-                '<table id="tt_table" border="2"><tr><th>Status</th><th>#</th><th>%</th></tr>' +
-                '<tr><td>Passed</td><td>' + this.data("passed") + '</td><td>' + this.data('passed')/this.data("length") +'</td></tr>' +
-                '<tr><td>Failed</td><td>' + this.data("failed") + '</td><td>' + this.data('failed')/this.data("length") +'</td></tr>' +
-                '<tr><td>Other</td><td>' + this.data("inconclusive") + '</td><td>' + this.data('inconclusive')/this.data("length") +'</td></tr></table>' // Ändra här för att ändra vad som ska vara i den
+            return getTooltipContent(this.data) // Ändra här för att ändra vad som ska vara i den
         },
         position: {
             my: 'bottom center',
@@ -189,6 +206,16 @@ function renderGraph(graph, container) {
         zoomOutIcon: 'fa fa-minus',
         resetIcon: 'fa fa-expand'
     };
+
+    Template.layout.events({
+       'click #tt_button': function (event) {
+            event.preventDefault();
+            document.getElementById('details').style.display = 'block';
+            document.querySelector('#details.section').scrollIntoView({
+                behavior: 'smooth'
+            });
+       }
+    });
 
     cy.panzoom(defaults);
 
