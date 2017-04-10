@@ -135,11 +135,16 @@ function renderGraph(graph, container) {
 
     cy.nodes().qtip({
         content: function () {
-            return 'Example qTip on ele ' + this.id() + '<p>man kan ha html i denna ruta</p>' // Ändra här för att ändra vad som ska vara i den
+            return '<h4 id="tt_header">' + this.id()  + '</h4>' +
+                '<button id="tt_button"> Show details </button>' +
+                '<table id="tt_table" border="2"><tr><th>Status</th><th>#</th><th>%</th></tr>' +
+                '<tr><td>Passed</td><td>' + this.data("passed") + '</td><td>' + this.data('passed')/this.data("length") +'</td></tr>' +
+                '<tr><td>Failed</td><td>' + this.data("failed") + '</td><td>' + this.data('failed')/this.data("length") +'</td></tr>' +
+                '<tr><td>Other</td><td>' + this.data("inconclusive") + '</td><td>' + this.data('inconclusive')/this.data("length") +'</td></tr></table>' // Ändra här för att ändra vad som ska vara i den
         },
         position: {
-            my: 'center center',
-            at: 'center center',
+            my: 'bottom center',
+            at: 'top center',
         },
         show: {
             event: 'mouseover',
