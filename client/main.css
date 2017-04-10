@@ -14,6 +14,37 @@
     margin: 1px;
 }
 
+/*  TIMELINE TEST */
+/*
+.vis-timeline {
+    border: 1px solid grey;
+    font-family: purisa, 'comic sans', cursive;
+    font-size: 11pt;
+    background: #F8F8FF;
+}
+
+.vis-item {
+    border-color: #F991A3;
+    background-color: skyBlue;
+    font-size: 15pt;
+    color: purple;
+    box-shadow: 5px 5px 20px rgba(128, 128, 128, 0.5);
+}
+
+.vis-time-axis .vis-text {
+    color: black;
+    padding-top: 0;
+    padding-left: 10px;
+}
+
+.vis-time-axis .vis-grid.vis-major {
+    border-width: 2px;
+    border-color: #F991A3;
+}
+
+*/
+/* --------------- */
+
 table {
     font-family: arial, sans-serif;
     border-collapse: collapse;

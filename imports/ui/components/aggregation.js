@@ -7,8 +7,11 @@ import { renderGraph } from "./graph.js";
 
 import './aggregation.html';
 import { getAggregatedGraph } from '/imports/api/events/methods.js';
+import vis from 'vis';
 
 Template.aggregation.rendered = () => {
+
+
     // Runs when document is ready
     $(() => {
         console.log('document is loaded');
@@ -50,6 +53,43 @@ Template.aggregation.rendered = () => {
 // Attempt to asynchronously fetch graph from server
 function showAggregation(from, to, limit) {
     console.log('rendering aggregation');
+
+    /* TEST TIMELINE */
+    //Timline demo created using vis.js - http://visjs.org/
+
+//Configuration options for a timeline - http://visjs.org/docs/timeline.html#Configuration_Options
+
+
+
+// DOM element where the Timeline will be attached
+    let container = document.getElementById('example-timeline');
+    console.log('hej '+Date.parse(from.val()));
+// Create a DataSet with data
+    let data = new vis.DataSet([{
+        id: 1,
+        content: 'Lower limit',
+        start: from.toString()
+    }, {
+        id: 2,
+        content: 'Upper limit',
+        start: to.toString()
+    }]);
+
+// Configuration for the Timeline as JSON object
+    let options = {
+        width: '70%',
+        editable: true, /* this option means you can add or remove items by clicking on the timeline */
+        margin: {
+            item: 20
+        }
+    };
+
+// Create a Timeline
+    let timeline = new vis.Timeline(container, data, options);
+
+
+    /*---------------*/
+
     getAggregatedGraph.call({from: from, to: to, limit: limit}, function (error, graph) {
         if (error) {
             console.log(error);
