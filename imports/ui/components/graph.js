@@ -138,8 +138,8 @@ function renderGraph(graph, container) {
             return 'Example qTip on ele ' + this.id() + '<p>man kan ha html i denna ruta</p>' // Ändra här för att ändra vad som ska vara i den
         },
         position: {
-            my: 'center center',
-            at: 'center center',
+            my: 'bottom center',
+            at: 'top center',
         },
         show: {
             event: 'mouseover',
