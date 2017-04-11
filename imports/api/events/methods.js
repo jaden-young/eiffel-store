@@ -71,7 +71,8 @@ export const getAggregatedGraph = new ValidatedMethod({
                     data: {
                         id: group,
                         label: group,
-                        events: events
+                        events: events,
+                        length: _.size(events),
                     }
                 });
             }
