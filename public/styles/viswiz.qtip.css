@@ -97,3 +97,8 @@
     opacity: 0.4;
     filter: alpha(opacity=40);
 }
+
+.tt_button {
+    width: 75%;
+
+}
