@@ -164,6 +164,34 @@ function renderGraph(graph, container) {
                     '<tr><td>Passed</td><td>' + node_data.passed + '</td><td>' + Math.floor(node_data.passed/node_data.length*100) +'</td></tr>' +
                     '<tr><td>Failed</td><td>' + node_data.failed + '</td><td>' + Math.floor(node_data.failed/node_data.length*100) +'</td></tr>' +
                     '<tr><td>Inconclusive</td><td>' + node_data.inconclusive + '</td><td>' + Math.floor(node_data.inconclusive/node_data.length) +'</td></tr></table>';
+
+            case /TS/.test(node_id):                                              // Checks if node_id starts with 'TS'
+                console.log('CASE', 'TSF');
+                return '<h4 id="tt_header">' + node_id  + '</h4>' +           // Tooltip-header (Node-ID)
+                    '<button id="tt_button"> Show details </button>' +          // Button will take user to level 2 - 'details'
+                    '<table id="tt_table" border="2"><tr><th>Status</th><th>#</th><th>%</th></tr>' +    // Table-header
+                    '<tr><td>Passed</td><td>' + node_data.passed + '</td><td>' + Math.floor(node_data.passed/node_data.length*100) +'</td></tr>' +
+                    '<tr><td>Failed</td><td>' + node_data.failed + '</td><td>' + Math.floor(node_data.failed/node_data.length*100) +'</td></tr>' +
+                    '<tr><td>Other</td><td>' + node_data.inconclusive + '</td><td>' + Math.floor(node_data.inconclusive/node_data.length) +'</td></tr></table>'; // Row 3 - OTHER
+/*
+            case /TSF/.test(node_id):                                              // Checks if node_id starts with 'TSF'
+                console.log('CASE', 'TSF');
+                return '<h4 id="tt_header">' + node_id  + '</h4>' +           // Tooltip-header (Node-ID)
+                    '<button id="tt_button"> Show details </button>' +          // Button will take user to level 2 - 'details'
+                    '<table id="tt_table" border="2"><tr><th>Status</th><th>#</th><th>%</th></tr>' +    // Table-header
+                    '<tr><td>Passed</td><td>' + node_data.passed + '</td><td>' + Math.floor(node_data.passed/node_data.length*100) +'</td></tr>' +
+                    '<tr><td>Failed</td><td>' + node_data.failed + '</td><td>' + Math.floor(node_data.failed/node_data.length*100) +'</td></tr>' +
+                    '<tr><td>Inconclusive</td><td>' + node_data.inconclusive + '</td><td>' + Math.floor(node_data.inconclusive/node_data.length) +'</td></tr></table>'; // Row 3 - OTHER
+
+            case /TSF/.test(node_id):                                              // Checks if node_id starts with 'TSF'
+                console.log('CASE', 'TSF');
+                return '<h4 id="tt_header">' + node_id  + '</h4>' +           // Tooltip-header (Node-ID)
+                    '<button id="tt_button"> Show details </button>' +          // Button will take user to level 2 - 'details'
+                    '<table id="tt_table" border="2"><tr><th>Status</th><th>#</th><th>%</th></tr>' +    // Table-header
+                    '<tr><td>Passed</td><td>' + node_data.passed + '</td><td>' + Math.floor(node_data.passed/node_data.length*100) +'</td></tr>' +
+                    '<tr><td>Failed</td><td>' + node_data.failed + '</td><td>' + Math.floor(node_data.failed/node_data.length*100) +'</td></tr>' +
+                    '<tr><td>Inconclusive</td><td>' + node_data.inconclusive + '</td><td>' + Math.floor(node_data.inconclusive/node_data.length) +'</td></tr></table>'; // Row 3 - OTHER
+                    */
         }
     }
 
