@@ -20,8 +20,8 @@ Template.aggregation.rendered = () => {
             limitInput = $('#limit'),
             datepickers = $('.datepicker'),
             defaultLimit = 500,
-            defaultFrom = '01/02/2012',
-            defaultTo = '01/02/2017';
+            defaultFrom = '2012-01-01',
+            defaultTo = '2017-01-01';
 
         // Set default input values
         fromInput.val(defaultFrom);
@@ -31,7 +31,8 @@ Template.aggregation.rendered = () => {
         // Set up datepicker;
         datepickers.datepicker({
             changeMonth: true,
-            changeYear: true
+            changeYear: true,
+            dateFormat: "yy-mm-dd"
         });
 
         /* TEST TIMELINE */
@@ -39,11 +40,11 @@ Template.aggregation.rendered = () => {
         let container = document.getElementById('example-timeline');
     // Create a DataSet with data
         let data = new vis.DataSet([{
-            id: 1,
+            id: '1',
             content: 'Lower limit',
             start: defaultFrom
         }, {
-            id: 2,
+            id: '2',
             content: 'Upper limit',
             start: defaultTo
         }]);
@@ -51,8 +52,24 @@ Template.aggregation.rendered = () => {
         let options = {
             width: '70%',
             height: '150px',
-            max: new Date(Date.now()).toLocaleDateString(),
-            align: 'center'
+            max: new Date(Date.now()).toLocaleDateString(), //Todays date
+            min: '01/01/2000',  // IS HARDCODED NOW, SHOULD BE THE DATE OF THE FIRST EVENT
+            editable: {updateTime: true},
+            selectable: true,
+            onMove: function (item, callback) {
+                    let limit = parseInt(limitInput.val());
+                if(item.id === 1){
+                    let from = Date.parse(new Date(item.start).toLocaleDateString());
+                    let to = Date.parse(toInput.val());
+                    fromInput.val(new Date(item.start).toLocaleDateString());
+                    showAggregation(from, to, limit);
+                }else if(item.id === 2){
+                    let from = Date.parse(fromInput.val());
+                    let to = Date.parse(new Date(item.start).toLocaleDateString());
+                    toInput.val(new Date(item.start).toLocaleDateString());
+                    showAggregation(from, to, limit);
+                }
+            }
         };
     // Create a Timeline
         let timeline = new vis.Timeline(container, data, options);
@@ -73,6 +90,7 @@ Template.aggregation.rendered = () => {
             }]));
             showAggregation(from, to, limit);
         };
+
 
         datepickers.on('change', onChange);
         limitInput.on('change', onChange);
