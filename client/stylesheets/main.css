@@ -3,6 +3,7 @@
     height: 900px;
     display: block;
     border: 2px solid lightblue;
+    background-color: #ffffff;
 }
 
 #buttons{
@@ -91,7 +92,7 @@ hr{
 
 body{
     scroll-behavior: smooth;
-    background-color: #ffffff;
+    background-color: whitesmoke;
 }
 
 .input-container label{
