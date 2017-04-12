@@ -2,9 +2,7 @@ import cytoscape from "cytoscape";
 import cydagre from "cytoscape-dagre";
 
 import "cytoscape-panzoom/cytoscape.js-panzoom.css";
-import "font-awesome/css/font-awesome.css";
 import panzoom from "cytoscape-panzoom";
-// import "/styles/jquery.qtip.min.css";
 import cyqtip from "cytoscape-qtip";
 
 cydagre(cytoscape); // register extension
@@ -180,9 +178,9 @@ function renderGraph(graph, container) {
         wheelSensitivity: 0.075,
     });
 
-    cy.elements().qtip({
+    cy.nodes().qtip({
         content: function () {
-            return 'Example qTip on ele ' + this.id() + '<p>man kan ha html i denna ruta</p>' // Ändra här för att ändra vad som ska vara i den
+            return 'Example qTip on ele ' + this.id() + '<div class="alert alert-success" role="alert"><strong>Well done!</strong> You successfully read this important alert message. (bootstrap)</div>' // Ändra här för att ändra vad som ska vara i den
         },
         position: {
             my: 'center center',
@@ -197,7 +195,7 @@ function renderGraph(graph, container) {
             event: 'mouseout'
         },
         style: {
-            classes: 'qtip-bootstrap qtip-shadow',
+            classes: 'qtip-viswiz qtip-shadow',
             tip: {
                 width: 16,
                 height: 8

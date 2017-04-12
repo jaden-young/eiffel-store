@@ -1,10 +1,6 @@
-/**
- * Created by seba on 2017-03-24.
- */
-
-import { Meteor } from 'meteor/meteor';
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import { Events } from './events.js';
+import {Meteor} from "meteor/meteor";
+import {ValidatedMethod} from "meteor/mdg:validated-method";
+import {Events} from "./events.js";
 
 /*
  * Returns a graph object in Cytoscape syntax with aggregated Eiffel events as nodes.
@@ -12,7 +8,7 @@ import { Events } from './events.js';
 export const getAggregatedGraph = new ValidatedMethod({
     name: 'getAggregatedGraph',
     validate: null,
-    run({ from, to, limit }) {
+    run({from, to, limit}) {
         // Below values will fetch events between 2015 and 2018
         // from: 1420070400000 2015
         // to: 1514764800000 2018
@@ -38,13 +34,13 @@ export const getAggregatedGraph = new ValidatedMethod({
                         id: group,
                         events: events,
                         length: _.size(events),
-                        passed: _.reduce(events, function(memo, event){
-                            return event.data.outcome.verdict === "PASSED" ? memo + (1/this) : memo;
+                        passed: _.reduce(events, function (memo, event) {
+                            return event.data.outcome.verdict === "PASSED" ? memo + (1 / this) : memo;
                         }, 0, _.size(events)) // Calculating rate of passed tests
                     }
                 });
             }
-            else if(group.startsWith("CLM")){
+            else if (group.startsWith("CLM")) {
                 nodes.push({
                     data: {
                         id: group,
@@ -92,9 +88,9 @@ export const getAggregatedGraph = new ValidatedMethod({
 
 
 export const getEventAncestorGraph = new ValidatedMethod({
-    name:'getEventAncestorGraph',
+    name: 'getEventAncestorGraph',
     validate: null,
-    run({ eventId }) {
+    run({eventId}) {
         let emptyGraph = {nodes: {}, edges: {}};
         if (Meteor.isClient) {
             return emptyGraph;
@@ -122,7 +118,7 @@ export const getEventAncestorGraph = new ValidatedMethod({
             };
 
             let graph = createAncestorGraph(emptyGraph, eventId);
-            return { nodes: _.values(graph.nodes), edges: _.values(graph.edges) };
+            return {nodes: _.values(graph.nodes), edges: _.values(graph.edges)};
         }
     }
 });
