@@ -180,7 +180,6 @@ function renderGraph(graph, container) {
                 '<tr><td>Total no. of events</td><td class="td-right">' + node_data.length + '</td></tr>' +
                 '</table>';
 
-
         }
     }
 
@@ -237,16 +236,6 @@ function renderGraph(graph, container) {
         zoomOutIcon: 'fa fa-minus',
         resetIcon: 'fa fa-expand'
     };
-
-    Template.layout.events({
-       'click #tt_button': function (event) {
-            event.preventDefault();
-            document.getElementById('details').style.display = 'block';
-            document.querySelector('#details.section').scrollIntoView({
-                behavior: 'smooth'
-            });
-       }
-    });
 
     cy.panzoom(defaults);
 
