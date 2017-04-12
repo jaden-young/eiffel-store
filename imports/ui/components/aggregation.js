@@ -35,23 +35,23 @@ Template.aggregation.rendered = () => {
             dateFormat: "yy-mm-dd"
         });
 
-        /* TEST TIMELINE */
-    // DOM element where the Timeline will be attached
+        /* TIMELINE */
         let container = document.getElementById('example-timeline');
-    // Create a DataSet with data
+        // Timebars in the timeline
         let data = new vis.DataSet([{
             id: '1',
-            content: 'Lower limit',
+            content: 'Start',
             start: defaultFrom
         }, {
             id: '2',
-            content: 'Upper limit',
+            content: 'End',
             start: defaultTo
         }]);
-    // Configuration for the Timeline as JSON object
+
         let options = {
-            width: '70%',
+            width: '90%',
             height: '150px',
+            zoomMin: 3600000, // Setting 10 minutes as minimum zoom
             max: new Date(Date.now()).toLocaleDateString(), //Todays date
             min: '01/01/2000',  // IS HARDCODED NOW, SHOULD BE THE DATE OF THE FIRST EVENT
             editable: {updateTime: true},
@@ -59,19 +59,18 @@ Template.aggregation.rendered = () => {
             onMove: function (item, callback) {
                     let limit = parseInt(limitInput.val());
                 if(item.id === 1){
-                    let from = Date.parse(new Date(item.start).toLocaleDateString());
-                    let to = Date.parse(toInput.val());
+                    let from = Date.parse(new Date(item.start).toLocaleDateString()),
+                        to = Date.parse(toInput.val());
                     fromInput.val(new Date(item.start).toLocaleDateString());
                     showAggregation(from, to, limit);
                 }else if(item.id === 2){
-                    let from = Date.parse(fromInput.val());
-                    let to = Date.parse(new Date(item.start).toLocaleDateString());
+                    let from = Date.parse(fromInput.val()),
+                        to = Date.parse(new Date(item.start).toLocaleDateString());
                     toInput.val(new Date(item.start).toLocaleDateString());
                     showAggregation(from, to, limit);
                 }
             }
         };
-    // Create a Timeline
         let timeline = new vis.Timeline(container, data, options);
         /*---------------*/
 
@@ -81,11 +80,11 @@ Template.aggregation.rendered = () => {
                 limit = parseInt(limitInput.val());
             timeline.setItems( new vis.DataSet([{
                 id: 1,
-                content: 'Lower limit',
+                content: 'Start',
                 start: fromInput.val()
             }, {
                 id: 2,
-                content: 'Upper limit',
+                content: 'End',
                 start: toInput.val()
             }]));
             showAggregation(from, to, limit);
