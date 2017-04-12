@@ -234,16 +234,6 @@ function renderGraph(graph, container) {
         resetIcon: 'fa fa-expand'
     };
 
-    Template.layout.events({
-       'click #tt_button': function (event) {
-            event.preventDefault();
-            document.getElementById('details').style.display = 'block';
-            document.querySelector('#details.section').scrollIntoView({
-                behavior: 'smooth'
-            });
-       }
-    });
-
     cy.panzoom(defaults);
 
     cy.nodes().ungrabify();     //Makes nodes ungrabbable
