@@ -133,11 +133,9 @@ function renderGraph(graph, container) {
 
     function getTooltipContent(node_data) {
         let node_id = node_data.id;
-        console.log('NODE_DATA', node_data);
 
         switch(true){
             case /TSF/.test(node_id):                                              // Checks if node_id starts with 'TSF'
-                console.log('CASE', 'TSF');
                 return '<h4>' + node_id  + '</h4>' +           // Tooltip-header (Node-ID)
                     '<button type="button" class="btn btn-info btn-block tt_button"> Show details </button>' +          // Button will take user to level 2 - 'details'
                     '<table class="table table-bordered">' +
@@ -149,7 +147,6 @@ function renderGraph(graph, container) {
                     '</table>'; // Row 3 - OTHER
 
             case /TCF/.test(node_id):                                              // Checks if node_id starts with 'TSF'
-                console.log('CASE', 'TCF');
                 return '<h4>' + node_id  + '</h4>' +           // Tooltip-header (Node-ID)
                     '<button type="button" class="btn btn-info btn-block tt_button">Show all events</button>' +          // Button will take user to level 2 - 'details'
                     '<table class="table table-bordered">' +
@@ -161,7 +158,6 @@ function renderGraph(graph, container) {
                     '</table>'; // Row 3 - OTHER
 
             case /CLM/.test(node_id):
-                console.log('CASE', 'CLM');
                 return '<h4>' + node_id  + '</h4>' +
                     '<button type="button" class="btn btn-block btn-info tt_button"> Show all events </button>' +
                     '<table class="table table-bordered">' +
@@ -173,7 +169,6 @@ function renderGraph(graph, container) {
                     '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + node_data.length + '</td></tr>' +
                     '</table>';
             default:
-                console.log('Default');
                 return '<h4 id="tt_header">' + node_id  + '</h4>' +
                 '<button type="button" class="btn btn-info btn-block tt_button"> Show all events </button>' +
                 '<table class="table table-bordered">' +
