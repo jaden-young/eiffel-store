@@ -14,7 +14,7 @@
     margin: 1px;
 }
 
-table {
+/*table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
     width: 95%;
@@ -30,7 +30,7 @@ td, th {
 tr:nth-child(even) {
     background-color: #dddddd;
 }
-
+*/
 h1{
     font-family:Georgia,serif;
     color:#4E443C;
@@ -160,4 +160,8 @@ h2{
 #aggregation.section{
     display:block;      /* Show only aggregation graph */
 
+}
+
+.tt_button {
+    margin-bottom: 10px !important;
 }

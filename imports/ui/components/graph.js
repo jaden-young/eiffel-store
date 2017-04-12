@@ -141,19 +141,19 @@ function renderGraph(graph, container) {
                 console.log('CASE', 'TSF');
                 return '<h4 id="tt_header">' + node_id  + '</h4>' +           // Tooltip-header (Node-ID)
                     '<button type="button" class="btn btn-default btn-block tt_button"> Show details </button>' +          // Button will take user to level 2 - 'details'
-                    '<table class="table">' +
-                    '<tr><th>Status</th><th>#</th><th>%</th></tr>' +    // Table-header
-                    '<tr><td>Passed</td><td>' + node_data.passed + '</td><td>' + Math.floor(node_data.passed/node_data.length*100) +'</td></tr>' +
-                    '<tr><td>Failed</td><td>' + node_data.failed + '</td><td>' + Math.floor(node_data.failed/node_data.length*100) +'</td></tr>' +
-                    '<tr><td>Inconclusive</td><td>' + node_data.inconclusive + '</td><td>' + Math.floor(node_data.inconclusive/node_data.length) +'</td></tr></table>'; // Row 3 - OTHER
+                    '<table class="table table-bordered">' +
+                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
+                    '<tr class="success"><td>Passed</td><td>' + node_data.passed + '</td><td>' + Math.floor(node_data.passed/node_data.length*100) +' %</td></tr>' +
+                    '<tr class="danger"><td>Failed</td><td>' + node_data.failed + '</td><td>' + Math.floor(node_data.failed/node_data.length*100) +' %</td></tr>' +
+                    '<tr><td>Inconclusive</td><td>' + node_data.inconclusive + '</td><td>' + Math.floor(node_data.inconclusive/node_data.length) +' %</td></tr></table>'; // Row 3 - OTHER
 
             case /TCF/.test(node_id):                                              // Checks if node_id starts with 'TSF'
                 console.log('CASE', 'TCF');
                 return '<h4 id="tt_header">' + node_id  + '</h4>' +           // Tooltip-header (Node-ID)
                     '<button type="button" class="btn btn-default btn-block tt_button">Show details</button>' +          // Button will take user to level 2 - 'details'
-                    '<table class="table">' +
+                    '<table class="table table-bordered">' +
                     '<thead>' +
-                    '<tr><th>Status</th><th>#</th><th>%</th></tr>' +    // Table-header
+                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
                     '</thead><tbody>' +
                     '<tr><td>Passed</td><td>' + node_data.passed + '</td><td>' + Math.floor(node_data.passed/node_data.length*100) +'</td></tr>' +
                     '<tr><td>Failed</td><td>' + node_data.failed + '</td><td>' + Math.floor(node_data.failed/node_data.length*100) +'</td></tr>' +
@@ -164,8 +164,8 @@ function renderGraph(graph, container) {
                 console.log('CASE', 'CLM');
                 return '<h4 id="tt_header">' + node_id  + '</h4>' +
                     '<button type="button" class="btn btn-default btn-block tt_button"> Show all events </button>' +
-                    '<table class="table">' +
-                    '<tr><th>Status</th><th>#</th><th>%</th></tr>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><th>' + node_data.name + '</th><th colspan="2">No. of</th></tr>' + // table header
                     '<tr><td>Passed</td><td>' + node_data.passed + '</td><td>' + Math.floor(node_data.passed/node_data.length*100) +'</td></tr>' +
                     '<tr><td>Failed</td><td>' + node_data.failed + '</td><td>' + Math.floor(node_data.failed/node_data.length*100) +'</td></tr>' +
                     '<tr><td>Inconclusive</td><td>' + node_data.inconclusive + '</td><td>' + Math.floor(node_data.inconclusive/node_data.length) +'</td></tr></table>';
@@ -173,7 +173,7 @@ function renderGraph(graph, container) {
                 console.log('Default');
                 return '<h4 id="tt_header">' + node_id  + '</h4>' +
                 '<button type="button" class="btn btn-default btn-block tt_button"> Show all events </button>' +
-                '<table class="table">' +
+                '<table class="table table-bordered">' +
                 '<tr><td>No of events</td><td>' + node_data.length + '</td></tr>' +
                 '</table>';
 
