@@ -6,11 +6,11 @@
     background-color: #ffffff;
 }
 
-#buttons{
-    position:fixed;
+#buttons {
+    position: fixed;
     right: 50px;
     top: 100px;
-    z-index:1000;
+    z-index: 1000;
     width: 150px;
     margin: 1px;
 }
@@ -32,19 +32,20 @@ tr:nth-child(even) {
     background-color: #dddddd;
 }
 */
-h1{
-    font-family:Georgia,serif;
-    color:#4E443C;
+h1 {
+    font-family: Georgia, serif;
+    color: #4E443C;
     font-variant: small-caps;
     text-transform: none;
     font-weight: 100;
     margin-bottom: 0;
     margin-left: 25px;
 }
+
 /*
 TODO: Change all buttons to inherit properties from same class
  */
-#level1_button{
+#level1_button {
     background-color: #383DDD; /* Green */
     border: none;
     color: white;
@@ -53,11 +54,12 @@ TODO: Change all buttons to inherit properties from same class
     text-decoration: none;
     display: block;
     font-size: 16px;
-    width:100%;
+    width: 100%;
     margin: 1px;
 
 }
-#level2_button{
+
+#level2_button {
     background-color: #4AB4F4; /* Green */
     border: none;
     color: white;
@@ -66,10 +68,11 @@ TODO: Change all buttons to inherit properties from same class
     text-decoration: none;
     display: block;
     font-size: 16px;
-    width:100%;
+    width: 100%;
     margin: 1px;
 }
-#level3_button{
+
+#level3_button {
     background-color: #38DDB7; /* Green */
     border: none;
     color: white;
@@ -78,24 +81,21 @@ TODO: Change all buttons to inherit properties from same class
     text-decoration: none;
     display: block;
     font-size: 16px;
-    width:100%;
+    width: 100%;
     margin: 1px;
 }
 
-
-hr{
-    width:45%;
+hr {
+    width: 45%;
     margin-left: 25px;
 }
 
-
-
-body{
+body {
     scroll-behavior: smooth;
     background-color: whitesmoke;
 }
 
-.input-container label{
+.input-container label {
     display: inline-block;
     float: left;
     clear: left;
@@ -103,6 +103,7 @@ body{
     text-align: right;
     margin: 4px;
 }
+
 .input-container input {
     display: inline-block;
     float: left;
@@ -117,12 +118,12 @@ body{
 
 .section {
     margin: 25px;
-    width:90%;
+    width: 90%;
     /*height:100%; */
     /*padding: 50px; */
     padding-bottom: 80px;
     /*border: 2px solid slategray; */
-     /* Hide sections per default */
+    /* Hide sections per default */
 }
 
 #cy_help_button {
@@ -135,35 +136,37 @@ body{
     text-decoration: none;
     display: block;
     font-size: 16px;
-    width:100%;
+    width: 100%;
     margin: 1px;
 }
+
 #cy_help_popup {
-    position:fixed;
+    position: fixed;
     right: 25px;
     top: 325px;
-    z-index:1000;
+    z-index: 1000;
     width: 225px;
-    height:400px;
+    height: 400px;
     margin: 1px;
     background-color: #8DECD6;
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     font-weight: 300;
-    display:none;
+    display: none;
 
 }
-h2{
-    text-align:center;
+
+h2 {
+    text-align: center;
     font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
     font-weight: 400;
 }
 
-#aggregation.section{
-    display:block;      /* Show only aggregation graph */
+#aggregation.section {
+    display: block; /* Show only aggregation graph */
 
 }
 
-.tt_button {
+.aggregation-tt-btn {
     margin-bottom: 10px !important;
 }
 
