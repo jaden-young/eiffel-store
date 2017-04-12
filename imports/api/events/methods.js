@@ -35,8 +35,15 @@ export const getAggregatedGraph = new ValidatedMethod({
                         events: events,
                         length: _.size(events),
                         passed: _.reduce(events, function (memo, event) {
-                            return event.data.outcome.verdict === "PASSED" ? memo + (1 / this) : memo;
-                        }, 0, _.size(events)) // Calculating rate of passed tests
+                            return event.data.outcome.verdict === "PASSED" ? memo + 1 : memo;
+                        }, 0), // Calculating number of passed tests
+                        failed: _.reduce(events, function (memo, event) {
+                            return event.data.outcome.verdict === "FAILED" ? memo + 1 : memo;
+                        }, 0),
+                        inconclusive: _.reduce(events, function (memo, event) {
+                            return event.data.outcome.verdict === "INCONCLUSIVE" ? memo + 1 : memo;
+                        }, 0)
+
                     }
                 });
             }
@@ -54,7 +61,8 @@ export const getAggregatedGraph = new ValidatedMethod({
                         }, 0),
                         inconclusive: _.reduce(events, function (memo, event) {
                             return event.data.value === "INCONCLUSIVE" ? memo + 1 : memo;
-                        }, 0)
+                        }, 0),
+                        name: events[0].data.name,
                     }
                 });
             }
@@ -63,7 +71,8 @@ export const getAggregatedGraph = new ValidatedMethod({
                     data: {
                         id: group,
                         label: group,
-                        events: events
+                        events: events,
+                        length: _.size(events),
                     }
                 });
             }

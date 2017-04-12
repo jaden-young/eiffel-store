@@ -90,7 +90,7 @@ function renderGraph(graph, container) {
                     'background-image': '/images/green.png',
                     'background-height': '100%',
                     'background-width': function (ele) {
-                        return (ele.data("passed") * 100).toString() + '%';
+                        return (ele.data("passed") * 100 / ele.data("length") ).toString() + '%';
                     },
                     'background-position-x': '0px'
                 }
@@ -116,8 +116,8 @@ function renderGraph(graph, container) {
                     'background-image': '/images/green.png',
                     'background-height': '100%',
                     'background-width': function (ele) {
-                        return (ele.data("passed") * 100).toString() + '%';
-                    }
+                        return (ele.data("passed") * 100 / ele.data("length") ).toString() + '%';
+                    },
                 }
             }
         ],
@@ -131,21 +131,75 @@ function renderGraph(graph, container) {
         wheelSensitivity: 0.075,
     });
 
+    function getTooltipContent(node_data) {
+        let node_id = node_data.id;
+        console.log('NODE_DATA', node_data);
+
+        switch(true){
+            case /TSF/.test(node_id):                                              // Checks if node_id starts with 'TSF'
+                console.log('CASE', 'TSF');
+                return '<h4>' + node_id  + '</h4>' +           // Tooltip-header (Node-ID)
+                    '<button type="button" class="btn btn-info btn-block tt_button"> Show details </button>' +          // Button will take user to level 2 - 'details'
+                    '<table class="table table-bordered">' +
+                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
+                    '<tr class="success"><td>Passed</td><td class="td-right">' + node_data.passed + '</td><td class="td-right">' + Math.floor(node_data.passed/node_data.length*100) +'%</td></tr>' +
+                    '<tr class="danger"><td>Failed</td><td class="td-right">' + node_data.failed + '</td><td class="td-right">' + Math.floor(node_data.failed/node_data.length*100) +'%</td></tr>' +
+                    '<tr><td>Inconclusive</td><td class="td-right">' + node_data.inconclusive + '</td><td class="td-right">' + Math.floor(node_data.inconclusive/node_data.length) +'%</td></tr>' +
+                    '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + node_data.length + '</td></tr>' +
+                    '</table>'; // Row 3 - OTHER
+
+            case /TCF/.test(node_id):                                              // Checks if node_id starts with 'TSF'
+                console.log('CASE', 'TCF');
+                return '<h4>' + node_id  + '</h4>' +           // Tooltip-header (Node-ID)
+                    '<button type="button" class="btn btn-info btn-block tt_button">Show all events</button>' +          // Button will take user to level 2 - 'details'
+                    '<table class="table table-bordered">' +
+                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
+                    '<tr class="success"><td>Passed</td><td class="td-right">' + node_data.passed + '</td><td class="td-right">' + Math.floor(node_data.passed/node_data.length*100) +'%</td></tr>' +
+                    '<tr class="danger"><td>Failed</td><td class="td-right">' + node_data.failed + '</td><td class="td-right">' + Math.floor(node_data.failed/node_data.length*100) +'%</td></tr>' +
+                    '<tr><td>Inconclusive</td><td class="td-right">' + node_data.inconclusive + '</td><td class="td-right">' + Math.floor(node_data.inconclusive/node_data.length) +'%</td></tr>' +
+                    '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + node_data.length + '</td></tr>' +
+                    '</table>'; // Row 3 - OTHER
+
+            case /CLM/.test(node_id):
+                console.log('CASE', 'CLM');
+                return '<h4>' + node_id  + '</h4>' +
+                    '<button type="button" class="btn btn-block btn-info tt_button"> Show all events </button>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td colspan="3"><em>' + node_data.name + '</em></td></tr>' +
+                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
+                    '<tr class="success"><td>Passed</td><td class="td-right">' + node_data.passed + '</td><td class="td-right">' + Math.floor(node_data.passed/node_data.length*100) +'%</td></tr>' +
+                    '<tr class="danger"><td>Failed</td><td class="td-right">' + node_data.failed + '</td><td class="td-right">' + Math.floor(node_data.failed/node_data.length*100) +'%</td></tr>' +
+                    '<tr><td>Inconclusive</td><td class="td-right">' + node_data.inconclusive + '</td><td class="td-right">' + Math.floor(node_data.inconclusive/node_data.length) +'%</td></tr>' +
+                    '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + node_data.length + '</td></tr>' +
+                    '</table>';
+            default:
+                console.log('Default');
+                return '<h4 id="tt_header">' + node_id  + '</h4>' +
+                '<button type="button" class="btn btn-info btn-block tt_button"> Show all events </button>' +
+                '<table class="table table-bordered">' +
+                '<tr><td>Total no. of events</td><td class="td-right">' + node_data.length + '</td></tr>' +
+                '</table>';
+
+        }
+    }
+
     cy.nodes().qtip({
         content: function () {
-            return 'Example qTip on ele ' + this.id() + '<div class="alert alert-success" role="alert"><strong>Well done!</strong> You successfully read this important alert message. (bootstrap)</div>' // Ändra här för att ändra vad som ska vara i den
+            return getTooltipContent(this.data()); // Ändra här för att ändra vad som ska vara i den
+            //return 'Example qTip on ele ' + this.id() + '<div class="alert alert-success" role="alert"><strong>Well done!</strong> You successfully read this important alert message. (bootstrap)</div>' // Ändra här för att ändra vad som ska vara i den
         },
         position: {
-            my: 'center center',
-            at: 'center center',
+            my: 'bottom center',
+            at: 'top center',
         },
         show: {
-            event: 'mouseover',
-            // event: 'click', om den ska trigga på klick istället
+            //event: 'mouseover',
+            event: 'click', //om den ska trigga på klick istället
             solo: true,
         },
         hide: {
-            event: 'mouseout'
+            //event: 'mouseout'
+            event: 'unfocus'
         },
         style: {
             classes: 'qtip-viswiz qtip-shadow',
