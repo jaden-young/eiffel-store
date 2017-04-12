@@ -4,7 +4,6 @@ import cydagre from "cytoscape-dagre";
 import "cytoscape-panzoom/cytoscape.js-panzoom.css";
 import "font-awesome/css/font-awesome.css";
 import panzoom from "cytoscape-panzoom";
-// import "/styles/jquery.qtip.min.css";
 import cyqtip from "cytoscape-qtip";
 
 cydagre(cytoscape); // register extension
@@ -141,63 +140,51 @@ function renderGraph(graph, container) {
             case /TSF/.test(node_id):                                              // Checks if node_id starts with 'TSF'
                 console.log('CASE', 'TSF');
                 return '<h4 id="tt_header">' + node_id  + '</h4>' +           // Tooltip-header (Node-ID)
-                    '<button id="tt_button"> Show details </button>' +          // Button will take user to level 2 - 'details'
-                    '<table id="tt_table" border="2"><tr><th>Status</th><th>#</th><th>%</th></tr>' +    // Table-header
-                    '<tr><td>Passed</td><td>' + node_data.passed + '</td><td>' + Math.floor(node_data.passed/node_data.length*100) +'</td></tr>' +
-                    '<tr><td>Failed</td><td>' + node_data.failed + '</td><td>' + Math.floor(node_data.failed/node_data.length*100) +'</td></tr>' +
-                    '<tr><td>Inconclusive</td><td>' + node_data.inconclusive + '</td><td>' + Math.floor(node_data.inconclusive/node_data.length) +'</td></tr></table>'; // Row 3 - OTHER
+                    '<button type="button" class="btn btn-default btn-block tt_button"> Show details </button>' +          // Button will take user to level 2 - 'details'
+                    '<table class="table table-bordered">' +
+                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
+                    '<tr class="success"><td>Passed</td><td>' + node_data.passed + '</td><td>' + Math.floor(node_data.passed/node_data.length*100) +' %</td></tr>' +
+                    '<tr class="danger"><td>Failed</td><td>' + node_data.failed + '</td><td>' + Math.floor(node_data.failed/node_data.length*100) +' %</td></tr>' +
+                    '<tr><td>Inconclusive</td><td>' + node_data.inconclusive + '</td><td>' + Math.floor(node_data.inconclusive/node_data.length) +' %</td></tr></table>'; // Row 3 - OTHER
 
             case /TCF/.test(node_id):                                              // Checks if node_id starts with 'TSF'
                 console.log('CASE', 'TCF');
                 return '<h4 id="tt_header">' + node_id  + '</h4>' +           // Tooltip-header (Node-ID)
-                    '<button id="tt_button"> Show details </button>' +          // Button will take user to level 2 - 'details'
-                    '<table id="tt_table" border="2"><tr><th>Status</th><th>#</th><th>%</th></tr>' +    // Table-header
+                    '<button type="button" class="btn btn-default btn-block tt_button">Show details</button>' +          // Button will take user to level 2 - 'details'
+                    '<table class="table table-bordered">' +
+                    '<thead>' +
+                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
+                    '</thead><tbody>' +
                     '<tr><td>Passed</td><td>' + node_data.passed + '</td><td>' + Math.floor(node_data.passed/node_data.length*100) +'</td></tr>' +
                     '<tr><td>Failed</td><td>' + node_data.failed + '</td><td>' + Math.floor(node_data.failed/node_data.length*100) +'</td></tr>' +
-                    '<tr><td>Inconclusive</td><td>' + node_data.inconclusive + '</td><td>' + Math.floor(node_data.inconclusive/node_data.length) +'</td></tr></table>'; // Row 3 - OTHER
+                    '<tr><td>Inconclusive</td><td>' + node_data.inconclusive + '</td><td>' + Math.floor(node_data.inconclusive/node_data.length) +'</td></tr>' +
+                    '</tbody></table>'; // Row 3 - OTHER
 
             case /CLM/.test(node_id):
                 console.log('CASE', 'CLM');
                 return '<h4 id="tt_header">' + node_id  + '</h4>' +
-                    '<button id="tt_button"> Show all events </button>' +
-                    '<table id="tt_table" border="2"><tr><th>Status</th><th>#</th><th>%</th></tr>' +
+                    '<button type="button" class="btn btn-default btn-block tt_button"> Show all events </button>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><th>' + node_data.name + '</th><th colspan="2">No. of</th></tr>' + // table header
                     '<tr><td>Passed</td><td>' + node_data.passed + '</td><td>' + Math.floor(node_data.passed/node_data.length*100) +'</td></tr>' +
                     '<tr><td>Failed</td><td>' + node_data.failed + '</td><td>' + Math.floor(node_data.failed/node_data.length*100) +'</td></tr>' +
                     '<tr><td>Inconclusive</td><td>' + node_data.inconclusive + '</td><td>' + Math.floor(node_data.inconclusive/node_data.length) +'</td></tr></table>';
 
-            case /TS/.test(node_id):                                              // Checks if node_id starts with 'TS'
-                console.log('CASE', 'TSF');
-                return '<h4 id="tt_header">' + node_id  + '</h4>' +           // Tooltip-header (Node-ID)
-                    '<button id="tt_button"> Show details </button>' +          // Button will take user to level 2 - 'details'
-                    '<table id="tt_table" border="2"><tr><th>Status</th><th>#</th><th>%</th></tr>' +    // Table-header
-                    '<tr><td>Passed</td><td>' + node_data.passed + '</td><td>' + Math.floor(node_data.passed/node_data.length*100) +'</td></tr>' +
-                    '<tr><td>Failed</td><td>' + node_data.failed + '</td><td>' + Math.floor(node_data.failed/node_data.length*100) +'</td></tr>' +
-                    '<tr><td>Other</td><td>' + node_data.inconclusive + '</td><td>' + Math.floor(node_data.inconclusive/node_data.length) +'</td></tr></table>'; // Row 3 - OTHER
-/*
-            case /TSF/.test(node_id):                                              // Checks if node_id starts with 'TSF'
-                console.log('CASE', 'TSF');
-                return '<h4 id="tt_header">' + node_id  + '</h4>' +           // Tooltip-header (Node-ID)
-                    '<button id="tt_button"> Show details </button>' +          // Button will take user to level 2 - 'details'
-                    '<table id="tt_table" border="2"><tr><th>Status</th><th>#</th><th>%</th></tr>' +    // Table-header
-                    '<tr><td>Passed</td><td>' + node_data.passed + '</td><td>' + Math.floor(node_data.passed/node_data.length*100) +'</td></tr>' +
-                    '<tr><td>Failed</td><td>' + node_data.failed + '</td><td>' + Math.floor(node_data.failed/node_data.length*100) +'</td></tr>' +
-                    '<tr><td>Inconclusive</td><td>' + node_data.inconclusive + '</td><td>' + Math.floor(node_data.inconclusive/node_data.length) +'</td></tr></table>'; // Row 3 - OTHER
+            default:
+                console.log('Default');
+                return '<h4 id="tt_header">' + node_id  + '</h4>' +
+                '<button type="button" class="btn btn-default btn-block tt_button"> Show all events </button>' +
+                '<table class="table table-bordered">' +
+                '<tr><td>No of events</td><td>' + node_data.length + '</td></tr>' +
+                '</table>';
 
-            case /TSF/.test(node_id):                                              // Checks if node_id starts with 'TSF'
-                console.log('CASE', 'TSF');
-                return '<h4 id="tt_header">' + node_id  + '</h4>' +           // Tooltip-header (Node-ID)
-                    '<button id="tt_button"> Show details </button>' +          // Button will take user to level 2 - 'details'
-                    '<table id="tt_table" border="2"><tr><th>Status</th><th>#</th><th>%</th></tr>' +    // Table-header
-                    '<tr><td>Passed</td><td>' + node_data.passed + '</td><td>' + Math.floor(node_data.passed/node_data.length*100) +'</td></tr>' +
-                    '<tr><td>Failed</td><td>' + node_data.failed + '</td><td>' + Math.floor(node_data.failed/node_data.length*100) +'</td></tr>' +
-                    '<tr><td>Inconclusive</td><td>' + node_data.inconclusive + '</td><td>' + Math.floor(node_data.inconclusive/node_data.length) +'</td></tr></table>'; // Row 3 - OTHER
-                    */
         }
     }
 
     cy.nodes().qtip({
         content: function () {
-            return getTooltipContent(this.data()) // Ändra här för att ändra vad som ska vara i den
+            return getTooltipContent(this.data()); // Ändra här för att ändra vad som ska vara i den
+            //return 'Example qTip on ele ' + this.id() + '<div class="alert alert-success" role="alert"><strong>Well done!</strong> You successfully read this important alert message. (bootstrap)</div>' // Ändra här för att ändra vad som ska vara i den
         },
         position: {
             my: 'bottom center',
