@@ -8,9 +8,9 @@ $(document).ready( function () {
     $('#table_id').DataTable();
 } );
 
-Template.aggregation.events({
-    'click .tt_button': function(e){
-        console.log("clicked");
-    }
-});
+// Template.aggregation.events({
+//     'click .tt_button': function(e){
+//         console.log("clicked");
+//     }
+// });
 
