@@ -9,13 +9,14 @@ import {
     isTestEvent,
     isConfidenceLevelEvent,
     isFinishedEvent} from './eventTypes.js';
+
 /*
  * Returns a graph object in Cytoscape syntax with aggregated Eiffel events as nodes.
  */
 export const getAggregatedGraph = new ValidatedMethod({
     name: 'getAggregatedGraph',
     validate: null,
-    run({ from, to, limit }) {
+    run({from, to, limit}) {
         // Below values will fetch events between 2015 and 2018
         // from: 1420070400000 2015
         // to: 1514764800000 2018
@@ -60,6 +61,7 @@ export const getAggregatedGraph = new ValidatedMethod({
                 node.passed = valueCount['SUCCESS'];
                 node.failed = valueCount['FAILED'];
                 node.inconclusive = valueCount['INCONCLUSIVE'];
+                node.name = events[0].data.name;
             }
 
             nodes.push(node);
@@ -83,9 +85,9 @@ export const getAggregatedGraph = new ValidatedMethod({
 
 
 export const getEventAncestorGraph = new ValidatedMethod({
-    name:'getEventAncestorGraph',
+    name: 'getEventAncestorGraph',
     validate: null,
-    run({ eventId }) {
+    run({eventId}) {
         let emptyGraph = {nodes: {}, edges: {}};
         if (Meteor.isClient) {
             return emptyGraph;
@@ -113,7 +115,7 @@ export const getEventAncestorGraph = new ValidatedMethod({
             };
 
             let graph = createAncestorGraph(emptyGraph, eventId);
-            return { nodes: _.values(graph.nodes), edges: _.values(graph.edges) };
+            return {nodes: _.values(graph.nodes), edges: _.values(graph.edges)};
         }
     }
 });
