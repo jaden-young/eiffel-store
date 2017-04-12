@@ -165,3 +165,8 @@ h2{
 .tt_button {
     margin-bottom: 10px !important;
 }
+
+.td-right {
+    text-align: right;
+
+}
