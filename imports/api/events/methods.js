@@ -5,6 +5,10 @@
 import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { Events } from './events.js';
+import {
+    isTestEvent,
+    isConfidenceLevelEvent,
+    isFinishedEvent} from './eventTypes.js';
 
 /*
  * Returns a graph object in Cytoscape syntax with aggregated Eiffel events as nodes.
@@ -12,7 +16,7 @@ import { Events } from './events.js';
 export const getAggregatedGraph = new ValidatedMethod({
     name: 'getAggregatedGraph',
     validate: null,
-    run({ from, to, limit }) {
+    run({from, to, limit}) {
         // Below values will fetch events between 2015 and 2018
         // from: 1420070400000 2015
         // to: 1514764800000 2018
@@ -32,54 +36,43 @@ export const getAggregatedGraph = new ValidatedMethod({
         let nodes = [];
         let groupedEvents = _.groupBy(events, (event) => event.data.customData[0].value);
         _.each(groupedEvents, (events, group) => {
-            if (group.startsWith("TCF") || group.startsWith("TSF")) {
-                nodes.push({
-                    data: {
-                        id: group,
-                        events: events,
-                        length: _.size(events),
-                        passed: _.reduce(events, function(memo, event){
-                            return event.data.outcome.verdict === "PASSED" ? memo + (1/this) : memo;
-                        }, 0, _.size(events)) // Calculating rate of passed tests
-                    }
-                });
+            let node = {
+                data: {
+                    id: group,
+                    events: events,
+                    length: _.size(events),
+                },
+                meta : {
+                    // This code is only run if there are events
+                    // so it is assumed that the first element exists.
+                    // The aggregated type is also the same type as every
+                    // aggregated event.
+                    type: events[0].meta.type
+                }
+            };
+
+            if (isTestEvent(node.type)) {
+                let valueCount = _.countBy(events, (event) => event.data.outcome.verdict);
+                node.passed = valueCount['PASSED'] / _.size(events); // Bad name for the quote?
             }
-            else if(group.startsWith("CLM")){
-                nodes.push({
-                    data: {
-                        id: group,
-                        events: events,
-                        length: _.size(events),
-                        passed: _.reduce(events, function (memo, event) {
-                            return event.data.value === "SUCCESS" ? memo + 1 : memo;
-                        }, 0), // Calculating number of passed tests
-                        failed: _.reduce(events, function (memo, event) {
-                            return event.data.value === "FAILURE" ? memo + 1 : memo;
-                        }, 0),
-                        inconclusive: _.reduce(events, function (memo, event) {
-                            return event.data.value === "INCONCLUSIVE" ? memo + 1 : memo;
-                        }, 0)
-                    }
-                });
+
+            if (isConfidenceLevelEvent(node.type)) {
+                let valueCount = _.countBy(events, (event) => event.data.value);
+                node.passed = valueCount['SUCCESS'];
+                node.failed = valueCount['FAILED'];
+                node.inconclusive = valueCount['INCONCLUSIVE'];
+                node.name = events[0].data.name;
             }
-            else {
-                nodes.push({
-                    data: {
-                        id: group,
-                        label: group,
-                        events: events
-                    }
-                });
-            }
+
+            nodes.push(node);
 
             // Save the links from events -> group and group -> events to reconstruct group -> group later
             let links = _.reduce(events, (memo, event) => memo.concat(event.links), []);
             groupToEvents[group] = _.pluck(links, 'target');
             _.each(events, (event) => eventToGroup[event.meta.id] = group);
         });
-        let evs = _.flatten(_.map(nodes, (n) => n.data.events));
-        let count = evs.length;
 
+        // let finishedEvents = _.filter(nodes, (node) => isFinishedEvent(node.meta.type));
         // Construct edges between groups
         let edges = [];
         _.each(groupToEvents, (events, group) => {
@@ -92,9 +85,9 @@ export const getAggregatedGraph = new ValidatedMethod({
 
 
 export const getEventAncestorGraph = new ValidatedMethod({
-    name:'getEventAncestorGraph',
+    name: 'getEventAncestorGraph',
     validate: null,
-    run({ eventId }) {
+    run({eventId}) {
         let emptyGraph = {nodes: {}, edges: {}};
         if (Meteor.isClient) {
             return emptyGraph;
@@ -122,7 +115,7 @@ export const getEventAncestorGraph = new ValidatedMethod({
             };
 
             let graph = createAncestorGraph(emptyGraph, eventId);
-            return { nodes: _.values(graph.nodes), edges: _.values(graph.edges) };
+            return {nodes: _.values(graph.nodes), edges: _.values(graph.edges)};
         }
     }
 });

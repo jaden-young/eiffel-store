@@ -1,6 +1,3 @@
-/**
- * Created by seba on 2017-03-25.
- */
 
 import { Template } from "meteor/templating";
 import { renderGraph } from "./graph.js";
@@ -9,12 +6,13 @@ import './aggregation.html';
 import { getAggregatedGraph } from '/imports/api/events/methods.js';
 import vis from 'vis';
 
+
 Template.aggregation.rendered = () => {
 
 
     // Runs when document is ready
     $(() => {
-        console.log('document is loaded');
+        //console.log('document is loaded');
         let fromInput = $('#date-from'),
             toInput = $('#date-to'),
             limitInput = $('#limit'),
@@ -101,34 +99,30 @@ Template.aggregation.rendered = () => {
 
 // Attempt to asynchronously fetch graph from server
 function showAggregation(from, to, limit) {
-    console.log('rendering aggregation');
 
-
+    //console.log('rendering aggregation');
 
     getAggregatedGraph.call({from: from, to: to, limit: limit}, function (error, graph) {
         if (error) {
-            console.log(error);
+            //console.log(error);
         } else {
             let container = document.getElementById('cy-aggregation');
-            let onClick = (event) => {
-                console.log(event.cyTarget.data());
-            };
-            console.log('rendering aggregation, now', graph);
-            renderGraph(graph, container, onClick);
+            //console.log('rendering aggregation, now', graph);
+            renderGraph(graph, container);
         }
     });
 
     /*Meteor.call('getAggregatedGraph', from, to, limit, (error, graph) => {
      if (error) {
-     console.log(error);
+     //console.log(error);
      } else {
      let container = document.getElementById('cy-aggregation');
      let onClick = (event) => {
-     console.log(event.cyTarget.id());
+     //console.log(event.cyTarget.id());
      };
-     console.log('got graph', graph);
+     //console.log('got graph', graph);
      renderGraph(graph, container, onClick);
-     console.log('aggregation rendered');
+     //console.log('aggregation rendered');
      }
      });*/
 }

@@ -1,23 +1,14 @@
-/**
- * Created by seba on 2017-03-25.
- */
+import "./layout.html";
+import "../components/aggregation.html";
+import "../components/details.html";
+import "../components/eventchain.html";
 
-import './layout.html';
-import '../components/aggregation.html';
-import '../components/details.html';
-import '../components/eventchain.html';
-
-
-/**
- * Shows the level provided
- * @param level Level to be viewed
- */
 
 /**
  *  Meteor event handler to handle events in the layout-template
  */
 Template.layout.events({
-    'click #level1_button' : function(event) {
+    'click #level1_button': function (event) {
         event.preventDefault();
         document.getElementById('aggregation').style.display = 'block';
 
@@ -26,7 +17,7 @@ Template.layout.events({
         });
     },
 
-    'click #level2_button' : function (event) {
+    'click #level2_button': function (event) {
         event.preventDefault();
         document.getElementById('details').style.display = 'block';
         document.querySelector('#details.section').scrollIntoView({
@@ -34,7 +25,7 @@ Template.layout.events({
         });
     },
 
-    'click #level3_button' : function(event){
+    'click #level3_button': function (event) {
         event.preventDefault();
         document.getElementById('details').style.display = 'block';
         document.querySelector('#eventchain.section').scrollIntoView({
@@ -43,9 +34,14 @@ Template.layout.events({
 
     },
 
-    'click #cy_help_button' : function(event){
+    'click #cy_help_button': function (event) {
         event.preventDefault();
-        document.getElementById('cy_help_popup').style.display = 'block';
-    }
+        if (document.getElementById('cy_help_popup').style.display === 'block') {
+            document.getElementById('cy_help_popup').style.display = 'none';
+        } else {
+
+            document.getElementById('cy_help_popup').style.display = 'block';
+        }
+    },
 
 });

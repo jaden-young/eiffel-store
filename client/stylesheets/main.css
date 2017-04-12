@@ -14,54 +14,6 @@
     margin: 1px;
 }
 
-/*  TIMELINE TEST */
-/*
-.vis-timeline {
-    border: 1px solid grey;
-    font-family: purisa, 'comic sans', cursive;
-    font-size: 11pt;
-    background: #F8F8FF;
-}
-
-.vis-item {
-    border-color: #F991A3;
-    background-color: skyBlue;
-    font-size: 15pt;
-    color: purple;
-    box-shadow: 5px 5px 20px rgba(128, 128, 128, 0.5);
-}
-
-.vis-time-axis .vis-text {
-    color: black;
-    padding-top: 0;
-    padding-left: 10px;
-}
-
-.vis-time-axis .vis-grid.vis-major {
-    border-width: 2px;
-    border-color: #F991A3;
-}
-
-*/
-/* --------------- */
-
-table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 95%;
-    height: 100%
-}
-
-td, th {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
-}
-
-tr:nth-child(even) {
-    background-color: #dddddd;
-}
-
 h1{
     font-family:Georgia,serif;
     color:#4E443C;
@@ -154,21 +106,8 @@ body{
     /*border: 2px solid slategray; */
      /* Hide sections per default */
 }
-/* This could be a general CSS for all buttons possibly. */
-/*#cy_help_button {
-    display: inline-block;
-    float: right;
-    width: 75px;
-    font-weight: bold;
-}*/
+
 #cy_help_button {
- /*   border-radius: 50%;
-    width: 30px;
-    height: 30px;
-    left: 220px;
-    top: 0px;
-    vertical-align: bottom;
-    position: absolute; */
 
     background-color: #3FFA58; /* Green */
     border: none;
@@ -182,17 +121,35 @@ body{
     margin: 1px;
 }
 #cy_help_popup {
-    display: none;
-    left: 250px; /* align 150px from left wall. Could use float: right if top right corner is used.*/
-    /*float: right;*/
-    vertical-align: bottom;
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    background-color: rgba(0, 255, 255, 0.25);
+    position:fixed;
+    right: 25px;
+    top: 325px;
+    z-index:1000;
+    width: 225px;
+    height:400px;
+    margin: 1px;
+    background-color: #8DECD6;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: 300;
+    display:none;
+
+}
+h2{
+    text-align:center;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+    font-weight: 400;
 }
 
 #aggregation.section{
     display:block;      /* Show only aggregation graph */
+
+}
+
+.tt_button {
+    margin-bottom: 10px !important;
+}
+
+.td-right {
+    text-align: right;
 
 }
