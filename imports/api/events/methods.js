@@ -21,7 +21,6 @@ export const getAggregatedGraph = new ValidatedMethod({
         // from: 1420070400000 2015
         // to: 1514764800000 2018
 
-        console.log('beginning aggregation ');
         let events = Events.find(
             {'meta.time': {$gte: parseInt(from), $lte: parseInt(to)}},
             {limit: limit})
@@ -37,7 +36,6 @@ export const getAggregatedGraph = new ValidatedMethod({
         let nodes = [];
         let groupedEvents = _.groupBy(events, (event) => event.data.customData[0].value);
         _.each(groupedEvents, (events, group) => {
-            console.log(group);
             let node = {
                 data: {
                     id: group,
@@ -60,12 +58,10 @@ export const getAggregatedGraph = new ValidatedMethod({
 
             if (isConfidenceLevelEvent(node.data.type)) {
                 let valueCount = _.countBy(events, (event) => event.data.value);
-                console.log('confience level', valueCount);
                 node.data.passed = valueCount.hasOwnProperty('SUCCESS') ?  valueCount['SUCCESS'] : 0;
                 node.data.failed = valueCount.hasOwnProperty('FAILURE') ?  valueCount['FAILURE'] : 0;
                 node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ?  valueCount['INCONCLUSIVE'] : 0;
                 node.data.name = events[0].data.name;
-                console.log('confience level nod ', node);
             }
 
             nodes.push(node);
@@ -76,8 +72,6 @@ export const getAggregatedGraph = new ValidatedMethod({
             _.each(events, (event) => eventToGroup[event.meta.id] = group);
         });
 
-        console.log('aggregated nodes');
-
         // let finishedEvents = _.filter(nodes, (node) => isFinishedEvent(node.meta.type));
         // Construct edges between groups
         let edges = [];
@@ -85,21 +79,7 @@ export const getAggregatedGraph = new ValidatedMethod({
             let toGroups = (_.uniq(_.map(events, (event) => eventToGroup[event])));
             _.each(toGroups, (toGroup) => edges.push({data: {source: group, target: toGroup}}));
         });
-        console.log('aggregated edges');
-        //console.log('nodes', nodes);
-        //console.log('edges', edges);
         return {nodes: nodes, edges: edges};
-
-        /*return {nodes: [{data: {
-            id: 'A',
-            events: ['lite', 'grejer'],
-            length: 2,
-            type: 'någoteiffelevent'
-        },
-            passed: 2,
-            failed: 0,
-            inconclusive: 0
-        }, {data: {id: 'B'}}], edges: [{data: {source:'A', target: 'B'}}]};*/
     }
 });
 

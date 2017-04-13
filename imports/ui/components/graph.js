@@ -21,8 +21,6 @@ const PASS_COLOR = '#22b14c';
 const FAIL_COLOR = '#af0020';
 const ELSE_COLOR = '#666';
 function renderGraph(graph, container) {
-    console.log('edge', graph.edges);
-    console.log('nodes', graph.nodes);
     let cy = cytoscape({
 
         container: container,
