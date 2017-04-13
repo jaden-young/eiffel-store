@@ -1,11 +1,47 @@
 import {Meteor} from "meteor/meteor";
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Events} from "./events.js";
+import {isConfidenceLevelEvent, isTestEvent} from "./eventTypes.js";
 
-import {
-    isTestEvent,
-    isConfidenceLevelEvent
-} from './eventTypes.js';
+export const getLevelTwoGraph = new ValidatedMethod({
+        name: 'getLevelTwoGraph',
+        validate: null,
+        run({nodeName}){
+            let events = Events.find({
+                "data.customData": {
+                    "value": nodeName,
+                    "key": "name"
+                }
+            }).fetch();
+
+
+            let columnNames = [
+                ["ID"],
+                ["Start time"],
+                ["Execution time"],
+                ["Passrate"]
+            ];
+
+            let rows = [];
+            _.each(events, (event) => {
+                    rows.push([
+                        event.meta.id,
+                        (new Date(event.meta.time)).toString(),
+                        "-",
+                        "-"
+                        // event._id._str, // _id
+                    ])
+                }
+            );
+
+            return {
+                columnNames: columnNames,
+                name: nodeName,
+                rows: rows
+            };
+        }
+    })
+;
 
 /*
  * Returns a graph object in Cytoscape syntax with aggregated Eiffel events as nodes.
@@ -50,15 +86,15 @@ export const getAggregatedGraph = new ValidatedMethod({
 
             if (isTestEvent(node.data.type)) {
                 let valueCount = _.countBy(events, (event) => event.data.outcome.verdict);
-                let passedCount = valueCount.hasOwnProperty('SUCCESS') ?  valueCount['SUCCESS'] : 0;
+                let passedCount = valueCount.hasOwnProperty('SUCCESS') ? valueCount['SUCCESS'] : 0;
                 node.data.passed = passedCount / _.size(events); // Bad name for the quotient?
             }
 
             if (isConfidenceLevelEvent(node.data.type)) {
                 let valueCount = _.countBy(events, (event) => event.data.value);
-                node.data.passed = valueCount.hasOwnProperty('SUCCESS') ?  valueCount['SUCCESS'] : 0;
-                node.data.failed = valueCount.hasOwnProperty('FAILURE') ?  valueCount['FAILURE'] : 0;
-                node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ?  valueCount['INCONCLUSIVE'] : 0;
+                node.data.passed = valueCount.hasOwnProperty('SUCCESS') ? valueCount['SUCCESS'] : 0;
+                node.data.failed = valueCount.hasOwnProperty('FAILURE') ? valueCount['FAILURE'] : 0;
+                node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ? valueCount['INCONCLUSIVE'] : 0;
                 node.data.name = events[0].data.name;
             }
 
