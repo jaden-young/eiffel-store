@@ -21,6 +21,7 @@ export const getAggregatedGraph = new ValidatedMethod({
         // from: 1420070400000 2015
         // to: 1514764800000 2018
 
+        console.log('beginning aggregation ');
         let events = Events.find(
             {'meta.time': {$gte: parseInt(from), $lte: parseInt(to)}},
             {limit: limit})
@@ -36,32 +37,35 @@ export const getAggregatedGraph = new ValidatedMethod({
         let nodes = [];
         let groupedEvents = _.groupBy(events, (event) => event.data.customData[0].value);
         _.each(groupedEvents, (events, group) => {
+            console.log(group);
             let node = {
                 data: {
                     id: group,
                     events: events,
                     length: _.size(events),
-                },
-                meta : {
-                    // This code is only run if there are events
-                    // so it is assumed that the first element exists.
-                    // The aggregated type is also the same type as every
-                    // aggregated event.
                     type: events[0].meta.type
-                }
+                },
+                // This code is only run if there are events
+                // so it is assumed that the first element exists.
+                // The aggregated type is also the same type as every
+                // aggregated event.
+                //type: events[0].meta.type
             };
 
-            if (isTestEvent(node.type)) {
+            if (isTestEvent(node.data.type)) {
                 let valueCount = _.countBy(events, (event) => event.data.outcome.verdict);
-                node.passed = valueCount['PASSED'] / _.size(events); // Bad name for the quote?
+                let passedCount = valueCount.hasOwnProperty('SUCCESS') ?  valueCount['SUCCESS'] : 0;
+                node.data.passed = passedCount / _.size(events); // Bad name for the quotient?
             }
 
-            if (isConfidenceLevelEvent(node.type)) {
+            if (isConfidenceLevelEvent(node.data.type)) {
                 let valueCount = _.countBy(events, (event) => event.data.value);
-                node.passed = valueCount['SUCCESS'];
-                node.failed = valueCount['FAILED'];
-                node.inconclusive = valueCount['INCONCLUSIVE'];
-                node.name = events[0].data.name;
+                console.log('confience level', valueCount);
+                node.data.passed = valueCount.hasOwnProperty('SUCCESS') ?  valueCount['SUCCESS'] : 0;
+                node.data.failed = valueCount.hasOwnProperty('FAILURE') ?  valueCount['FAILURE'] : 0;
+                node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ?  valueCount['INCONCLUSIVE'] : 0;
+                node.data.name = events[0].data.name;
+                console.log('confience level nod ', node);
             }
 
             nodes.push(node);
@@ -72,6 +76,8 @@ export const getAggregatedGraph = new ValidatedMethod({
             _.each(events, (event) => eventToGroup[event.meta.id] = group);
         });
 
+        console.log('aggregated nodes');
+
         // let finishedEvents = _.filter(nodes, (node) => isFinishedEvent(node.meta.type));
         // Construct edges between groups
         let edges = [];
@@ -79,7 +85,21 @@ export const getAggregatedGraph = new ValidatedMethod({
             let toGroups = (_.uniq(_.map(events, (event) => eventToGroup[event])));
             _.each(toGroups, (toGroup) => edges.push({data: {source: group, target: toGroup}}));
         });
+        console.log('aggregated edges');
+        //console.log('nodes', nodes);
+        //console.log('edges', edges);
         return {nodes: nodes, edges: edges};
+
+        /*return {nodes: [{data: {
+            id: 'A',
+            events: ['lite', 'grejer'],
+            length: 2,
+            type: 'någoteiffelevent'
+        },
+            passed: 2,
+            failed: 0,
+            inconclusive: 0
+        }, {data: {id: 'B'}}], edges: [{data: {source:'A', target: 'B'}}]};*/
     }
 });
 
@@ -106,6 +126,7 @@ export const getEventAncestorGraph = new ValidatedMethod({
                     let id = eventId + ':' + parentId;
                     graph.edges[id] = {
                         data: {
+                            id: id,
                             source: eventId,
                             target: parentId
                         }
