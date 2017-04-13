@@ -2,6 +2,11 @@ import {Meteor} from "meteor/meteor";
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Events} from "./events.js";
 
+import {
+    isTestEvent,
+    isConfidenceLevelEvent
+} from './eventTypes.js';
+
 /*
  * Returns a graph object in Cytoscape syntax with aggregated Eiffel events as nodes.
  */
@@ -28,62 +33,42 @@ export const getAggregatedGraph = new ValidatedMethod({
         let nodes = [];
         let groupedEvents = _.groupBy(events, (event) => event.data.customData[0].value);
         _.each(groupedEvents, (events, group) => {
-            if (group.startsWith("TCF") || group.startsWith("TSF")) {
-                nodes.push({
-                    data: {
-                        id: group,
-                        events: events,
-                        length: _.size(events),
-                        passed: _.reduce(events, function (memo, event) {
-                            return event.data.outcome.verdict === "PASSED" ? memo + 1 : memo;
-                        }, 0), // Calculating number of passed tests
-                        failed: _.reduce(events, function (memo, event) {
-                            return event.data.outcome.verdict === "FAILED" ? memo + 1 : memo;
-                        }, 0),
-                        inconclusive: _.reduce(events, function (memo, event) {
-                            return event.data.outcome.verdict === "INCONCLUSIVE" ? memo + 1 : memo;
-                        }, 0)
+            let node = {
+                data: {
+                    id: group,
+                    events: events,
+                    length: _.size(events),
 
-                    }
-                });
+                    // This code is only run if there are events
+                    // so it is assumed that the first element exists.
+                    // The aggregated type is also the same type as every
+                    // aggregated event.
+                    type: events[0].meta.type
+
+                }
+            };
+
+            if (isTestEvent(node.data.type)) {
+                let valueCount = _.countBy(events, (event) => event.data.outcome.verdict);
+                let passedCount = valueCount.hasOwnProperty('SUCCESS') ?  valueCount['SUCCESS'] : 0;
+                node.data.passed = passedCount / _.size(events); // Bad name for the quotient?
             }
-            else if (group.startsWith("CLM")) {
-                nodes.push({
-                    data: {
-                        id: group,
-                        events: events,
-                        length: _.size(events),
-                        passed: _.reduce(events, function (memo, event) {
-                            return event.data.value === "SUCCESS" ? memo + 1 : memo;
-                        }, 0), // Calculating number of passed tests
-                        failed: _.reduce(events, function (memo, event) {
-                            return event.data.value === "FAILURE" ? memo + 1 : memo;
-                        }, 0),
-                        inconclusive: _.reduce(events, function (memo, event) {
-                            return event.data.value === "INCONCLUSIVE" ? memo + 1 : memo;
-                        }, 0),
-                        name: events[0].data.name,
-                    }
-                });
+
+            if (isConfidenceLevelEvent(node.data.type)) {
+                let valueCount = _.countBy(events, (event) => event.data.value);
+                node.data.passed = valueCount.hasOwnProperty('SUCCESS') ?  valueCount['SUCCESS'] : 0;
+                node.data.failed = valueCount.hasOwnProperty('FAILURE') ?  valueCount['FAILURE'] : 0;
+                node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ?  valueCount['INCONCLUSIVE'] : 0;
+                node.data.name = events[0].data.name;
             }
-            else {
-                nodes.push({
-                    data: {
-                        id: group,
-                        label: group,
-                        events: events,
-                        length: _.size(events),
-                    }
-                });
-            }
+
+            nodes.push(node);
 
             // Save the links from events -> group and group -> events to reconstruct group -> group later
             let links = _.reduce(events, (memo, event) => memo.concat(event.links), []);
             groupToEvents[group] = _.pluck(links, 'target');
             _.each(events, (event) => eventToGroup[event.meta.id] = group);
         });
-        let evs = _.flatten(_.map(nodes, (n) => n.data.events));
-        let count = evs.length;
 
         // Construct edges between groups
         let edges = [];
@@ -118,6 +103,7 @@ export const getEventAncestorGraph = new ValidatedMethod({
                     let id = eventId + ':' + parentId;
                     graph.edges[id] = {
                         data: {
+                            id: id,
                             source: eventId,
                             target: parentId
                         }
