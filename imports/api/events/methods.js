@@ -14,7 +14,6 @@ export const getLevelTwoGraph = new ValidatedMethod({
                 }
             }).fetch();
 
-
             let columnNames = [
                 ["ID"],
                 ["Timestamp"],
