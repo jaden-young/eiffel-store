@@ -1,9 +1,8 @@
 .cy {
-    width: 90%;
-    height: 900px;
+    height: 80vh;
     display: block;
-    border: 2px solid lightblue;
     background-color: #ffffff;
+    padding: 0;
 }
 
 #side-menu-buttons {
@@ -117,13 +116,8 @@ body {
 }
 
 .section {
-    margin: 25px;
+    margin: 10px;
     width: 90%;
-    /*height:100%; */
-    /*padding: 50px; */
-    padding-bottom: 80px;
-    /*border: 2px solid slategray; */
-    /* Hide sections per default */
 }
 
 #cy_help_button {
@@ -187,11 +181,28 @@ h2 {
 }
 
 @-webkit-keyframes spin {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(360deg); }
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
+
+.alert {
+    margin: 0;
+}
+
+.page-header {
+    margin: 0;
+}
+

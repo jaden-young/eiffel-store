@@ -17,7 +17,7 @@ export const getLevelTwoGraph = new ValidatedMethod({
 
             let columnNames = [
                 ["ID"],
-                ["Start time"],
+                ["Timestamp"],
                 ["Execution time"],
                 ["Passrate"]
             ];
@@ -29,6 +29,7 @@ export const getLevelTwoGraph = new ValidatedMethod({
                         (new Date(event.meta.time)).toString(),
                         "-",
                         "-"
+
                         // event._id._str, // _id
                     ])
                 }
@@ -86,9 +87,9 @@ export const getAggregatedGraph = new ValidatedMethod({
 
             if (isTestEvent(node.data.type)) {
                 let valueCount = _.countBy(events, (event) => event.data.outcome.verdict);
-                let passedCount = valueCount.hasOwnProperty('PASSED') ?  valueCount['PASSED'] : 0;
-                let failedCount = valueCount.hasOwnProperty('FAILED') ?  valueCount['FAILED'] : 0;
-                node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ?  valueCount['INCONCLUSIVE'] : 0;
+                let passedCount = valueCount.hasOwnProperty('PASSED') ? valueCount['PASSED'] : 0;
+                let failedCount = valueCount.hasOwnProperty('FAILED') ? valueCount['FAILED'] : 0;
+                node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ? valueCount['INCONCLUSIVE'] : 0;
                 node.data.passed = passedCount;
                 node.data.failed = failedCount;
             }
