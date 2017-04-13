@@ -1,14 +1,11 @@
-/**
- * Created by seba on 2017-03-24.
- */
+import {Meteor} from "meteor/meteor";
+import {ValidatedMethod} from "meteor/mdg:validated-method";
+import {Events} from "./events.js";
 
-import { Meteor } from 'meteor/meteor';
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import { Events } from './events.js';
 import {
     isTestEvent,
-    isConfidenceLevelEvent,
-    isFinishedEvent} from './eventTypes.js';
+    isConfidenceLevelEvent
+} from './eventTypes.js';
 
 /*
  * Returns a graph object in Cytoscape syntax with aggregated Eiffel events as nodes.
@@ -41,13 +38,14 @@ export const getAggregatedGraph = new ValidatedMethod({
                     id: group,
                     events: events,
                     length: _.size(events),
+
+                    // This code is only run if there are events
+                    // so it is assumed that the first element exists.
+                    // The aggregated type is also the same type as every
+                    // aggregated event.
                     type: events[0].meta.type
-                },
-                // This code is only run if there are events
-                // so it is assumed that the first element exists.
-                // The aggregated type is also the same type as every
-                // aggregated event.
-                //type: events[0].meta.type
+
+                }
             };
 
             if (isTestEvent(node.data.type)) {
@@ -72,7 +70,6 @@ export const getAggregatedGraph = new ValidatedMethod({
             _.each(events, (event) => eventToGroup[event.meta.id] = group);
         });
 
-        // let finishedEvents = _.filter(nodes, (node) => isFinishedEvent(node.meta.type));
         // Construct edges between groups
         let edges = [];
         _.each(groupToEvents, (events, group) => {
