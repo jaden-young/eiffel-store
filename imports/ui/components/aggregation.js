@@ -48,8 +48,9 @@ function showAggregation(from, to, limit) {
     //console.log('rendering aggregation');
     getAggregatedGraph.call({from: from, to: to, limit: limit}, function (error, graph) {
         if (error) {
-            //console.log(error);
+            console.log(error);
         } else {
+            console.log('graph', graph);
             let container = document.getElementById('cy-aggregation');
             //console.log('rendering aggregation, now', graph);
             renderGraph(graph, container);
