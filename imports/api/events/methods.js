@@ -2,6 +2,21 @@ import {Meteor} from "meteor/meteor";
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Events} from "./events.js";
 
+
+
+
+export const getLevelTwoGraph = new ValidatedMethod({
+        name: 'getLevelTwoGraph',
+        validate: null,
+        run({nodeId}){
+            console.log("called");
+            let events = Events.findOne({'meta.id': "0873c670-2889-4907-9c45-bdc96968ab38"});
+
+            return events;
+        }
+    })
+;
+
 /*
  * Returns a graph object in Cytoscape syntax with aggregated Eiffel events as nodes.
  */
