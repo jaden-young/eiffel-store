@@ -3,16 +3,42 @@ import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Events} from "./events.js";
 
 
-
-
 export const getLevelTwoGraph = new ValidatedMethod({
         name: 'getLevelTwoGraph',
         validate: null,
-        run({nodeId}){
-            console.log("called");
-            let events = Events.findOne({'meta.id': "0873c670-2889-4907-9c45-bdc96968ab38"});
+        run({nodeName}){
+            let events = Events.find({
+                "data.customData": {
+                    "value": nodeName,
+                    "key": "name"
+                }
+            }).fetch();
 
-            return events;
+
+            let columnNames = [
+                ["ID"],
+                ["Start time"],
+                ["Execution time"],
+                ["Passrate"]
+            ];
+
+            let rows = [];
+            _.each(events, (event) => {
+                    rows.push([
+                        event.meta.id,
+                        (new Date(event.meta.time)).toString(),
+                        "-",
+                        "-"
+                        // event._id._str, // _id
+                    ])
+                }
+            );
+
+            return {
+                columnNames: columnNames,
+                name: nodeName,
+                rows: rows
+            };
         }
     })
 ;
