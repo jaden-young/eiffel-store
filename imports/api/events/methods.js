@@ -86,8 +86,11 @@ export const getAggregatedGraph = new ValidatedMethod({
 
             if (isTestEvent(node.data.type)) {
                 let valueCount = _.countBy(events, (event) => event.data.outcome.verdict);
-                let passedCount = valueCount.hasOwnProperty('SUCCESS') ? valueCount['SUCCESS'] : 0;
-                node.data.passed = passedCount / _.size(events); // Bad name for the quotient?
+                let passedCount = valueCount.hasOwnProperty('PASSED') ?  valueCount['PASSED'] : 0;
+                let failedCount = valueCount.hasOwnProperty('FAILED') ?  valueCount['FAILED'] : 0;
+                node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ?  valueCount['INCONCLUSIVE'] : 0;
+                node.data.passed = passedCount;
+                node.data.failed = failedCount;
             }
 
             if (isConfidenceLevelEvent(node.data.type)) {

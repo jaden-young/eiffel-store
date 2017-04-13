@@ -50,7 +50,6 @@ function showAggregation(from, to, limit) {
         if (error) {
             console.log(error);
         } else {
-            console.log('graph', graph);
             let container = document.getElementById('cy-aggregation');
             //console.log('rendering aggregation, now', graph);
             renderGraph(graph, container);
