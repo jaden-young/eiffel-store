@@ -3,45 +3,47 @@ import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Events} from "./events.js";
 import {isConfidenceLevelEvent, isTestEvent} from "./eventTypes.js";
 
-export const getLevelTwoGraph = new ValidatedMethod({
-        name: 'getLevelTwoGraph',
-        validate: null,
-        run({nodeName}){
-            let events = Events.find({
-                "data.customData": {
-                    "value": nodeName,
-                    "key": "name"
-                }
-            }).fetch();
-
-            let columnNames = [
-                ["ID"],
-                ["Timestamp"],
-                ["Execution time"],
-                ["Passrate"]
-            ];
-
-            let rows = [];
-            _.each(events, (event) => {
-                    rows.push([
-                        event.meta.id,
-                        (new Date(event.meta.time)).toString(),
-                        "-",
-                        "-"
-
-                        // event._id._str, // _id
-                    ])
-                }
-            );
-
-            return {
-                columnNames: columnNames,
-                name: nodeName,
-                rows: rows
-            };
-        }
-    })
-;
+// export const getLevelTwoGraph = new ValidatedMethod({
+//     name: 'getLevelTwoGraph',
+//     validate: null,
+//     run({nodeName}){
+//         let events = Events.find({
+//             "data.customData": {
+//                 "value": nodeName,
+//                 "key": "name"
+//             }
+//         }).fetch();
+//         console.log(events[0]);
+//
+//         let columnNames = [
+//             ["Name (debug)"],
+//             ["ID"],
+//             ["Timestamp"],
+//             ["Execution time"],
+//             ["Passrate"]
+//         ];
+//
+//         let rows = [];
+//         _.each(events, (event) => {
+//                 rows.push([
+//                     event.data.customData[0].value,
+//                     event.meta.id,
+//                     (new Date(event.meta.time)).toString(),
+//                     "-",
+//                     "-"
+//
+//                     // event._id._str, // _id
+//                 ])
+//             }
+//         );
+//
+//         return {
+//             columnNames: columnNames,
+//             name: nodeName,
+//             rows: rows
+//         };
+//     }
+// });
 
 /*
  * Returns a graph object in Cytoscape syntax with aggregated Eiffel events as nodes.
