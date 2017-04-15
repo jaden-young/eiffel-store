@@ -1,13 +1,13 @@
 import {Meteor} from "meteor/meteor";
 import {ValidatedMethod} from "meteor/mdg:validated-method";
-import {Events} from "./events.js";
-import {isConfidenceLevelEvent, isTestEvent} from "./eventTypes.js";
+import {EiffelEvents} from "./eiffelevents.js";
+import {isConfidenceLevelEvent, isTestEvent} from "./eiffeleventTypes.js";
 
 // export const getLevelTwoGraph = new ValidatedMethod({
 //     name: 'getLevelTwoGraph',
 //     validate: null,
 //     run({nodeName}){
-//         let events = Events.find({
+//         let events = EiffelEvents.find({
 //             "data.customData": {
 //                 "value": nodeName,
 //                 "key": "name"
@@ -56,7 +56,7 @@ export const getAggregatedGraph = new ValidatedMethod({
         // from: 1420070400000 2015
         // to: 1514764800000 2018
 
-        let events = Events.find(
+        let events = EiffelEvents.find(
             {'meta.time': {$gte: parseInt(from), $lte: parseInt(to)}},
             {limit: limit})
             .fetch();
@@ -133,7 +133,7 @@ export const getEventAncestorGraph = new ValidatedMethod({
 
         if (Meteor.isServer) {
             let createAncestorGraph = function (graph, eventId) {
-                let event = Events.findOne({'meta.id': eventId});
+                let event = EiffelEvents.findOne({'meta.id': eventId});
                 let parentIds = _.map(event.links, (link) => link.target);
 
                 // Save nodes in a map to prevent duplicates

@@ -115,8 +115,9 @@ body {
 }
 
 .section {
-    margin-bottom: 20px;
-    margin-left: 10px;
+    /*margin-bottom: 20px;*/
+    /*margin-left: 10px;*/
+    margin: 10px;
     width: 90%;
 }
 

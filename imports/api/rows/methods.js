@@ -1,9 +1,9 @@
 import {ValidatedMethod} from "meteor/mdg:validated-method";
-import {Events} from "../events/events";
+import {EiffelEvents} from "../eiffelevents/eiffelevents";
 import {Rows} from "./rows.js";
 
 Meteor.startup(function () {
-    if(Events.find().count() !== Rows.find().count() || (Object.keys(Rows.findOne()).length !== 4)){ // Number to be equal amount of data elements that should be in each row + 1
+    if(EiffelEvents.find().count() !== Rows.find().count() || (Object.keys(Rows.findOne()).length !== 4)){ // Number to be equal amount of data elements that should be in each row + 1
         console.log("Rows collection is not up to date with database.");
         populateRowsCollection.call();
     }
@@ -17,12 +17,12 @@ export const populateRowsCollection = new ValidatedMethod({
         Rows.remove({});
 
         console.log("Populating rows collection from events collection.");
-        let total = Events.find().count();
+        let total = EiffelEvents.find().count();
         let done = 0;
         let lastPrint = ((done/total)*100);
 
         console.log('Fetching ' + total + ' events from database.');
-        let events = Events.find().fetch();
+        let events = EiffelEvents.find().fetch();
 
         _.each(events, (event) => {
             Rows.insert({

@@ -2,7 +2,7 @@ import {Template} from "meteor/templating";
 import {renderGraph} from "./graph.js";
 
 import "./aggregation.html";
-import {getAggregatedGraph} from "/imports/api/events/methods.js";
+import {getAggregatedGraph} from "/imports/api/eiffelevents/methods.js";
 
 Template.aggregation.rendered = () => {
     // Runs when document is ready

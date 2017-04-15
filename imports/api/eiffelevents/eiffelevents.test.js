@@ -7,7 +7,7 @@ import { assert } from 'meteor/practicalmeteor:chai';
 import { faker } from 'meteor/practicalmeteor:faker';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 
-import { Events } from './events.js';
+import { EiffelEvents } from './eiffelevents.js';
 import {
     getAggregatedGraph,
     getEventAncestorGraph, }
@@ -17,7 +17,7 @@ import {
     isTestEvent,
     isConfidenceLevelEvent,
     isFinishedEvent}
-    from './eventTypes.js';
+    from './eiffeleventTypes.js';
 
 if (Meteor.isServer) {
 
@@ -121,8 +121,8 @@ if (Meteor.isServer) {
             mergeObjectInto(data, event);
         }
 
-        let id = Events.insert(event);
-        return Events.findOne(id);
+        let id = EiffelEvents.insert(event);
+        return EiffelEvents.findOne(id);
     }
 
     describe('getAggregatedGraph', function () {
