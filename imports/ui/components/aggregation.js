@@ -2,7 +2,7 @@ import {Template} from "meteor/templating";
 import {renderGraph} from "./graph.js";
 
 import "./aggregation.html";
-import {getAggregatedGraph} from "/imports/api/eiffelevents/methods.js";
+import {getAggregatedGraph} from "/imports/api/events/methods.js";
 
 Template.aggregation.rendered = () => {
     // Runs when document is ready
@@ -51,6 +51,7 @@ function showAggregation(from, to, limit) {
             console.log(error);
         } else {
             let container = document.getElementById('cy-aggregation');
+            console.log(graph);
             //console.log('rendering aggregation, now', graph);
             renderGraph(graph, container);
         }

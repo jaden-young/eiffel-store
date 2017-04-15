@@ -1,2 +1,4 @@
-import "../../api/eiffelevents/methods.js";
-import "../../api/rows/methods.js";
+import "../../api/initializer/methods";
+import "../../api/eiffelevents/methods";
+import "../../api/events/methods";
+import "../../api/rows/methods";

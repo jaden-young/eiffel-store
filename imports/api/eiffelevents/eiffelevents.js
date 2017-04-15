@@ -1,1 +1,1 @@
-export const EiffelEvents = new Mongo.Collection('eiffel-events');
+export const EiffelEvents = new Mongo.Collection('eiffelevents');
