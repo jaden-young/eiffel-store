@@ -36,9 +36,13 @@ export const populateEventsCollection = new ValidatedMethod({
                 // }));
                 // links.concat(startEvent.links);
 
+                let regex = /^(\D+)\D(\d)+$/g;
+                let str = event.data.customData[0].value;
+                let match = regex.exec(str);
+
                 Events.insert({
                     type: 'TestCase', // *
-                    name: startEvent.data.testCase.id, // *
+                    name: match[1]+match[2], // *
                     feedId: [
                         event.meta.id, // *
                         startEvent.meta.id
@@ -215,8 +219,9 @@ export const getAggregatedGraph = new ValidatedMethod({
             });
         });
 
-        console.log(edges);
+        // console.log(edges);
         // console.log(nodes);
+        // console.log(nodes.length);
         return {nodes: nodes, edges: edges};
     }
 });
