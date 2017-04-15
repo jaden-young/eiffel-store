@@ -2,6 +2,7 @@ import {Meteor} from "meteor/meteor";
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Events} from "./events.js";
 import {isConfidenceLevelEvent, isTestEvent} from "./eventTypes.js";
+'use strict';
 
 export const getLevelTwoGraph = new ValidatedMethod({
         name: 'getLevelTwoGraph',

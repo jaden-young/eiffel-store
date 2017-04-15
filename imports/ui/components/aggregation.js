@@ -1,3 +1,4 @@
+'use strict';
 import {Template} from "meteor/templating";
 import {renderGraph} from "./graph.js";
 
@@ -38,6 +39,12 @@ Template.aggregation.rendered = () => {
         datepickers.on('change', onChange);
         limitInput.on('change', onChange);
 
+        let from = Date.parse(fromInput.val()),
+            to = Date.parse(toInput.val()),
+            limit = parseInt(limitInput.val());
+
+        //showAggregation(from, to, limit);
+
         // Trigger on change to fetch and render graph
         fromInput.trigger('change');
     });
@@ -45,28 +52,12 @@ Template.aggregation.rendered = () => {
 
 // Attempt to asynchronously fetch graph from server
 function showAggregation(from, to, limit) {
-    //console.log('rendering aggregation');
     getAggregatedGraph.call({from: from, to: to, limit: limit}, function (error, graph) {
         if (error) {
             console.log(error);
         } else {
             let container = document.getElementById('cy-aggregation');
-            //console.log('rendering aggregation, now', graph);
             renderGraph(graph, container);
         }
     });
-
-    /*Meteor.call('getAggregatedGraph', from, to, limit, (error, graph) => {
-     if (error) {
-     //console.log(error);
-     } else {
-     let container = document.getElementById('cy-aggregation');
-     let onClick = (event) => {
-     //console.log(event.cyTarget.id());
-     };
-     //console.log('got graph', graph);
-     renderGraph(graph, container, onClick);
-     //console.log('aggregation rendered');
-     }
-     });*/
 }

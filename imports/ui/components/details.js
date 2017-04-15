@@ -1,3 +1,4 @@
+'use strict';
 import {Template} from "meteor/templating";
 import "./details.html";
 import {getLevelTwoGraph} from "/imports/api/events/methods.js";

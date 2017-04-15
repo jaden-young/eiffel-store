@@ -1,3 +1,4 @@
+'use strict';
 /**
  * Created by seba on 2017-03-24.
  */
@@ -21,15 +22,15 @@ import {
 
 if (Meteor.isServer) {
 
-    function mergeObjectInto(source, target) {
+    let mergeObjectInto = function (source, target) {
         for(let property in source) {
             if(Object.prototype.hasOwnProperty.call(source, property)) {
                 target[property] = source[property];
             }
         }
-    }
+    };
 
-    function randomEventType() {
+    let randomEventType = function () {
         let eventTypes = [
             'EiffelActivityTriggeredEvent',
             'EiffelActivityCanceledEvent',
@@ -55,9 +56,9 @@ if (Meteor.isServer) {
             'EiffelConfidenceLevelModifiedEvent'
         ];
         return eventTypes[_.random(0, eventTypes.length - 1)];
-    }
+    };
 
-    function createEventId (eventType) {
+    let createEventId = function (eventType) {
 
         let typeToIdMap = {
             'EiffelActivityTriggeredEvent' : 'ActT',
@@ -84,10 +85,10 @@ if (Meteor.isServer) {
             'EiffelAnnouncementPublishedEvent' : 'AnnP'
         };
         return typeToIdMap[eventType] + _.random(1, 9);
-    }
+    };
 
     // Helper function for the factory creating dummy data
-    function insertRandomEvent(data) {
+    let insertRandomEvent = function (data) {
         let eventType = randomEventType();
         let event = {
             links: [],
@@ -123,7 +124,7 @@ if (Meteor.isServer) {
 
         let id = Events.insert(event);
         return Events.findOne(id);
-    }
+    };
 
     describe('getAggregatedGraph', function () {
 
@@ -161,7 +162,6 @@ if (Meteor.isServer) {
             let graph = getAggregatedGraph.call({from: from, to: to, limit: limit});
             let aggregatedEvents = _.flatten(_.map(graph.nodes, (node) => node.data.events));
 
-            console.log('aggregated', aggregatedEvents[0]);
             // Every event should be in the time span
             assert(_.every(aggregatedEvents, (event) =>
                 event.meta.time >= from &&
