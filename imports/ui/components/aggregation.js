@@ -8,7 +8,6 @@ import {getAggregatedGraph} from "/imports/api/events/methods.js";
 Template.aggregation.rendered = () => {
     // Runs when document is ready
     $(() => {
-        //console.log('document is loaded');
         let fromInput = $('#date-from'),
             toInput = $('#date-to'),
             limitInput = $('#limit'),
