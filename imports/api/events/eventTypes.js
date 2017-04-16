@@ -1,9 +1,9 @@
+'use strict';
 /**
  * Created by seba on 2017-04-12.
  * Contains various categories of events types
  * that are to be processed in the same way.
  */
-'use strict';
 
 export const isTestEvent = function (eventType) {
     let eventTypesWithTests = [
