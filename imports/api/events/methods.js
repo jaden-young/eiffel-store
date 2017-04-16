@@ -35,45 +35,32 @@ export const populateEventsCollection = new ValidatedMethod({
 
                 Events.insert({
                     type: 'TestCase', // *
+                    version: event.meta.version, // *
                     name: match[1] + match[2], // *
-                    feedId: [
-                        event.meta.id, // *
-                        startEvent.meta.id
-                    ],
-                    startEvent: {
-                        id: startEvent.meta.id
-                    },
-                    finishEvent: {
-                        id: event.meta.id
-                    },
+                    id: event.meta.id, // *
                     timeStart: startEvent.meta.time, // *
                     timeFinish: event.meta.time, // *
-                    links: startEvent.links,
-                    source: startEvent.meta.source,
-                    data: Object.assign(startEvent.data, event.data),
-                    // targetedBy: [], // *
-                    hidden: {
-                        checked: false, // *
-                    }
+                    links: startEvent.links, // *
+                    source: startEvent.meta.source, //*
+                    data: Object.assign(startEvent.data, event.data), // *
+
+                    startEvent: startEvent.meta.id,
+                    finishEvent: event.meta.id,
                 })
             } else if (isEiffelTestCaseStarted(event.meta.type)) {
                 toBePared[event.meta.id] = event;
-            } else {
+            }
+            else {
                 Events.insert(({
                     type: event.meta.type, // *
+                    version: event.meta.version, // *
                     name: event.data.customData[0].value, // *
-                    feedId: [ // *
-                        event.meta.id
-                    ],
+                    id: event.meta.id, // *
                     timeStart: event.meta.time, // *
                     timeFinish: event.meta.time, // *
                     links: event.links, // *
-                    source: event.meta.source,
-                    // targetedBy: [], // *
-                    hidden: {
-                        checked: false, // *
-                    },
-                    data: event.data
+                    source: event.meta.source, // *
+                    data: event.data // *
                 }))
             }
 
@@ -151,9 +138,7 @@ export const getAggregatedGraph = new ValidatedMethod({
             // console.log(links);
             groupToEvents[group] = _.pluck(links, 'target');
             _.each(events, (event) => {
-                _.each(event.feedId, (id) => {
-                    eventToGroup[id] = group
-                });
+                eventToGroup[event.id] = group
             });
         });
 

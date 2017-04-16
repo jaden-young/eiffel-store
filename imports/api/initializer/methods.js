@@ -7,11 +7,11 @@ import {populateEventsCollection} from '/imports/api/events/methods'
 import {populateEventSequences} from '/imports/api/eventSequences/methods'
 
 Meteor.startup(function () {
-    // populateEventsCollection.call();
+    populateEventsCollection.call();
     // console.log(Events.findOne({type: 'TestCase'}));
     // console.log(Events.findOne({type: 'ConfidenceLevel'}));
 
-    populateEventSequences.call();
+    // populateEventSequences.call();
 
 
     if(EiffelEvents.find().count() !== Rows.find().count() || (Object.keys(Rows.findOne()).length !== 5)){ // The number to be equal amount of data elements that should be in each row (including _id)
