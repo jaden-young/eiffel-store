@@ -19,22 +19,15 @@ export const populateEventsCollection = new ValidatedMethod({
         console.log('Fetching ' + total + ' eiffel events from database. Please wait.');
         let events = EiffelEvents.find().fetch();
 
-
-        let eventMap = {};
-
+        let toBePared = {};
 
         _.each(events, (event) => {
             if (isEiffelTestCaseFinished(event.meta.type)) {
-                let startEvent = eventMap[event.links[0].target];
+                let startEvent = toBePared[event.links[0].target];
                 if (startEvent === undefined) {
                     console.log(startEvent);
                 }
-                delete eventMap[event.links[0].target];
-
-                // let links = _.without(event.links, _.findWhere(event.links, {
-                //     target: startEvent.meta.id
-                // }));
-                // links.concat(startEvent.links);
+                delete toBePared[event.links[0].target];
 
                 let regex = /^(\D+)\D(\d)+$/g;
                 let str = event.data.customData[0].value;
@@ -42,7 +35,7 @@ export const populateEventsCollection = new ValidatedMethod({
 
                 Events.insert({
                     type: 'TestCase', // *
-                    name: match[1]+match[2], // *
+                    name: match[1] + match[2], // *
                     feedId: [
                         event.meta.id, // *
                         startEvent.meta.id
@@ -58,57 +51,14 @@ export const populateEventsCollection = new ValidatedMethod({
                     links: startEvent.links,
                     source: startEvent.meta.source,
                     data: Object.assign(startEvent.data, event.data),
-                    children: [], // *
+                    // targetedBy: [], // *
                     hidden: {
                         checked: false, // *
                     }
                 })
-            }
-            // else if (isEiffelTestSuiteFinished(event.meta.type)) {
-            //     let startEvent = eventMap[event.links[0].target];
-            //     if (startEvent === undefined) {
-            //         console.log(startEvent);
-            //     }
-            //     delete eventMap[event.links[0].target];
-            //
-            //     let regex = /^(\D+)\D(\d)+$/g;
-            //     let str = event.data.customData[0].value;
-            //     let match = regex.exec(str);
-            //     if (match === null) {
-            //         console.log(match);
-            //         console.log(str);
-            //     }
-            //
-            //
-            //     Events.insert({
-            //         type: 'TestSuite', // *
-            //         name: match[1] + match[2], // *
-            //         feedId: event.meta.id, // *
-            //         startEvent: {
-            //             id: startEvent.meta.id
-            //         },
-            //         finishEvent: {
-            //             id: event.meta.id
-            //         },
-            //         timeStart: startEvent.meta.time, // *
-            //         timeFinish: event.meta.time, // *
-            //         links: startEvent.links,
-            //         source: startEvent.meta.source,
-            //         outcome: event.data.outcome,
-            //         data: startEvent.data,
-            //         children: [], // *
-            //         hidden: {
-            //             checked: false, // *
-            //         }
-            //     })
-            // }
-            else if (isEiffelTestCaseStarted(event.meta.type)) {
-                eventMap[event.meta.id] = event;
-            }
-            // else if (isEiffelTestSuiteStarted(event.meta.type)) {
-            //     eventMap[event.meta.id] = event;
-            // }
-            else {
+            } else if (isEiffelTestCaseStarted(event.meta.type)) {
+                toBePared[event.meta.id] = event;
+            } else {
                 Events.insert(({
                     type: event.meta.type, // *
                     name: event.data.customData[0].value, // *
@@ -119,7 +69,7 @@ export const populateEventsCollection = new ValidatedMethod({
                     timeFinish: event.meta.time, // *
                     links: event.links, // *
                     source: event.meta.source,
-                    children: [], // *
+                    // targetedBy: [], // *
                     hidden: {
                         checked: false, // *
                     },
