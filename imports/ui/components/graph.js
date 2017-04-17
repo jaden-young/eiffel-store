@@ -130,7 +130,7 @@ function renderGraph(graph, container) {
         let node_id = node_data.id;
 
         switch (true) {
-            case /TS/.test(node_id):                                              // Checks if node_id starts with 'TSF'
+            case /TSF/.test(node_id):                                              // Checks if node_id starts with 'TSF'
                 return '<h4>' + node_id + '</h4>' +           // Tooltip-header (Node-ID)
                     getTooltipButton(node_id) +          // Button will take user to level 2 - 'details'
                     '<table class="table table-bordered">' +
