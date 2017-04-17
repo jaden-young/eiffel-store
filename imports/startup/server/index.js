@@ -1,4 +1,2 @@
-/**
- * Created by seba on 2017-03-25.
- */
-import './api';
+import "./api";
+import '/imports/ui/components/rows'
