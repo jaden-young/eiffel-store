@@ -90,7 +90,8 @@ export const populateEventsCollection = new ValidatedMethod({
                 lastPrint = print;
             }
         });
-        console.log("Events collection is populated.");
+        let print = Math.floor((done / total) * 100);
+        console.log("Events collection is populated. [" + print + "%] (" + done + "/" + total + ")");
     }
 });
 
@@ -108,7 +109,10 @@ export const getAggregatedGraph = new ValidatedMethod({
             {sort: {timeFinish: -1}, limit: limit})
             .fetch();
 
+        let sequencesIds = [];
+
         let events = _.reduce(eventsSequences, function (memo, sequence) {
+            sequencesIds.push(sequence._id);
             memo = memo.concat(sequence.events);
             return memo;
         }, []);
@@ -176,6 +180,6 @@ export const getAggregatedGraph = new ValidatedMethod({
             });
         });
 
-        return {nodes: nodes, edges: edges};
+        return {nodes: nodes, edges: edges, sequences: sequencesIds};
     }
 });

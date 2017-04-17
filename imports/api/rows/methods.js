@@ -1,29 +1,66 @@
 import {ValidatedMethod} from "meteor/mdg:validated-method";
-import {EiffelEvents} from "../eiffelevents/eiffelevents";
 import {Rows} from "./rows";
+import {EventSequences} from "../eventSequences/eventSequences";
 
+function getRowsVersion() {
+    return '0.3';
+}
+
+export const rowsVersion = new ValidatedMethod({
+    name: 'rowsVersion',
+    validate: null,
+    run(){
+        return getRowsVersion();
+    }
+});
 
 export const populateRowsCollection = new ValidatedMethod({
     name: 'populateRowsCollection',
     validate: null,
     run(){
+        let VALUE_UNDEFINED = '-';
+
         console.log("Removing old rows collection.");
         Rows.remove({});
 
-        let total = EiffelEvents.find().count();
+        let total = EventSequences.find().count();
         let done = 0;
         let lastPrint = ((done / total) * 100);
 
-        console.log('Fetching ' + total + ' eiffelevents from database. Please wait.');
-        let events = EiffelEvents.find().fetch();
+        console.log('Fetching ' + total + ' sequences from database. Please wait.');
 
-        _.each(events, (event) => {
-            Rows.insert({
-                name: event.data.customData[0].value,
-                type: event.meta.type,
-                id: event.meta.id,
-                timestamp: event.meta.time
+        let sequences = EventSequences.find().fetch();
+
+        _.each(sequences, (sequence) => {
+            _.each(sequence.events, (event) => {
+
+                let verdict = VALUE_UNDEFINED;
+                if(event.data.outcome !== undefined && event.data.outcome.verdict !== undefined){
+                    verdict = event.data.outcome.verdict
+                }
+
+                let conclusion = VALUE_UNDEFINED;
+                if(event.data.outcome !== undefined && event.data.outcome.conclusion !== undefined){
+                    conclusion = event.data.outcome.conclusion
+                }
+
+                Rows.insert({
+                    name: event.name,
+                    type: event.type,
+                    id: event.id,
+                    sequenceId: sequence._id,
+                    timeStart: event.timeStart,
+                    timeFinish: event.timeFinish,
+                    timeExecution: event.timeFinish - event.timeStart,
+                    verdict: verdict,
+                    conclusion: conclusion,
+                    dev: {
+                        version: getRowsVersion()
+                    }
+                });
             });
+
+
             done++;
             let print = Math.floor((done / total) * 100);
             if (print >= (lastPrint + 5)) {
@@ -31,6 +68,7 @@ export const populateRowsCollection = new ValidatedMethod({
                 lastPrint = print;
             }
         });
-        console.log("Rows collection is populated.");
+        let print = Math.floor((done / total) * 100);
+        console.log("Rows collection is populated. [" + print + "%] (" + done + "/" + total + ")");
     }
 });

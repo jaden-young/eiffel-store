@@ -171,7 +171,8 @@ export const populateEventSequences = new ValidatedMethod({
                 lastPrint = print;
             }
         });
-        console.log("Event-sequence collection populated.");
+        let print = Math.floor((done / total) * 100);
+        console.log("Event-sequence collection populated. [" + print + "%] (" + done + "/" + total + ")");
     }
 });
 

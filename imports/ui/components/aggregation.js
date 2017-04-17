@@ -3,6 +3,7 @@ import {renderGraph} from "./graph.js";
 
 import "./aggregation.html";
 import {getAggregatedGraph} from "/imports/api/events/methods.js";
+import {Session} from "meteor/session";
 
 Template.aggregation.rendered = () => {
     // Runs when document is ready
@@ -32,7 +33,8 @@ Template.aggregation.rendered = () => {
                 to = Date.parse(toInput.val()),
                 limit = parseInt(limitInput.val());
 
-            showAggregation(from, to, limit);
+            let sequenceIds = showAggregation(from, to, limit);
+            Session.set('displayedSequenceIds', sequenceIds);
         };
 
         datepickers.on('change', onChange);
@@ -52,7 +54,10 @@ function showAggregation(from, to, limit) {
             let container = document.getElementById('cy-aggregation');
             console.log(graph);
             //console.log('rendering aggregation, now', graph);
+
+
             renderGraph(graph, container);
+            return graph.sequences;
         }
     });
 }
