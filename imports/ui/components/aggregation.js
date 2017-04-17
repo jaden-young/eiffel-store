@@ -12,7 +12,7 @@ Template.aggregation.rendered = () => {
             toInput = $('#date-to'),
             limitInput = $('#limit'),
             datepickers = $('.datepicker'),
-            defaultLimit = 50,
+            defaultLimit = 500,
             defaultFrom = '01/02/2012',
             defaultTo = '01/02/2018';
 

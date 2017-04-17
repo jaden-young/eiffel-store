@@ -93,7 +93,7 @@ function renderGraph(graph, container) {
             {
                 selector: 'node[id ^= "TS"]', // All nodes with ID starting with TS(Test Suite)
                 style: {
-                    'background-color': FAIL_COLOR,
+                    'background-color': ELSE_COLOR,
                     'shape': 'rectangle',
                     'border-style': 'double', // solid, dotted, dashed, or double.
                     'border-width': '6px', // The size of the node’s border.
@@ -106,6 +106,7 @@ function renderGraph(graph, container) {
             {
                 selector: 'node[id ^= "TSF"]', // All nodes with ID starting with TSF(Test Suite Finished)
                 style: {
+                    'background-color': FAIL_COLOR,
                     'background-position-x': '0px',
                     'background-image': '/images/green.png',
                     'background-height': '100%',

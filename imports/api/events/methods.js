@@ -105,7 +105,7 @@ export const getAggregatedGraph = new ValidatedMethod({
 
         let eventsSequences = EventSequences.find(
             {timeStart: {$gte: parseInt(from), $lte: parseInt(to)}},
-            {limit: limit})
+            {sort: {timeFinish: -1}, limit: limit})
             .fetch();
 
         let events = _.reduce(eventsSequences, function (memo, sequence) {

@@ -3,7 +3,7 @@ import {Events} from "../events/events";
 import {EventSequences} from "../eventSequences/eventSequences";
 
 function getEventSequenceVersion() {
-    return '0.1';
+    return '0.2';
 }
 
 export const eventSequenceVersion = new ValidatedMethod({
@@ -30,38 +30,54 @@ export const populateEventSequences = new ValidatedMethod({
 
         console.log('Processing events from database. Please wait.');
 
+        let illegalBridgeTypes = [
+            'EiffelArtifactCreatedEvent',
+            'EiffelDocumentationCreatedEvent',
+            'EiffelCompositionDefinedEvent',
+            'EiffelEnvironmentDefinedEvent',
+            'EiffelSourceChangeCreatedEvent',
+            'EiffelSourceChangeSubmittedEvent'
+        ];
+
+        let legalTypes = [
+            'CAUSE',
+            'CONTEXT',
+            'FLOW_CONTEXT',
+            'ACTIVITY_EXECUTION',
+            'PREVIOUS_ACTIVITY_EXECUTION',
+            // 'PREVIOUS_VERSION', RangeError: Maximum call stack size exceeded
+            'COMPOSITION',
+            // 'ENVIRONMENT', MongoError: document is larger than the maximum size 16777216
+            'ARTIFACT',
+            'SUBJECT',
+            // 'ELEMENT' MongoError: document is larger than the maximum size 16777216
+            // 'BASE', RangeError: Maximum call stack size exceeded
+            'CHANGE',
+            'TEST_SUITE_EXECUTION',
+            'TEST_CASE_EXECUTION',
+            'IUT',
+            'TERC',
+            'MODIFIED_ANNOUNCEMENT',
+            'SUB_CONFIDENCE_LEVEL',
+            'REUSED_ARTIFACT',
+            'VERIFICATION_BASIS',
+        ];
+
         // Populate map
         let eventMap = {};
         _.each(events, (event) => {
             // Filtering links that would make us jump between sequences.
             event.targets = _.pluck(_.filter(event.links, function (link) {
-                let types = [
-                    'CAUSE',
-                    'CONTEXT',
-                    'FLOW_CONTEXT',
-                    'ACTIVITY_EXECUTION',
-                    'PREVIOUS_ACTIVITY_EXECUTION',
-                    // 'PREVIOUS_VERSION', RangeError: Maximum call stack size exceeded
-                    'COMPOSITION',
-                    // 'ENVIRONMENT', MongoError: document is larger than the maximum size 16777216
-                    'ARTIFACT',
-                    'SUBJECT',
-                    // 'ELEMENT' MongoError: document is larger than the maximum size 16777216
-                    // 'BASE', RangeError: Maximum call stack size exceeded
-                    'CHANGE',
-                    'TEST_SUITE_EXECUTION',
-                    'TEST_CASE_EXECUTION',
-                    'IUT',
-                    'TERC',
-                    'MODIFIED_ANNOUNCEMENT',
-                    'SUB_CONFIDENCE_LEVEL',
-                    'REUSED_ARTIFACT',
-                    'VERIFICATION_BASIS',
-                ];
-                return _.contains(types, link.type);
+
+                return _.contains(legalTypes, link.type);
+
+                // return !(_.contains(illegalBridgeTypes, event.type));
+
+                // return true;
             }), 'target');
             event.targetedBy = [];
             event.dev.checked = false;
+            event.dev.stop = _.contains(illegalBridgeTypes, event.type);
             eventMap[event.id] = event;
         });
 
@@ -71,7 +87,7 @@ export const populateEventSequences = new ValidatedMethod({
                 let exists = _.find(eventMap[target].targetedBy, function (id) {
                     return id === event.id;
                 });
-                if (!exists) {
+                if (!exists) { //  && !(_.contains(illegalBridgeTypes, event.type))
                     (eventMap[target].targetedBy).push(event.id)
                 }
             });
@@ -86,6 +102,11 @@ export const populateEventSequences = new ValidatedMethod({
         });
 
         function getAllLinked(eventId) {
+            // if(eventMap[eventId].dev.stop === true){
+            //     let linkedEvents = [];
+            //     linkedEvents.push(eventId);
+            //     return linkedEvents;
+            // }
             if (eventMap[eventId].dev.checked === true) {
                 return [];
             }
@@ -106,13 +127,13 @@ export const populateEventSequences = new ValidatedMethod({
             return linkedEvents;
         }
 
-        let sequences = _.reduce(events, function (memo, event) {
+        let sequences = _.sortBy(_.reduce(events, function (memo, event) {
             let sequence = getAllLinked(event.id);
-            if (sequence.length > 10) {
+            if (sequence.length > 0) { // 10
                 memo.push(sequence);
             }
             return memo;
-        }, []);
+        }, []), 'timeFinish').reverse();
 
 
         done = 0;

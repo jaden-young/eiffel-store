@@ -17,6 +17,9 @@ Meteor.startup(function () {
         populateEventSequences.call();
     }
 
+    // populateEventsCollection.call();
+    // populateEventSequences.call();
+
     if (Rows.find().count() === 0 || EiffelEvents.find().count() !== Rows.find().count() || (Object.keys(Rows.findOne()).length !== 5)) { // The number to be equal amount of data elements that should be in each row (including _id)
         console.log("Rows collection is not up to date with database.");
         populateRowsCollection.call();
