@@ -1,8 +1,21 @@
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {EiffelEvents} from "../eiffelevents/eiffelevents";
 import {Events} from "../events/events";
+import {EventSequences} from "../eventSequences/eventSequences";
 import {isConfidenceLevelEvent, isTestEvent} from "./eventTypes";
 import {isEiffelTestCaseFinished, isEiffelTestCaseStarted} from "../eiffelevents/eiffeleventTypes";
+
+function getEventVersion() {
+    return '1.0';
+}
+
+export const eventVersion = new ValidatedMethod({
+    name: 'eventVersion',
+    validate: null,
+    run(){
+        return getEventVersion();
+    }
+});
 
 
 export const populateEventsCollection = new ValidatedMethod({
@@ -43,6 +56,9 @@ export const populateEventsCollection = new ValidatedMethod({
                     links: startEvent.links, // *
                     source: startEvent.meta.source, //*
                     data: Object.assign(startEvent.data, event.data), // *
+                    dev: {
+                        version: getEventVersion() // *
+                    },
 
                     startEvent: startEvent.meta.id,
                     finishEvent: event.meta.id,
@@ -60,7 +76,10 @@ export const populateEventsCollection = new ValidatedMethod({
                     timeFinish: event.meta.time, // *
                     links: event.links, // *
                     source: event.meta.source, // *
-                    data: event.data // *
+                    data: event.data, // *
+                    dev: {
+                        version: getEventVersion() // *
+                    },
                 }))
             }
 
@@ -84,10 +103,15 @@ export const getAggregatedGraph = new ValidatedMethod({
         // from: 1420070400000 2015
         // to: 1514764800000 2018
 
-        let events = Events.find(
+        let eventsSequences = EventSequences.find(
             {timeStart: {$gte: parseInt(from), $lte: parseInt(to)}},
             {limit: limit})
             .fetch();
+
+        let events = _.reduce(eventsSequences, function (memo, sequence) {
+            memo = memo.concat(sequence.events);
+            return memo;
+        }, []);
 
         // Maps individual event node id's to their aggregated node's id and vice versa
         let groupToEvents = {};
@@ -98,7 +122,6 @@ export const getAggregatedGraph = new ValidatedMethod({
         // Very brittle.
         let nodes = [];
         let groupedEvents = _.groupBy(events, (event) => event.name);
-        // console.log(groupedEvents);
         _.each(groupedEvents, (events, group) => {
             let node = {
                 data: {
@@ -134,9 +157,8 @@ export const getAggregatedGraph = new ValidatedMethod({
             nodes.push(node);
 
             // Save the links from events -> group and group -> events to reconstruct group -> group later
-            let links = _.reduce(events, (memo, event) => memo.concat(event.links), []);
             // console.log(links);
-            groupToEvents[group] = _.pluck(links, 'target');
+            groupToEvents[group] = _.reduce(events, (memo, event) => memo.concat(event.targets), []);
             _.each(events, (event) => {
                 eventToGroup[event.id] = group
             });
@@ -154,9 +176,6 @@ export const getAggregatedGraph = new ValidatedMethod({
             });
         });
 
-        // console.log(edges);
-        // console.log(nodes);
-        // console.log(nodes.length);
         return {nodes: nodes, edges: edges};
     }
 });

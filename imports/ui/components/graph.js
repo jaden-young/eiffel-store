@@ -80,13 +80,7 @@ function renderGraph(graph, container) {
                     'background-color': FAIL_COLOR,
                     'shape': 'rectangle',
                     'height': 50,
-                    'width': 100
-                }
-            },
-
-            {
-                selector: 'node[id ^= "TCF"]', // All nodes with ID starting with TCF(Test Case Finished)
-                style: {
+                    'width': 100,
                     'background-image': '/images/green.png',
                     'background-height': '100%',
                     'background-width': function (ele) {
@@ -135,7 +129,7 @@ function renderGraph(graph, container) {
         let node_id = node_data.id;
 
         switch (true) {
-            case /TSF/.test(node_id):                                              // Checks if node_id starts with 'TSF'
+            case /TS/.test(node_id):                                              // Checks if node_id starts with 'TSF'
                 return '<h4>' + node_id + '</h4>' +           // Tooltip-header (Node-ID)
                     getTooltipButton(node_id) +          // Button will take user to level 2 - 'details'
                     '<table class="table table-bordered">' +
@@ -146,7 +140,7 @@ function renderGraph(graph, container) {
                     '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + node_data.length + '</td></tr>' +
                     '</table>'; // Row 3 - OTHER
 
-            case /TCF/.test(node_id):                                              // Checks if node_id starts with 'TSF'
+            case /TC/.test(node_id):                                              // Checks if node_id starts with 'TSF'
                 return '<h4>' + node_id + '</h4>' +           // Tooltip-header (Node-ID)
                     getTooltipButton(node_id) +          // Button will take user to level 2 - 'details'
                     '<table class="table table-bordered">' +
