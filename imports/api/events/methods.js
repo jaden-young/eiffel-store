@@ -2,11 +2,16 @@ import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {EiffelEvents} from "../eiffelevents/eiffelevents";
 import {Events} from "../events/events";
 import {EventSequences} from "../eventSequences/eventSequences";
-import {isConfidenceLevelEvent, isTestEvent} from "./eventTypes";
-import {isEiffelTestCaseFinished, isEiffelTestCaseStarted} from "../eiffelevents/eiffeleventTypes";
+import {getTestCaseEventName, getTestSuiteEventName, isConfidenceLevelEvent, isTestEvent} from "./eventTypes";
+import {
+    isEiffelTestCaseFinished,
+    isEiffelTestCaseStarted,
+    isEiffelTestSuiteFinished,
+    isEiffelTestSuiteStarted
+} from "../eiffelevents/eiffeleventTypes";
 
 function getEventVersion() {
-    return '1.0';
+    return '1.1';
 }
 
 export const eventVersion = new ValidatedMethod({
@@ -47,7 +52,7 @@ export const populateEventsCollection = new ValidatedMethod({
                 let match = regex.exec(str);
 
                 Events.insert({
-                    type: 'TestCase', // *
+                    type: getTestCaseEventName(), // *
                     version: event.meta.version, // *
                     name: match[1] + match[2], // *
                     id: event.meta.id, // *
@@ -63,7 +68,36 @@ export const populateEventsCollection = new ValidatedMethod({
                     startEvent: startEvent.meta.id,
                     finishEvent: event.meta.id,
                 })
-            } else if (isEiffelTestCaseStarted(event.meta.type)) {
+            } else if (isEiffelTestSuiteFinished(event.meta.type)) {
+                let startEvent = toBePared[event.links[0].target];
+                if (startEvent === undefined) {
+                    console.log(startEvent);
+                }
+                delete toBePared[event.links[0].target];
+
+                let regex = /^(\D+)\D(\d)+$/g;
+                let str = event.data.customData[0].value;
+                let match = regex.exec(str);
+
+                Events.insert({
+                    type: getTestSuiteEventName(), // *
+                    version: event.meta.version, // *
+                    name: match[1] + match[2], // *
+                    id: event.meta.id, // *
+                    timeStart: startEvent.meta.time, // *
+                    timeFinish: event.meta.time, // *
+                    links: startEvent.links, // *
+                    source: startEvent.meta.source, //*
+                    data: Object.assign(startEvent.data, event.data), // *
+                    dev: {
+                        version: getEventVersion() // *
+                    },
+
+                    startEvent: startEvent.meta.id,
+                    finishEvent: event.meta.id,
+                });
+            }
+            else if (isEiffelTestCaseStarted(event.meta.type) || isEiffelTestSuiteStarted(event.meta.type)) {
                 toBePared[event.meta.id] = event;
             }
             else {
