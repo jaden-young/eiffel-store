@@ -1,48 +1,24 @@
-// import {ValidatedMethod} from "meteor/mdg:validated-method";
-// import {EiffelEvents} from "../eiffelevents/eiffelevents";
-// import {Rows} from "../rows/rows";
-//
-// Meteor.startup(function () {
-//
-//
-//
-//
-//
-//
-//     if(EiffelEvents.find().count() !== Rows.find().count() || (Object.keys(Rows.findOne()).length !== 4)){ // Number to be equal amount of data elements that should be in each row + 1
-//         console.log("Rows collection is not up to date with database.");
-//         populateRowsCollection.call();
-//     }
-// });
-//
-// export const populateRowsCollection = new ValidatedMethod({
-//     name: 'populateRowsCollection',
-//     validate: null,
-//     run(){
-//         console.log("Removing old rows collection.");
-//         Rows.remove({});
-//
-//         console.log("Populating rows collection from events collection.");
-//         let total = EiffelEvents.find().count();
-//         let done = 0;
-//         let lastPrint = ((done/total)*100);
-//
-//         console.log('Fetching ' + total + ' events from database.');
-//         let events = EiffelEvents.find().fetch();
-//
-//         _.each(events, (event) => {
-//             Rows.insert({
-//                 name: event.data.customData[0].value,
-//                 id: event.meta.id,
-//                 timestamp: event.meta.time
-//             });
-//             done++;
-//             let print = Math.floor((done/total)*100);
-//             if(print >= (lastPrint + 5)){
-//                 console.log("Populating rows progress: " + print + '% (' + done + '/' + total + ')');
-//                 lastPrint = print;
-//             }
-//         });
-//         console.log("Rows collection is populated.");
-//     }
-// });
+import {ValidatedMethod} from "meteor/mdg:validated-method";
+import {EiffelEvents} from "../eiffelevents/eiffelevents";
+import {Events} from "../events/events";
+import {Rows} from "../rows/rows";
+import {populateRowsCollection} from "/imports/api/rows/methods";
+import {eventVersion, populateEventsCollection} from "/imports/api/events/methods";
+import {populateEventSequences} from "/imports/api/eventSequences/methods";
+import {EventSequences} from "../eventSequences/eventSequences";
+import {eventSequenceVersion} from "../eventSequences/methods";
+
+Meteor.startup(function () {
+    if (Events.find().count() === 0 || Events.findOne().dev.version !== eventVersion.call()) {
+        populateEventsCollection.call();
+    }
+
+    if (EventSequences.find().count() === 0 || EventSequences.findOne().dev.version !== eventSequenceVersion.call()) {
+        populateEventSequences.call();
+    }
+
+    if (Rows.find().count() === 0 || EiffelEvents.find().count() !== Rows.find().count() || (Object.keys(Rows.findOne()).length !== 5)) { // The number to be equal amount of data elements that should be in each row (including _id)
+        console.log("Rows collection is not up to date with database.");
+        populateRowsCollection.call();
+    }
+});

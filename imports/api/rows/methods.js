@@ -1,13 +1,8 @@
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {EiffelEvents} from "../eiffelevents/eiffelevents";
-import {Rows} from "./rows.js";
+import {Rows} from "./rows";
 
-Meteor.startup(function () {
-    if(EiffelEvents.find().count() !== Rows.find().count() || (Object.keys(Rows.findOne()).length !== 4)){ // Number to be equal amount of data elements that should be in each row + 1
-        console.log("Rows collection is not up to date with database.");
-        populateRowsCollection.call();
-    }
-});
+
 
 export const populateRowsCollection = new ValidatedMethod({
     name: 'populateRowsCollection',
@@ -16,17 +11,17 @@ export const populateRowsCollection = new ValidatedMethod({
         console.log("Removing old rows collection.");
         Rows.remove({});
 
-        console.log("Populating rows collection from events collection.");
         let total = EiffelEvents.find().count();
         let done = 0;
         let lastPrint = ((done/total)*100);
 
-        console.log('Fetching ' + total + ' events from database.');
+        console.log('Fetching ' + total + ' eiffelevents from database. Please wait.');
         let events = EiffelEvents.find().fetch();
 
         _.each(events, (event) => {
             Rows.insert({
                 name: event.data.customData[0].value,
+                type : event.meta.type,
                 id: event.meta.id,
                 timestamp: event.meta.time
             });

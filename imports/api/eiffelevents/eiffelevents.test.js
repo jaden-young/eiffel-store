@@ -14,9 +14,9 @@ import {
     from './methods';
 
 import {
-    isTestEvent,
-    isConfidenceLevelEvent,
-    isFinishedEvent}
+    isTestEiffelEvent,
+    isConfidenceLevelEiffelEvent,
+    isFinishedEiffelEvent}
     from './eiffeleventTypes.js';
 
 if (Meteor.isServer) {
@@ -105,14 +105,14 @@ if (Meteor.isServer) {
             }
         };
 
-        if (isTestEvent(eventType)) {
+        if (isTestEiffelEvent(eventType)) {
             let possibleVerdicts = ['PASSED', 'FAILED'];
             event.data.outcome = {
                 verdict: possibleVerdicts[_.random(0, possibleVerdicts.length - 1)]
             };
         }
 
-        if (isConfidenceLevelEvent(eventType)) {
+        if (isConfidenceLevelEiffelEvent(eventType)) {
             let possibleValues = ['PASSED', 'FAILED', 'INCONCLUSIVE'];
             event.data.value = possibleValues[_.random(0, possibleValues.length - 1)]
         }
@@ -204,14 +204,14 @@ if (Meteor.isServer) {
         });
     });
 
-    describe('isTestEvent', function () {
+    describe('isTestEiffelEvent', function () {
         it('returns true for events containing tests', function () {
             let events = [
                 'EiffelTestCaseFinishedEvent',
                 'EiffelTestSuiteFinishedEvent'
             ];
 
-            let result = _.every(events, isTestEvent);
+            let result = _.every(events, isTestEiffelEvent);
             assert.isTrue(result);
         });
 
@@ -242,15 +242,15 @@ if (Meteor.isServer) {
                 'EiffelAnnouncementPublishedEvent'
             ];
 
-            let result = _.every(events, !isTestEvent);
+            let result = _.every(events, !isTestEiffelEvent);
             assert.isTrue(result);
         });
     });
 
-    describe('isConfidenceLevelEvent', function () {
+    describe('isConfidenceLevelEiffelEvent', function () {
         it('returns true for confidence level modified event', function () {
             let event = 'EiffelConfidenceLevelModifiedEvent';
-            let result = isConfidenceLevelEvent(event);
+            let result = isConfidenceLevelEiffelEvent(event);
             assert.isTrue(result);
         });
 
@@ -279,20 +279,20 @@ if (Meteor.isServer) {
                 'EiffelAnnouncementPublishedEvent'
             ];
 
-            let result = _.every(events, !isConfidenceLevelEvent);
+            let result = _.every(events, !isConfidenceLevelEiffelEvent);
             assert.isTrue(result);
         });
     });
 
 
-    describe('isFinishedEvent', function () {
+    describe('isFinishedEiffelEvent', function () {
         it('returns true for events that signal that something finished', function () {
             let events = [
                 'EiffelActivityFinishedEvent',
                 'EiffelTestCaseFinishedEvent',
                 'EiffelTestSuiteFinishedEvent'
             ];
-            let result = _.every(events, !isFinishedEvent);
+            let result = _.every(events, !isFinishedEiffelEvent);
             assert.isTrue(result);
         });
 
@@ -318,7 +318,7 @@ if (Meteor.isServer) {
                 'EiffelAnnouncementPublishedEvent'
             ];
 
-            let result = _.every(events, !isFinishedEvent);
+            let result = _.every(events, !isFinishedEiffelEvent);
             assert.isTrue(result);
         });
     });

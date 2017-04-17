@@ -7,6 +7,7 @@ new Tabular.Table({
     collection: Rows,
     columns: [
         {data: "name", title: "Name"},
+        {data: "type", title: "Type"},
         {data: "id", title: "ID"},
         {
             data: "timestamp",

@@ -1,10 +1,4 @@
-/**
- * Created by seba on 2017-04-12.
- * Contains various categories of events types
- * that are to be processed in the same way.
- */
-
-export const isTestEvent = function (eventType) {
+export const isTestEiffelEvent = function (eventType) {
     let eventTypesWithTests = [
         'EiffelTestCaseFinishedEvent',
         'EiffelTestSuiteFinishedEvent'
@@ -12,15 +6,42 @@ export const isTestEvent = function (eventType) {
     return _.contains(eventTypesWithTests, eventType);
 };
 
-export const isConfidenceLevelEvent = function (eventType) {
+export const isConfidenceLevelEiffelEvent = function (eventType) {
     return eventType === 'EiffelConfidenceLevelModifiedEvent';
 };
 
-export const isFinishedEvent = function (eventType) {
+export const isFinishedEiffelEvent = function (eventType) {
     let finishedEventTypes = [
         'EiffelActivityFinishedEvent',
         'EiffelTestCaseFinishedEvent',
         'EiffelTestSuiteFinishedEvent'
     ];
     return _.contains(finishedEventTypes, eventType);
+};
+
+export const isEiffelTestCaseStarted = function (eventType) {
+    let eventTypes = [
+        'EiffelTestCaseStartedEvent'
+    ];
+    return _.contains(eventTypes, eventType);
+};
+
+export const isEiffelTestCaseFinished = function (eventType) {
+    let eventTypes = [
+        'EiffelTestCaseFinishedEvent'
+    ];
+    return _.contains(eventTypes, eventType);
+};
+
+export const isEiffelTestSuiteStarted = function (eventType) {
+    let eventTypes = [
+        'EiffelTestSuiteStartedEvent'
+    ];
+    return _.contains(eventTypes, eventType);
+};
+export const isEiffelTestSuiteFinished = function (eventType) {
+    let eventTypes = [
+        'EiffelTestSuiteFinishedEvent'
+    ];
+    return _.contains(eventTypes, eventType);
 };
