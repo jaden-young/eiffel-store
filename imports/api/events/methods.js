@@ -2,7 +2,10 @@ import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {EiffelEvents} from "../eiffelevents/eiffelevents";
 import {Events} from "../events/events";
 import {EventSequences} from "../eventSequences/eventSequences";
-import {getTestCaseEventName, getTestSuiteEventName, isConfidenceLevelEvent, isTestEvent} from "./eventTypes";
+import {
+    getRedirectName, getTestCaseEventName, getTestSuiteEventName, isConfidenceLevelEvent,
+    isTestEvent
+} from "./eventTypes";
 import {
     isEiffelTestCaseFinished,
     isEiffelTestCaseStarted,
@@ -11,7 +14,7 @@ import {
 } from "../eiffelevents/eiffeleventTypes";
 
 function getEventVersion() {
-    return '1.1';
+    return '1.2bbbbbbbbfasbb';
 }
 
 export const eventVersion = new ValidatedMethod({
@@ -38,6 +41,12 @@ export const populateEventsCollection = new ValidatedMethod({
         let events = EiffelEvents.find().fetch();
 
         let toBePared = {};
+
+        _.each(events, (event) => {
+            if (isEiffelTestCaseStarted(event.meta.type) || isEiffelTestSuiteStarted(event.meta.type)) {
+                toBePared[event.meta.id] = event;
+            }
+        });
 
         _.each(events, (event) => {
             if (isEiffelTestCaseFinished(event.meta.type)) {
@@ -96,9 +105,19 @@ export const populateEventsCollection = new ValidatedMethod({
                     startEvent: startEvent.meta.id,
                     finishEvent: event.meta.id,
                 });
+
+                Events.insert({
+                    type: getRedirectName(), // *
+                    id: startEvent.meta.id,
+                    dev: {
+                        version: getEventVersion() // *
+                    },
+
+                    target: event.meta.id
+                });
             }
             else if (isEiffelTestCaseStarted(event.meta.type) || isEiffelTestSuiteStarted(event.meta.type)) {
-                toBePared[event.meta.id] = event;
+                // toBePared[event.meta.id] = event;
             }
             else {
                 Events.insert(({
@@ -147,8 +166,7 @@ export const getAggregatedGraph = new ValidatedMethod({
 
         let events = _.reduce(eventsSequences, function (memo, sequence) {
             sequencesIds.push(sequence.id);
-            memo = memo.concat(sequence.events);
-            return memo;
+            return memo.concat(sequence.events);
         }, []);
 
         // Maps individual event node id's to their aggregated node's id and vice versa

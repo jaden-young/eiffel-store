@@ -17,3 +17,7 @@ export const getTestCaseEventName = function (eventType) {
 export const getTestSuiteEventName = function (eventType) {
     return "TestSuiteEvent"
 };
+
+export const getRedirectName = function (eventType) {
+    return "Redirect"
+};

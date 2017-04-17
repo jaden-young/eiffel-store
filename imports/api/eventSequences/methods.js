@@ -1,9 +1,10 @@
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Events} from "../events/events";
 import {EventSequences} from "../eventSequences/eventSequences";
+import {getRedirectName} from "../events/eventTypes";
 
 function getEventSequenceVersion() {
-    return '0.3';
+    return '0.5bbbbcxzcbbasdfbadsffadfbbbb';
 }
 
 export const eventSequenceVersion = new ValidatedMethod({
@@ -67,31 +68,39 @@ export const populateEventSequences = new ValidatedMethod({
         let eventMap = {};
         _.each(events, (event) => {
             // Filtering links that would make us jump between sequences.
-            event.targets = _.pluck(_.filter(event.links, function (link) {
+            if (event.type !== getRedirectName()) {
+                event.targets = _.pluck(_.filter(event.links, function (link) {
 
-                return _.contains(legalTypes, link.type);
+                    return _.contains(legalTypes, link.type);
 
-                // return !(_.contains(illegalBridgeTypes, event.type));
+                    // return !(_.contains(illegalBridgeTypes, event.type));
 
-                // return true;
-            }), 'target');
-            event.targetedBy = [];
-            event.dev.checked = false;
-            event.dev.stop = _.contains(illegalBridgeTypes, event.type);
+                    // return true;
+                }), 'target');
+                event.targetedBy = [];
+                event.dev.checked = false;
+                event.dev.stop = _.contains(illegalBridgeTypes, event.type);
+            }
             eventMap[event.id] = event;
         });
 
         // Find targetedBy
         _.each(events, (event) => {
-            _.each(eventMap[event.id].targets, (target) => {
-                let exists = _.find(eventMap[target].targetedBy, function (id) {
-                    return id === event.id;
+            if (event.type !== getRedirectName()) {
+                _.each(event.targets, (target, index) => {
+                    if (eventMap[target].type === getRedirectName()) {
+                        eventMap[event.id].targets[index] = eventMap[target].target;
+                        target = eventMap[target].target;
+                    }
+                    let exists = _.find(eventMap[target].targetedBy, function (id) {
+                        return id === event.id;
+                    });
+                    if (!exists) { //  && !(_.contains(illegalBridgeTypes, event.type))
+                        (eventMap[target].targetedBy).push(event.id)
+                    }
+                    eventMap[event.id] = event;
                 });
-                if (!exists) { //  && !(_.contains(illegalBridgeTypes, event.type))
-                    (eventMap[target].targetedBy).push(event.id)
-                }
-            });
-            eventMap[event.id] = event;
+            }
 
             done++;
             let print = Math.floor((done / total) * 100);
@@ -128,7 +137,10 @@ export const populateEventSequences = new ValidatedMethod({
         }
 
         let sequences = _.sortBy(_.reduce(events, function (memo, event) {
-            let sequence = getAllLinked(event.id);
+            let sequence = [];
+            if(event.type !== getRedirectName()){
+                sequence = getAllLinked(event.id);
+            }
             if (sequence.length > 0) { // 10
                 memo.push(sequence);
             }
@@ -152,7 +164,7 @@ export const populateEventSequences = new ValidatedMethod({
                 if (timeFinish === undefined || event.timeFinish > timeFinish) {
                     timeFinish = event.timeFinish;
                 }
-                memo.push(eventMap[eventId]);
+                memo.push(event);
                 return memo;
             }, []);
 
