@@ -3,7 +3,7 @@ import {Rows} from "./rows";
 import {EventSequences} from "../eventSequences/eventSequences";
 
 function getRowsVersion() {
-    return '0.3';
+    return '0.4';
 }
 
 export const rowsVersion = new ValidatedMethod({
@@ -48,7 +48,7 @@ export const populateRowsCollection = new ValidatedMethod({
                     name: event.name,
                     type: event.type,
                     id: event.id,
-                    sequenceId: sequence._id,
+                    sequenceId: sequence.id,
                     timeStart: event.timeStart,
                     timeFinish: event.timeFinish,
                     timeExecution: event.timeFinish - event.timeStart,

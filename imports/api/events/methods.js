@@ -112,7 +112,7 @@ export const getAggregatedGraph = new ValidatedMethod({
         let sequencesIds = [];
 
         let events = _.reduce(eventsSequences, function (memo, sequence) {
-            sequencesIds.push(sequence._id);
+            sequencesIds.push(sequence.id);
             memo = memo.concat(sequence.events);
             return memo;
         }, []);

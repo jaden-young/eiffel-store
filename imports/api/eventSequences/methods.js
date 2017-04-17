@@ -3,7 +3,7 @@ import {Events} from "../events/events";
 import {EventSequences} from "../eventSequences/eventSequences";
 
 function getEventSequenceVersion() {
-    return '0.2';
+    return '0.3';
 }
 
 export const eventSequenceVersion = new ValidatedMethod({
@@ -139,6 +139,7 @@ export const populateEventSequences = new ValidatedMethod({
         done = 0;
         lastPrint = ((done / total) * 100);
 
+        let sequenceIndex = 0;
         _.each(sequences, (sequence) => {
             let timeStart = undefined;
             let timeFinish = undefined;
@@ -159,10 +160,13 @@ export const populateEventSequences = new ValidatedMethod({
                 timeStart: timeStart,
                 timeFinish: timeFinish,
                 events: sequenceEvents,
+                id: sequenceIndex,
                 dev: {
                     version: getEventSequenceVersion()
                 }
             });
+
+            sequenceIndex++;
 
             done = done + sequenceEvents.length;
             let print = Math.floor((done / total) * 100);

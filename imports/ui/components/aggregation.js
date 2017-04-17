@@ -33,8 +33,7 @@ Template.aggregation.rendered = () => {
                 to = Date.parse(toInput.val()),
                 limit = parseInt(limitInput.val());
 
-            let sequenceIds = showAggregation(from, to, limit);
-            Session.set('displayedSequenceIds', sequenceIds);
+            showAggregation(from, to, limit);
         };
 
         datepickers.on('change', onChange);
@@ -57,7 +56,7 @@ function showAggregation(from, to, limit) {
 
 
             renderGraph(graph, container);
-            return graph.sequences;
+            Session.set('displayedSequenceIds', graph.sequences);
         }
     });
 }

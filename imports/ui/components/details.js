@@ -11,6 +11,8 @@ dataTablesBootstrap(window, $);
 Template.aggregation.events({
     'click .aggregation-tt-btn': function (event) {
 
+        console.log(Session.get('displayedSequenceIds'));
+
         Session.set('nodeNameFilter', event.target.value);
         $('#table-level2-heading').html(Session.get('nodeNameFilter'));
 
@@ -27,6 +29,6 @@ Template.details.onCreated(function () {
 });
 Template.details.helpers({
     selector() {
-        return {name: Session.get('nodeNameFilter')}//, sequenceId: { $in:Session.get('displayedSequenceIds')}}; // this could be pulled from a Session var or something that is reactive
+        return {name: Session.get('nodeNameFilter'), sequenceId: {$in: (Session.get('displayedSequenceIds'))}}
     }
 });
