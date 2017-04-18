@@ -1,0 +1,1 @@
+export const Rows = new Mongo.Collection('tablerows');

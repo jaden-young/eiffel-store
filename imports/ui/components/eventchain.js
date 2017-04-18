@@ -1,6 +1,6 @@
 import "./eventchain.html";
 
-import {getEventAncestorGraph} from "/imports/api/events/methods";
+import {getEventAncestorGraph} from "/imports/api/eiffelevents/methods";
 import {renderGraph} from "./graph";
 
 Template.eventchain.rendered = () => {
