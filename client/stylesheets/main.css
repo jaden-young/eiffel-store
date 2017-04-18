@@ -1,5 +1,6 @@
 .cy {
     height: 85vh;
+    /*height: 900px;*/
     display: block;
     background-color: #ffffff;
     padding: 0;
@@ -114,8 +115,9 @@ body {
 }
 
 .section {
-    margin-bottom: 20px;
-    margin-left: 10px;
+    /*margin-bottom: 20px;*/
+    /*margin-left: 10px;*/
+    margin: 10px;
     width: 90%;
 }
 

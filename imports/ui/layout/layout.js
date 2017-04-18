@@ -7,7 +7,6 @@ import "../components/eventchain.html";
 $(document).ready(function () {
     $(document.body).attr('data-spy', 'scroll');
     $(document.body).attr('data-target', '#navscrollspy');
-    // $(document.body).attr('data-offset', '15');
     $(document.body).scrollspy({offset: 20});
     $('[data-spy="scroll"]').each(function () {
         $(this).scrollspy('refresh');
@@ -17,12 +16,12 @@ $(document).ready(function () {
 
 
 //jQuery for page scrolling feature - requires jQuery Easing plugin
-$(function() {
-    $(document).on('click', 'a.page-scroll', function(event) {
+$(function () {
+    $(document).on('click', 'a.page-scroll', function (event) {
         var $anchor = $(this);
         $('html, body').stop().animate({
             scrollTop: $($anchor.attr('href')).offset().top - 10
-        }, 200, 'easeInOutExpo');
+        }, 300, 'easeInOutExpo');
         event.preventDefault();
     });
 });

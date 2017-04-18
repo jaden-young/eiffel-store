@@ -4,24 +4,14 @@
  * Contains various categories of events types
  * that are to be processed in the same way.
  */
-
 export const isTestEvent = function (eventType) {
-    let eventTypesWithTests = [
-        'EiffelTestCaseFinishedEvent',
+    let eventTypes = [
+        'TestCase',
         'EiffelTestSuiteFinishedEvent'
     ];
-    return _.contains(eventTypesWithTests, eventType);
+    return _.contains(eventTypes, eventType);
 };
 
 export const isConfidenceLevelEvent = function (eventType) {
     return eventType === 'EiffelConfidenceLevelModifiedEvent';
-};
-
-export const isFinishedEvent = function (eventType) {
-    let finishedEventTypes = [
-        'EiffelActivityFinishedEvent',
-        'EiffelTestCaseFinishedEvent',
-        'EiffelTestSuiteFinishedEvent'
-    ];
-    return _.contains(finishedEventTypes, eventType);
 };

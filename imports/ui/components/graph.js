@@ -81,13 +81,7 @@ function renderGraph(graph, container) {
                     'background-color': FAIL_COLOR,
                     'shape': 'rectangle',
                     'height': 50,
-                    'width': 100
-                }
-            },
-
-            {
-                selector: 'node[id ^= "TCF"]', // All nodes with ID starting with TCF(Test Case Finished)
-                style: {
+                    'width': 100,
                     'background-image': '/images/green.png',
                     'background-height': '100%',
                     'background-width': function (ele) {
@@ -100,7 +94,7 @@ function renderGraph(graph, container) {
             {
                 selector: 'node[id ^= "TS"]', // All nodes with ID starting with TS(Test Suite)
                 style: {
-                    'background-color': FAIL_COLOR,
+                    'background-color': ELSE_COLOR,
                     'shape': 'rectangle',
                     'border-style': 'double', // solid, dotted, dashed, or double.
                     'border-width': '6px', // The size of the node’s border.
@@ -113,6 +107,7 @@ function renderGraph(graph, container) {
             {
                 selector: 'node[id ^= "TSF"]', // All nodes with ID starting with TSF(Test Suite Finished)
                 style: {
+                    'background-color': FAIL_COLOR,
                     'background-position-x': '0px',
                     'background-image': '/images/green.png',
                     'background-height': '100%',
@@ -147,7 +142,7 @@ function renderGraph(graph, container) {
                     '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + node_data.length + '</td></tr>' +
                     '</table>'; // Row 3 - OTHER
 
-            case /TCF/.test(node_id):                                              // Checks if node_id starts with 'TSF'
+            case /TC/.test(node_id):                                              // Checks if node_id starts with 'TSF'
                 return '<h4>' + node_id + '</h4>' +           // Tooltip-header (Node-ID)
                     getTooltipButton(node_id) +          // Button will take user to level 2 - 'details'
                     '<table class="table table-bordered">' +
