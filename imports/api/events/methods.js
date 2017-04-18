@@ -3,7 +3,10 @@ import {EiffelEvents} from "../eiffelevents/eiffelevents";
 import {Events} from "../events/events";
 import {EventSequences} from "../eventSequences/eventSequences";
 import {
-    getRedirectName, getTestCaseEventName, getTestSuiteEventName, isConfidenceLevelEvent,
+    getRedirectName,
+    getTestCaseEventName,
+    getTestSuiteEventName,
+    isConfidenceLevelEvent,
     isTestEvent
 } from "./eventTypes";
 import {
@@ -12,9 +15,17 @@ import {
     isEiffelTestSuiteFinished,
     isEiffelTestSuiteStarted
 } from "../eiffelevents/eiffeleventTypes";
+import {setProperty} from "../properties/methods";
 
 function getEventVersion() {
     return '1.3';
+}
+function getEventVersionPropertyName() {
+    return 'eventVersion';
+}
+
+function setEventVersionProperty() {
+    setProperty.call({propertyName: getEventVersionPropertyName(), propertyValue: getEventVersion()})
 }
 
 export const eventVersion = new ValidatedMethod({
@@ -22,6 +33,14 @@ export const eventVersion = new ValidatedMethod({
     validate: null,
     run(){
         return getEventVersion();
+    }
+});
+
+export const eventVersionPropertyName = new ValidatedMethod({
+    name: 'eventVersionPropertyName',
+    validate: null,
+    run(){
+        return getEventVersionPropertyName();
     }
 });
 
@@ -143,6 +162,8 @@ export const populateEventsCollection = new ValidatedMethod({
                 lastPrint = print;
             }
         });
+
+        setEventVersionProperty();
         let print = Math.floor((done / total) * 100);
         console.log("Events collection is populated. [" + print + "%] (" + done + "/" + total + ")");
     }

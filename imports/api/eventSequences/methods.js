@@ -2,9 +2,17 @@ import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Events} from "../events/events";
 import {EventSequences} from "../eventSequences/eventSequences";
 import {getRedirectName} from "../events/eventTypes";
+import {setProperty} from "../properties/methods";
 
 function getEventSequenceVersion() {
-    return '0.6';
+    return '0.7';
+}
+function getEventSequenceVersionPropertyName() {
+    return 'eventSequenceVersion';
+}
+
+function setEventVersionProperty() {
+    setProperty.call({propertyName: getEventSequenceVersionPropertyName(), propertyValue: getEventSequenceVersion()})
 }
 
 export const eventSequenceVersion = new ValidatedMethod({
@@ -12,6 +20,14 @@ export const eventSequenceVersion = new ValidatedMethod({
     validate: null,
     run(){
         return getEventSequenceVersion();
+    }
+});
+
+export const eventSequenceVersionPropertyName = new ValidatedMethod({
+    name: 'eventSequenceVersionPropertyName',
+    validate: null,
+    run(){
+        return getEventSequenceVersionPropertyName();
     }
 });
 
@@ -138,7 +154,7 @@ export const populateEventSequences = new ValidatedMethod({
 
         let sequences = _.sortBy(_.reduce(events, function (memo, event) {
             let sequence = [];
-            if(event.type !== getRedirectName()){
+            if (event.type !== getRedirectName()) {
                 sequence = getAllLinked(event.id);
             }
             if (sequence.length > 0) { // 10
@@ -187,6 +203,8 @@ export const populateEventSequences = new ValidatedMethod({
                 lastPrint = print;
             }
         });
+
+        setEventVersionProperty();
         let print = Math.floor((done / total) * 100);
         console.log("Event-sequence collection populated. [" + print + "%] (" + done + "/" + total + ")");
     }
