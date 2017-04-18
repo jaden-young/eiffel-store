@@ -1,5 +1,4 @@
 import {ValidatedMethod} from "meteor/mdg:validated-method";
-import {EiffelEvents} from "../eiffelevents/eiffelevents";
 import {Events} from "../events/events";
 import {Rows} from "../rows/rows";
 import {rowsVersion} from "../rows/methods";

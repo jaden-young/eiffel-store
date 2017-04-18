@@ -3,7 +3,7 @@ import {Rows} from "./rows";
 import {EventSequences} from "../eventSequences/eventSequences";
 
 function getRowsVersion() {
-    return '0.4';
+    return '1.0';
 }
 
 export const rowsVersion = new ValidatedMethod({

@@ -4,7 +4,7 @@ import {EventSequences} from "../eventSequences/eventSequences";
 import {getRedirectName} from "../events/eventTypes";
 
 function getEventSequenceVersion() {
-    return '0.5';
+    return '0.6';
 }
 
 export const eventSequenceVersion = new ValidatedMethod({

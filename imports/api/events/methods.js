@@ -14,7 +14,7 @@ import {
 } from "../eiffelevents/eiffeleventTypes";
 
 function getEventVersion() {
-    return '1.2';
+    return '1.3';
 }
 
 export const eventVersion = new ValidatedMethod({

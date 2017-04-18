@@ -1,7 +1,7 @@
 export const isTestEvent = function (eventType) {
     let eventTypes = [
-        getTestCaseEventName,
-        getTestSuiteEventName
+        getTestCaseEventName(),
+        getTestSuiteEventName()
     ];
     return _.contains(eventTypes, eventType);
 };

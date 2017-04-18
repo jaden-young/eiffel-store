@@ -11,8 +11,6 @@ dataTablesBootstrap(window, $);
 Template.aggregation.events({
     'click .aggregation-tt-btn': function (event) {
 
-        console.log(Session.get('displayedSequenceIds'));
-
         Session.set('nodeNameFilter', event.target.value);
         $('#table-level2-heading').html(Session.get('nodeNameFilter'));
 
