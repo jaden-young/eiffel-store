@@ -47,7 +47,6 @@ Template.aggregation.rendered = () => {
         }]);
 
         let options = {
-            width: '90%',
             height: '150px',
             zoomMin: 3600000, // Setting 10 minutes as minimum zoom
             max: new Date(Date.now()).toLocaleDateString(), //Todays date
@@ -57,14 +56,14 @@ Template.aggregation.rendered = () => {
             onMove: function (item, callback) {
                     let limit = parseInt(limitInput.val());
                 if(item.id === 1){
-                    let from = Date.parse(new Date(item.start).toLocaleDateString('zh-Hans-CN').replace(/\//g, '-')),
+                    let from = Date.parse(new Date(item.start).toLocaleDateString()),
                         to = Date.parse(toInput.val());
-                    fromInput.val(new Date(item.start).toLocaleDateString('zh-Hans-CN').replace(/\//g, '-'));
+                    fromInput.val(new Date(item.start).toLocaleDateString());
                     showAggregation(from, to, limit);
                 }else if(item.id === 2){
                     let from = Date.parse(fromInput.val()),
-                        to = Date.parse(new Date(item.start).toLocaleDateString('zh-Hans-CN').replace(/\//g, '-'));
-                    toInput.val(new Date(item.start).toLocaleDateString('zh-Hans-CN').replace(/\//g, '-'));
+                        to = Date.parse(new Date(item.start).toLocaleDateString());
+                    toInput.val(new Date(item.start).toLocaleDateString());
                     showAggregation(from, to, limit);
                 }
             }
@@ -104,8 +103,6 @@ function showAggregation(from, to, limit) {
             console.log(error);
         } else {
             let container = document.getElementById('cy-aggregation');
-            console.log(graph);
-            //console.log('rendering aggregation, now', graph);
             renderGraph(graph, container);
         }
     });
