@@ -89,23 +89,15 @@ function renderGraph(graph, container) {
                     'background-position-x': '0px'
                 }
             },
-
             {
-                selector: 'node[id ^= "TS"]', // All nodes with ID starting with TS(Test Suite)
+                selector: 'node[id ^= "TS"]', // All nodes with ID starting with TSF(Test Suite Finished)
                 style: {
-                    'background-color': ELSE_COLOR,
                     'shape': 'rectangle',
                     'border-style': 'double', // solid, dotted, dashed, or double.
                     'border-width': '6px', // The size of the node’s border.
                     'border-color': '#000',
                     'height': 50,
-                    'width': 100
-                }
-            },
-
-            {
-                selector: 'node[id ^= "TSF"]', // All nodes with ID starting with TSF(Test Suite Finished)
-                style: {
+                    'width': 100,
                     'background-color': FAIL_COLOR,
                     'background-position-x': '0px',
                     'background-image': '/images/green.png',
@@ -130,7 +122,7 @@ function renderGraph(graph, container) {
         let node_id = node_data.id;
 
         switch (true) {
-            case /TSF/.test(node_id):                                              // Checks if node_id starts with 'TSF'
+            case /TS/.test(node_id):                                              // Checks if node_id starts with 'TSF'
                 return '<h4>' + node_id + '</h4>' +           // Tooltip-header (Node-ID)
                     getTooltipButton(node_id) +          // Button will take user to level 2 - 'details'
                     '<table class="table table-bordered">' +

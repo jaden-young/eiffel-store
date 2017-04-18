@@ -10,12 +10,28 @@ new Tabular.Table({
         {data: "type", title: "Type"},
         {data: "id", title: "ID"},
         {
-            data: "timestamp",
-            title: "Time stamp",
-            render: function (val, type, doc) {
-                (new Date(val)).toString()
-            }
-        }
+            data: "timeStart",
+            title: "Start time",
+            // render: function (val, type, doc) {
+            //     (new Date(val)).toString()
+            // }
+        },
+        {
+            data: "timeFinish",
+            title: "End time",
+            // render: function (val, type, doc) {
+            //     (new Date(val)).toString()
+            // }
+        },
+        {
+            data: "timeExecution",
+            title: "Execution time (ms)",
+            // render: function (val, type, doc) {
+            //     (new Date(val)).toString()
+            // }
+        },
+        {data: "verdict", title: "Verdict"},
+        {data: "conclusion", title: "Conclusion"},
     ],
     // destroy: true,
     lengthMenu: [[100, -1], [100, "All"]],

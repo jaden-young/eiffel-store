@@ -1,37 +1,91 @@
 import {ValidatedMethod} from "meteor/mdg:validated-method";
-import {EiffelEvents} from "../eiffelevents/eiffelevents";
 import {Rows} from "./rows";
+import {EventSequences} from "../eventSequences/eventSequences";
+import {setProperty} from "../properties/methods";
 
+function getRowsVersion() {
+    return '1.2';
+}
 
+function getRowsVersionPropertyName() {
+    return 'rowsVersion';
+}
+
+function setRowsVersionPropertyName() {
+    setProperty.call({propertyName: getRowsVersionPropertyName(), propertyValue: getRowsVersion()})
+}
+
+export const rowsVersion = new ValidatedMethod({
+    name: 'rowsVersion',
+    validate: null,
+    run(){
+        return getRowsVersion();
+    }
+});
+
+export const rowsVersionPropertyName = new ValidatedMethod({
+    name: 'rowsVersionPropertyName',
+    validate: null,
+    run(){
+        return getRowsVersionPropertyName();
+    }
+});
 
 export const populateRowsCollection = new ValidatedMethod({
     name: 'populateRowsCollection',
     validate: null,
     run(){
+        let VALUE_UNDEFINED = '-';
+
         console.log("Removing old rows collection.");
         Rows.remove({});
 
-        let total = EiffelEvents.find().count();
+        let total = EventSequences.find().count();
         let done = 0;
-        let lastPrint = ((done/total)*100);
+        let lastPrint = ((done / total) * 100);
 
-        console.log('Fetching ' + total + ' eiffelevents from database. Please wait.');
-        let events = EiffelEvents.find().fetch();
+        console.log('Fetching ' + total + ' sequences from database. Please wait.');
+        let sequences = EventSequences.find().fetch();
 
-        _.each(events, (event) => {
-            Rows.insert({
-                name: event.data.customData[0].value,
-                type : event.meta.type,
-                id: event.meta.id,
-                timestamp: event.meta.time
+        _.each(sequences, (sequence) => {
+            _.each(sequence.events, (event) => {
+
+                let verdict = VALUE_UNDEFINED;
+                if (event.data.outcome !== undefined && event.data.outcome.verdict !== undefined) {
+                    verdict = event.data.outcome.verdict
+                }
+
+                let conclusion = VALUE_UNDEFINED;
+                if (event.data.outcome !== undefined && event.data.outcome.conclusion !== undefined) {
+                    conclusion = event.data.outcome.conclusion
+                }
+
+                Rows.insert({
+                    name: event.name,
+                    type: event.type,
+                    id: event.id,
+                    sequenceId: sequence.id,
+                    timeStart: event.timeStart,
+                    timeFinish: event.timeFinish,
+                    timeExecution: event.timeFinish - event.timeStart,
+                    verdict: verdict,
+                    conclusion: conclusion,
+                    dev: {
+                        // version: getRowsVersion()
+                    }
+                });
             });
+
+
             done++;
-            let print = Math.floor((done/total)*100);
-            if(print >= (lastPrint + 5)){
+            let print = Math.floor((done / total) * 100);
+            if (print >= (lastPrint + 5)) {
                 console.log("Populating rows progress: " + print + '% (' + done + '/' + total + ')');
                 lastPrint = print;
             }
         });
-        console.log("Rows collection is populated.");
+        setRowsVersionPropertyName();
+        let print = Math.floor((done / total) * 100);
+        console.log("Rows collection is populated. [" + print + "%] (" + done + "/" + total + ")");
     }
 });
