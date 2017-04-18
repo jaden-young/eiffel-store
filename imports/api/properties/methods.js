@@ -7,7 +7,7 @@ export const getProperties = new ValidatedMethod({
     validate: null,
     run(){
         let properties = Properties.findOne();
-        if (properties === undefined){
+        if (properties === undefined) {
             properties = {};
             Properties.insert(properties);
         }

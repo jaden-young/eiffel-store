@@ -5,7 +5,7 @@ import {getRedirectName} from "../events/eventTypes";
 import {setProperty} from "../properties/methods";
 
 function getEventSequenceVersion() {
-    return '0.7';
+    return '0.8';
 }
 function getEventSequenceVersionPropertyName() {
     return 'eventSequenceVersion';
@@ -96,6 +96,8 @@ export const populateEventSequences = new ValidatedMethod({
                 event.targetedBy = [];
                 event.dev.checked = false;
                 event.dev.stop = _.contains(illegalBridgeTypes, event.type);
+            } else {
+                total--;
             }
             eventMap[event.id] = event;
         });
@@ -190,7 +192,7 @@ export const populateEventSequences = new ValidatedMethod({
                 events: sequenceEvents,
                 id: sequenceIndex,
                 dev: {
-                    version: getEventSequenceVersion()
+                    // version: getEventSequenceVersion()
                 }
             });
 

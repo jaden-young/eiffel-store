@@ -4,7 +4,7 @@ import {EventSequences} from "../eventSequences/eventSequences";
 import {setProperty} from "../properties/methods";
 
 function getRowsVersion() {
-    return '1.1';
+    return '1.2';
 }
 
 function getRowsVersionPropertyName() {
@@ -45,7 +45,6 @@ export const populateRowsCollection = new ValidatedMethod({
         let lastPrint = ((done / total) * 100);
 
         console.log('Fetching ' + total + ' sequences from database. Please wait.');
-
         let sequences = EventSequences.find().fetch();
 
         _.each(sequences, (sequence) => {
@@ -72,7 +71,7 @@ export const populateRowsCollection = new ValidatedMethod({
                     verdict: verdict,
                     conclusion: conclusion,
                     dev: {
-                        version: getRowsVersion()
+                        // version: getRowsVersion()
                     }
                 });
             });

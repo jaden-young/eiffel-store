@@ -18,7 +18,7 @@ import {
 import {setProperty} from "../properties/methods";
 
 function getEventVersion() {
-    return '1.3';
+    return '1.4';
 }
 function getEventVersionPropertyName() {
     return 'eventVersion';
@@ -43,7 +43,6 @@ export const eventVersionPropertyName = new ValidatedMethod({
         return getEventVersionPropertyName();
     }
 });
-
 
 export const populateEventsCollection = new ValidatedMethod({
     name: 'populateEventsCollection',
@@ -118,7 +117,7 @@ export const populateEventsCollection = new ValidatedMethod({
                     source: startEvent.meta.source, //*
                     data: Object.assign(startEvent.data, event.data), // *
                     dev: {
-                        version: getEventVersion() // *
+                        // version: getEventVersion() // *
                     },
 
                     startEvent: startEvent.meta.id,
@@ -129,7 +128,7 @@ export const populateEventsCollection = new ValidatedMethod({
                     type: getRedirectName(), // *
                     id: startEvent.meta.id,
                     dev: {
-                        version: getEventVersion() // *
+                        // version: getEventVersion() // *
                     },
 
                     target: event.meta.id
@@ -150,7 +149,7 @@ export const populateEventsCollection = new ValidatedMethod({
                     source: event.meta.source, // *
                     data: event.data, // *
                     dev: {
-                        version: getEventVersion() // *
+                        // version: getEventVersion() // *
                     },
                 }))
             }

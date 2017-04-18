@@ -12,15 +12,14 @@ import {EventSequences} from "../eventSequences/eventSequences";
 import {getProperty} from "../properties/methods";
 
 Meteor.startup(function () {
-    console.log(getProperty.call({propertyName: eventVersionPropertyName.call()}));
-    console.log(eventVersion.call());
-    console.log(getProperty.call({propertyName: eventSequenceVersionPropertyName.call()}));
-    console.log(eventSequenceVersion.call());
-    console.log(getProperty.call({propertyName: rowsVersionPropertyName.call()}));
-    console.log(rowsVersion.call());
+    // console.log(getProperty.call({propertyName: eventVersionPropertyName.call()}));
+    // console.log(eventVersion.call());
+    // console.log(getProperty.call({propertyName: eventSequenceVersionPropertyName.call()}));
+    // console.log(eventSequenceVersion.call());
+    // console.log(getProperty.call({propertyName: rowsVersionPropertyName.call()}));
+    // console.log(rowsVersion.call());
+
     if (getProperty.call({propertyName: eventVersionPropertyName.call()}) !== eventVersion.call() || Events.find().count() === 0) {
-
-
         populateEventsCollection.call();
         populateEventSequences.call();
         populateRowsCollection.call();
