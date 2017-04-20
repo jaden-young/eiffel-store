@@ -50,20 +50,20 @@ Template.aggregation.rendered = () => {
             height: '150px',
             zoomMin: 3600000, // Setting 10 minutes as minimum zoom
             max: new Date(Date.now()).toLocaleDateString(), //Todays date
-            min: '01-01-2000',  // IS HARDCODED NOW, SHOULD BE THE DATE OF THE FIRST EVENT
+            min: '2010-01-01',  // IS HARDCODED NOW, SHOULD BE THE DATE OF THE FIRST EVENT
             editable: {updateTime: true},
             selectable: true,
             onMove: function (item, callback) {
                     let limit = parseInt(limitInput.val());
                 if(item.id === 1){
-                    let from = Date.parse(new Date(item.start).toLocaleDateString()),
+                    let from = Date.parse(item.start),
                         to = Date.parse(toInput.val());
-                    fromInput.val(new Date(item.start).toLocaleDateString());
+                    fromInput.val(new Date(item.start).toLocaleDateString('sv'));
                     showAggregation(from, to, limit);
                 }else if(item.id === 2){
-                    let from = Date.parse(fromInput.val()),
-                        to = Date.parse(new Date(item.start).toLocaleDateString());
-                    toInput.val(new Date(item.start).toLocaleDateString());
+                    let from = Date.parse(toInput.val()),
+                        to = Date.parse(item.start);
+                    toInput.val(new Date(item.start).toLocaleDateString('sv'));
                     showAggregation(from, to, limit);
                 }
             }
