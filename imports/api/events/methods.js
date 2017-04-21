@@ -2,14 +2,14 @@ import {Meteor} from "meteor/meteor";
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {EiffelEvents} from "../eiffelevents/eiffelevents";
 import {Events} from "../events/events";
-import {EventSequences} from "../eventSequences/eventSequences";
+import {EventSequences} from "../eventSequences/event-sequences";
 import {
     getRedirectName,
     getTestCaseEventName,
     getTestSuiteEventName,
     isConfidenceLevelEvent,
     isTestEvent
-} from "./eventTypes";
+} from "./event-types";
 import {
     isEiffelTestCaseFinished,
     isEiffelTestCaseStarted,

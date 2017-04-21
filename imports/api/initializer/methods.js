@@ -8,7 +8,7 @@ import {
     eventSequenceVersionPropertyName,
     populateEventSequences
 } from "../eventSequences/methods";
-import {EventSequences} from "../eventSequences/eventSequences";
+import {EventSequences} from "../eventSequences/event-sequences";
 import {getProperty} from "../properties/methods";
 
 Meteor.startup(function () {

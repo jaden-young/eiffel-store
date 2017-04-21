@@ -1,9 +1,9 @@
 import {Meteor} from "meteor/meteor";
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Events} from "../events/events";
-import {EventSequences} from "../eventSequences/eventSequences";
+import {EventSequences} from "./event-sequences";
 import {setProperty} from "../properties/methods";
-import {getRedirectName, isConfidenceLevelEvent, isTestEvent} from "../events/eventTypes";
+import {getRedirectName, isConfidenceLevelEvent, isTestEvent} from "../events/event-types";
 
 function getEventSequenceVersion() {
     return '0.8';
@@ -386,8 +386,8 @@ export const getEventChainGraph = new ValidatedMethod({
                         })
                 });
             });
-            console.log(nodes);
-            console.log(edges);
+            // console.log(nodes);
+            // console.log(edges);
             return {nodes: nodes, edges: edges};
         }
     }
