@@ -1,3 +1,4 @@
+'use strict';
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Events} from "../events/events";
 import {Rows} from "../rows/rows";
@@ -12,13 +13,6 @@ import {EventSequences} from "../eventSequences/event-sequences";
 import {getProperty} from "../properties/methods";
 
 Meteor.startup(function () {
-    // console.log(getProperty.call({propertyName: eventVersionPropertyName.call()}));
-    // console.log(eventVersion.call());
-    // console.log(getProperty.call({propertyName: eventSequenceVersionPropertyName.call()}));
-    // console.log(eventSequenceVersion.call());
-    // console.log(getProperty.call({propertyName: rowsVersionPropertyName.call()}));
-    // console.log(rowsVersion.call());
-
     if (getProperty.call({propertyName: eventVersionPropertyName.call()}) !== eventVersion.call() || Events.find().count() === 0) {
         populateEventsCollection.call();
         populateEventSequences.call();

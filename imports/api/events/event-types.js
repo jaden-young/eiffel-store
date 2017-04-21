@@ -1,3 +1,5 @@
+'use strict';
+
 export const isTestEvent = function (eventType) {
     let eventTypes = [
         getTestCaseEventName(),

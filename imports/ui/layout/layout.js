@@ -1,3 +1,4 @@
+'use strict';
 import "./layout.html";
 import "../components/aggregation.html";
 import "../components/details.html";

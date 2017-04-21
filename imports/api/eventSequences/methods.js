@@ -1,4 +1,6 @@
+'use strict';
 import {Meteor} from "meteor/meteor";
+
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Events} from "../events/events";
 import {EventSequences} from "./event-sequences";
@@ -308,7 +310,7 @@ export const getEventChainGraph = new ValidatedMethod({
     name: 'getEventChainGraph',
     validate: null,
     run({sequenceId}) {
-        if(sequenceId === undefined){
+        if (sequenceId === undefined) {
             return undefined;
         }
         if (Meteor.isServer) {
@@ -341,9 +343,9 @@ export const getEventChainGraph = new ValidatedMethod({
                     let failedCount = 0;
                     let inconclusiveCount = 0;
 
-                    if(verdict === 'PASSED'){
+                    if (verdict === 'PASSED') {
                         passedCount++;
-                    } else if(verdict === 'FAILED'){
+                    } else if (verdict === 'FAILED') {
                         failedCount++;
                     } else {
                         inconclusiveCount++;
@@ -360,9 +362,9 @@ export const getEventChainGraph = new ValidatedMethod({
                     let failedCount = 0;
                     let inconclusiveCount = 0;
 
-                    if(value === 'SUCCESS'){
+                    if (value === 'SUCCESS') {
                         passedCount++;
-                    } else if(value === 'FAILURE'){
+                    } else if (value === 'FAILURE') {
                         failedCount++;
                     } else {
                         inconclusiveCount++;

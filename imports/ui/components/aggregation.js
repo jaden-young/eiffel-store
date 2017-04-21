@@ -1,3 +1,4 @@
+'use strict';
 import {Template} from "meteor/templating";
 import {renderGraph} from "./graph.js";
 
@@ -8,7 +9,6 @@ import {Session} from "meteor/session";
 Template.aggregation.rendered = () => {
     // Runs when document is ready
     $(() => {
-        //console.log('document is loaded');
         let fromInput = $('#date-from'),
             toInput = $('#date-to'),
             limitInput = $('#limit'),
@@ -39,6 +39,12 @@ Template.aggregation.rendered = () => {
         datepickers.on('change', onChange);
         limitInput.on('change', onChange);
 
+        let from = Date.parse(fromInput.val()),
+            to = Date.parse(toInput.val()),
+            limit = parseInt(limitInput.val());
+
+        //showAggregation(from, to, limit);
+
         // Trigger on change to fetch and render graph
         fromInput.trigger('change');
     });
@@ -52,8 +58,6 @@ function showAggregation(from, to, limit) {
         } else {
             let container = $('#cy-aggregation');
 
-
-            // console.log(graph);
             Session.set('displayedSequenceIds', graph.sequences);
             renderGraph(graph, container);
         }

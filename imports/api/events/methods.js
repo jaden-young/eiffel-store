@@ -1,15 +1,9 @@
-import {Meteor} from "meteor/meteor";
+'use strict';
+
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {EiffelEvents} from "../eiffelevents/eiffelevents";
 import {Events} from "../events/events";
-import {EventSequences} from "../eventSequences/event-sequences";
-import {
-    getRedirectName,
-    getTestCaseEventName,
-    getTestSuiteEventName,
-    isConfidenceLevelEvent,
-    isTestEvent
-} from "./event-types";
+import {getRedirectName, getTestCaseEventName, getTestSuiteEventName} from "./event-types";
 import {
     isEiffelTestCaseFinished,
     isEiffelTestCaseStarted,
@@ -168,7 +162,3 @@ export const populateEventsCollection = new ValidatedMethod({
         console.log("Events collection is populated. [" + print + "%] (" + done + "/" + total + ")");
     }
 });
-
-
-
-

@@ -1,3 +1,4 @@
+'use strict';
 import Tabular from "meteor/aldeed:tabular";
 import {Rows} from "./rows";
 
@@ -47,7 +48,7 @@ new Tabular.Table({
         // smart: true,
         // onEnterOnly: true
     },
-    sub: subs = new SubsManager({
+    sub: new SubsManager({
         // maximum number of cache subscriptions
         cacheLimit: 1000,
         // any subscription will be expire after 5 minute, if it's not subscribed again

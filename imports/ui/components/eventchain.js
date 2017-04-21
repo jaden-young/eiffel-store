@@ -1,3 +1,4 @@
+'use strict';
 import {Template} from "meteor/templating";
 import {Session} from "meteor/session";
 
@@ -57,5 +58,3 @@ function updateSequenceGraph(sequenceId) {
         }
     })
 }
-
-

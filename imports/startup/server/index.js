@@ -1,2 +1,3 @@
+'use strict';
 import "./api";
-import '/imports/api/rows/rows-table'
+import "/imports/api/rows/rows-table";
