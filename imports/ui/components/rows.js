@@ -6,6 +6,7 @@ new Tabular.Table({
     name: "Rows",
     collection: Rows,
     columns: [
+        {defaultContent: "<button type='button' class='btn btn-default showEventChainButton'>See event chain</button>", title: 'Event chain'},
         {data: "name", title: "Name"},
         {data: "type", title: "Type"},
         {data: "id", title: "ID"},

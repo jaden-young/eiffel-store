@@ -1,6 +1,6 @@
 import "./eventchain.html";
 
-import {getEventAncestorGraph} from "/imports/api/eiffelevents/methods";
+import {getEventAncestorGraph} from "/imports/api/events/methods";
 import {renderGraph} from "./graph";
 
 Template.eventchain.rendered = () => {
@@ -14,12 +14,12 @@ function showEventChain(eventId) {
     //console.log('rendering event chain');
     getEventAncestorGraph.call({eventId: eventId}, function (error, graph) {
         if (error) {
-            //console.log(error);
+            console.log(error);
         } else {
             let container = document.getElementById('cy-event-chain');
-            //console.log('rendering graph, client', graph);
+
             renderGraph(graph, container);
-            //console.log('event chain rendered');
+            // Session.set('displayedSequenceIds', graph.sequences);
         }
     })
 
