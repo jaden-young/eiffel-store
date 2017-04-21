@@ -23,11 +23,11 @@ Template.aggregation.events({
 });
 
 Template.details.onCreated(function () {
-
     Session.set('nodeNameFilter');
+    Session.set('displayedSequenceIds');
 });
 Template.details.helpers({
     selector() {
-        return {name: Session.get('nodeNameFilter')}; // this could be pulled from a Session var or something that is reactive
+        return {name: Session.get('nodeNameFilter'), sequenceId: {$in: (Session.get('displayedSequenceIds'))}}
     }
 });

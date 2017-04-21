@@ -3,11 +3,30 @@ import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {EiffelEvents} from "../eiffelevents/eiffelevents";
 import {Events} from "../events/events";
 import {EventSequences} from "../eventSequences/eventSequences";
-import {isConfidenceLevelEvent, isTestEvent} from "./eventTypes";
-import {isEiffelTestCaseFinished, isEiffelTestCaseStarted} from "../eiffelevents/eiffeleventTypes";
+import {
+    getRedirectName,
+    getTestCaseEventName,
+    getTestSuiteEventName,
+    isConfidenceLevelEvent,
+    isTestEvent
+} from "./eventTypes";
+import {
+    isEiffelTestCaseFinished,
+    isEiffelTestCaseStarted,
+    isEiffelTestSuiteFinished,
+    isEiffelTestSuiteStarted
+} from "../eiffelevents/eiffeleventTypes";
+import {setProperty} from "../properties/methods";
 
 function getEventVersion() {
-    return '1.0';
+    return '1.4';
+}
+function getEventVersionPropertyName() {
+    return 'eventVersion';
+}
+
+function setEventVersionProperty() {
+    setProperty.call({propertyName: getEventVersionPropertyName(), propertyValue: getEventVersion()})
 }
 
 export const eventVersion = new ValidatedMethod({
@@ -18,6 +37,13 @@ export const eventVersion = new ValidatedMethod({
     }
 });
 
+export const eventVersionPropertyName = new ValidatedMethod({
+    name: 'eventVersionPropertyName',
+    validate: null,
+    run(){
+        return getEventVersionPropertyName();
+    }
+});
 
 export const populateEventsCollection = new ValidatedMethod({
     name: 'populateEventsCollection',
@@ -36,6 +62,12 @@ export const populateEventsCollection = new ValidatedMethod({
         let toBePared = {};
 
         _.each(events, (event) => {
+            if (isEiffelTestCaseStarted(event.meta.type) || isEiffelTestSuiteStarted(event.meta.type)) {
+                toBePared[event.meta.id] = event;
+            }
+        });
+
+        _.each(events, (event) => {
             if (isEiffelTestCaseFinished(event.meta.type)) {
                 let startEvent = toBePared[event.links[0].target];
                 if (startEvent === undefined) {
@@ -48,7 +80,7 @@ export const populateEventsCollection = new ValidatedMethod({
                 let match = regex.exec(str);
 
                 Events.insert({
-                    type: 'TestCase', // *
+                    type: getTestCaseEventName(), // *
                     version: event.meta.version, // *
                     name: match[1] + match[2], // *
                     id: event.meta.id, // *
@@ -64,8 +96,47 @@ export const populateEventsCollection = new ValidatedMethod({
                     startEvent: startEvent.meta.id,
                     finishEvent: event.meta.id,
                 })
-            } else if (isEiffelTestCaseStarted(event.meta.type)) {
-                toBePared[event.meta.id] = event;
+            } else if (isEiffelTestSuiteFinished(event.meta.type)) {
+                let startEvent = toBePared[event.links[0].target];
+                if (startEvent === undefined) {
+                    console.log(startEvent);
+                }
+                delete toBePared[event.links[0].target];
+
+                let regex = /^(\D+)\D(\d)+$/g;
+                let str = event.data.customData[0].value;
+                let match = regex.exec(str);
+
+                Events.insert({
+                    type: getTestSuiteEventName(), // *
+                    version: event.meta.version, // *
+                    name: match[1] + match[2], // *
+                    id: event.meta.id, // *
+                    timeStart: startEvent.meta.time, // *
+                    timeFinish: event.meta.time, // *
+                    links: startEvent.links, // *
+                    source: startEvent.meta.source, //*
+                    data: Object.assign(startEvent.data, event.data), // *
+                    dev: {
+                        // version: getEventVersion() // *
+                    },
+
+                    startEvent: startEvent.meta.id,
+                    finishEvent: event.meta.id,
+                });
+
+                Events.insert({
+                    type: getRedirectName(), // *
+                    id: startEvent.meta.id,
+                    dev: {
+                        // version: getEventVersion() // *
+                    },
+
+                    target: event.meta.id
+                });
+            }
+            else if (isEiffelTestCaseStarted(event.meta.type) || isEiffelTestSuiteStarted(event.meta.type)) {
+                // toBePared[event.meta.id] = event;
             }
             else {
                 Events.insert(({
@@ -79,7 +150,7 @@ export const populateEventsCollection = new ValidatedMethod({
                     source: event.meta.source, // *
                     data: event.data, // *
                     dev: {
-                        version: getEventVersion() // *
+                        // version: getEventVersion() // *
                     },
                 }))
             }
@@ -91,7 +162,10 @@ export const populateEventsCollection = new ValidatedMethod({
                 lastPrint = print;
             }
         });
-        console.log("Events collection is populated.");
+
+        setEventVersionProperty();
+        let print = Math.floor((done / total) * 100);
+        console.log("Events collection is populated. [" + print + "%] (" + done + "/" + total + ")");
     }
 });
 
@@ -109,9 +183,11 @@ export const getAggregatedGraph = new ValidatedMethod({
             {sort: {timeFinish: -1}, limit: limit})
             .fetch();
 
+        let sequencesIds = [];
+
         let events = _.reduce(eventsSequences, function (memo, sequence) {
-            memo = memo.concat(sequence.events);
-            return memo;
+            sequencesIds.push(sequence.id);
+            return memo.concat(sequence.events);
         }, []);
 
         // Maps individual event node id's to their aggregated node's id and vice versa
@@ -177,6 +253,6 @@ export const getAggregatedGraph = new ValidatedMethod({
             });
         });
 
-        return {nodes: nodes, edges: edges};
+        return {nodes: nodes, edges: edges, sequences: sequencesIds};
     }
 });

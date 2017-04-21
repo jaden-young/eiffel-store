@@ -4,6 +4,7 @@ import {renderGraph} from "./graph.js";
 
 import "./aggregation.html";
 import {getAggregatedGraph} from "/imports/api/events/methods.js";
+import {Session} from "meteor/session";
 
 Template.aggregation.rendered = () => {
     // Runs when document is ready
@@ -57,6 +58,7 @@ function showAggregation(from, to, limit) {
         } else {
             let container = document.getElementById('cy-aggregation');
             renderGraph(graph, container);
+            Session.set('displayedSequenceIds', graph.sequences);
         }
     });
 }
