@@ -1,3 +1,4 @@
+'use strict';
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {EiffelEvents} from "../eiffelevents/eiffelevents";
 import {Events} from "../events/events";
@@ -247,7 +248,7 @@ export const getAggregatedGraph = new ValidatedMethod({
             let toGroups = (_.uniq(tmp1));
             _.each(toGroups, (toGroup) => {
                 // if(toGroup !== undefined){
-                edges.push({data: {source: group, target: toGroup}})
+                edges.push({data: {source: group, target: toGroup}});
                 // }
             });
         });

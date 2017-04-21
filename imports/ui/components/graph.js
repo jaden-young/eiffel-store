@@ -1,3 +1,4 @@
+'use strict';
 import cytoscape from "cytoscape";
 import cydagre from "cytoscape-dagre";
 

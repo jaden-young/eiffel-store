@@ -1,3 +1,4 @@
+'use strict';
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Rows} from "./rows";
 import {EventSequences} from "../eventSequences/eventSequences";

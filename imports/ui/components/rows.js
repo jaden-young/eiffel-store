@@ -1,3 +1,4 @@
+'use strict';
 import Tabular from "meteor/aldeed:tabular";
 import {Rows} from "../../api/rows/rows";
 
