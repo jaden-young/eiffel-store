@@ -1,8 +1,9 @@
+import {Meteor} from "meteor/meteor";
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Events} from "../events/events";
 import {EventSequences} from "../eventSequences/eventSequences";
-import {getRedirectName} from "../events/eventTypes";
 import {setProperty} from "../properties/methods";
+import {getRedirectName, isConfidenceLevelEvent, isTestEvent} from "../events/eventTypes";
 
 function getEventSequenceVersion() {
     return '0.8';
@@ -212,3 +213,182 @@ export const populateEventSequences = new ValidatedMethod({
     }
 });
 
+export const getAggregatedGraph = new ValidatedMethod({
+    name: 'getAggregatedGraph',
+    validate: null,
+    run({from, to, limit}) {
+        if (Meteor.isServer) {
+            // Below values will fetch events between 2015 and 2018
+            // from: 1420070400000 2015
+            // to: 1514764800000 2018
+
+            let eventsSequences = EventSequences.find(
+                {timeStart: {$gte: parseInt(from), $lte: parseInt(to)}},
+                {sort: {timeFinish: -1}, limit: limit})
+                .fetch();
+
+            let sequencesIds = [];
+
+            let events = _.reduce(eventsSequences, function (memo, sequence) {
+                sequencesIds.push(sequence.id);
+                return memo.concat(sequence.events);
+            }, []);
+
+            // console.log(events[0]);
+
+            // Maps individual event node id's to their aggregated node's id and vice versa
+            let groupToEvents = {};
+            let eventToGroup = {};
+
+            // Assumes that the events list data.customData contains a unique value
+            // first in the list and provided to the Eiffel event by the event producer.
+            // Very brittle.
+            let nodes = [];
+            let groupedEvents = _.groupBy(events, (event) => event.name);
+            _.each(groupedEvents, (events, group) => {
+                let node = {
+                    data: {
+                        id: group,
+                        events: events,
+                        length: _.size(events),
+
+                        // This code is only run if there are events
+                        // so it is assumed that the first element exists.
+                        // The aggregated type is also the same type as every
+                        // aggregated event.
+                        type: events[0].type
+                    }
+                };
+
+                if (isTestEvent(node.data.type)) {
+                    let valueCount = _.countBy(events, (event) => event.data.outcome.verdict);
+                    let passedCount = valueCount.hasOwnProperty('PASSED') ? valueCount['PASSED'] : 0;
+                    let failedCount = valueCount.hasOwnProperty('FAILED') ? valueCount['FAILED'] : 0;
+                    node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ? valueCount['INCONCLUSIVE'] : 0;
+                    node.data.passed = passedCount;
+                    node.data.failed = failedCount;
+                }
+
+                if (isConfidenceLevelEvent(node.data.type)) {
+                    let valueCount = _.countBy(events, (event) => event.data.value);
+                    node.data.passed = valueCount.hasOwnProperty('SUCCESS') ? valueCount['SUCCESS'] : 0;
+                    node.data.failed = valueCount.hasOwnProperty('FAILURE') ? valueCount['FAILURE'] : 0;
+                    node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ? valueCount['INCONCLUSIVE'] : 0;
+                    node.data.name = events[0].data.name;
+                }
+
+                nodes.push(node);
+
+                // Save the links from events -> group and group -> events to reconstruct group -> group later
+                // console.log(links);
+                groupToEvents[group] = _.reduce(events, (memo, event) => memo.concat(event.targets), []);
+                _.each(events, (event) => {
+                    eventToGroup[event.id] = group
+                });
+            });
+
+            // Construct edges between groups
+            let edges = [];
+            _.each(groupToEvents, (events, group) => {
+                let tmp1 = _.map(events, (event) => eventToGroup[event]);
+                let toGroups = (_.uniq(tmp1));
+                _.each(toGroups, (toGroup) => {
+                    // if(toGroup !== undefined){
+                    edges.push({data: {source: group, target: toGroup}})
+                    // }
+                });
+            });
+
+            return {nodes: nodes, edges: edges, sequences: sequencesIds};
+        }
+    }
+});
+
+export const getEventChainGraph = new ValidatedMethod({
+    name: 'getEventChainGraph',
+    validate: null,
+    run({sequenceId}) {
+        if(sequenceId === undefined){
+            return undefined;
+        }
+        if (Meteor.isServer) {
+            let sequence = EventSequences.findOne({id: sequenceId}, {});
+
+            let events = sequence.events;
+
+            let nodeMap = {};
+            _.each(events, (event) => {
+                nodeMap[event.id] = event.name
+            });
+
+            let nodes = [];
+            let edges = [];
+
+            _.each(events, (event) => {
+                let node = {
+                    data: {
+                        id: event.name,
+                        events: [event],
+                        length: 1,
+                        type: event.type
+                    }
+                };
+
+                if (isTestEvent(node.data.type)) {
+                    let verdict = event.data.outcome.verdict;
+
+                    let passedCount = 0;
+                    let failedCount = 0;
+                    let inconclusiveCount = 0;
+
+                    if(verdict === 'PASSED'){
+                        passedCount++;
+                    } else if(verdict === 'FAILED'){
+                        failedCount++;
+                    } else {
+                        inconclusiveCount++;
+                    }
+                    node.data.inconclusive = inconclusiveCount;
+                    node.data.passed = passedCount;
+                    node.data.failed = failedCount;
+                }
+
+                if (isConfidenceLevelEvent(node.data.type)) {
+                    let value = event.data.value;
+
+                    let passedCount = 0;
+                    let failedCount = 0;
+                    let inconclusiveCount = 0;
+
+                    if(value === 'SUCCESS'){
+                        passedCount++;
+                    } else if(value === 'FAILURE'){
+                        failedCount++;
+                    } else {
+                        inconclusiveCount++;
+                    }
+
+                    node.data.inconclusive = inconclusiveCount;
+                    node.data.passed = passedCount;
+                    node.data.failed = failedCount;
+                    node.data.name = event.name;
+                }
+
+                nodes.push(node);
+
+                _.each(event.targetedBy, (target) => {
+                    edges.push(
+                        {
+                            data: {
+                                source: nodeMap[target],
+                                target: event.name
+                            }
+                        })
+                });
+            });
+            console.log(nodes);
+            console.log(edges);
+            return {nodes: nodes, edges: edges};
+        }
+    }
+});

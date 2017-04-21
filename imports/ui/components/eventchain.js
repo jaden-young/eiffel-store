@@ -1,38 +1,61 @@
+import {Template} from "meteor/templating";
+import {Session} from "meteor/session";
+
+import {getEventChainGraph} from "/imports/api/eventSequences/methods";
+
+import {renderGraph} from "./graph.js";
+
 import "./eventchain.html";
 
-import {getEventAncestorGraph} from "/imports/api/events/methods";
-import {renderGraph} from "./graph";
+
+// import {Session} from "meteor/session";
 
 Template.eventchain.rendered = () => {
-    //console.log('event chain template created');
-    let eventId = '6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43';
-    showEventChain(eventId);
+    // Runs when document is ready
+    $(() => {
+        $('#graph-level3-heading').hide();
+        $("time.timeago").timeago();
+    });
 };
 
-// Attempt to asynchronously fetch graph from server
-function showEventChain(eventId) {
-    //console.log('rendering event chain');
-    getEventAncestorGraph.call({eventId: eventId}, function (error, graph) {
+Template.button_row.events({
+    'click .showEventChainButton': function (event) {
+
+        // showEventChain(this.sequenceId);
+        // Session.set('selectedSequenceId', this.sequenceId);
+
+
+        $('html, body').animate({
+            scrollTop: $("#eventchain").offset().top - 10
+        }, "slow");
+
+        updateSequenceGraph(this.sequenceId);
+    }
+});
+
+Template.details.onCreated(function () {
+    Session.set('selectedSequenceId');
+});
+
+function updateSequenceGraph(sequenceId) {
+    $('#graph-level3-heading').hide();
+    $('#graph-level3-heading-alt').hide();
+    getEventChainGraph.call({sequenceId: sequenceId}, function (error, graph) {
         if (error) {
             console.log(error);
         } else {
-            let container = document.getElementById('cy-event-chain');
+            let container = $('#cy-event-chain');
+            // console.log(graph);
+            if (graph !== undefined) {
+                renderGraph(graph, container);
+                $("time#selectedSequenceUpdatedTime").timeago("update", new Date());
+                $('#graph-level3-heading').show();
+            } else {
+                $('#graph-level3-heading-alt').show();
+            }
 
-            renderGraph(graph, container);
-            // Session.set('displayedSequenceIds', graph.sequences);
         }
     })
-
-    /*getEventAncestorGraph.call({ eventId: eventId }, function (error, graph) {
-     if (error) {
-     //console.log(error);
-     } else {
-     let container = document.getElementById('cy-event-chain');
-     let onClick = (event) => {
-     //console.log(event.cyTarget.id());
-     };
-     renderGraph(graph, container, onClick);
-     //console.log('event chain rendered');
-     }
-     });*/
 }
+
+

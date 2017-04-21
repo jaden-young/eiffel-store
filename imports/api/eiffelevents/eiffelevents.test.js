@@ -187,7 +187,7 @@ if (Meteor.isServer) {
         });
     });
 
-    describe('getEventAncestorGraph', function () {
+    describe('getEventChainGraph', function () {
 
         beforeEach(function () {
             resetDatabase();

@@ -1,13 +1,15 @@
 import Tabular from "meteor/aldeed:tabular";
-import {Rows} from "../../api/rows/rows";
+import {Rows} from "./rows";
 
 
 new Tabular.Table({
     name: "Rows",
     collection: Rows,
     columns: [
-
-        {defaultContent: "<button type='button' class='btn btn-default showEventChainButton'>See event chain</button>", title: 'Event chain'},
+        {data: "sequenceId", title: "sequenceId", visible: false},
+        {
+            tmpl: Meteor.isClient && Template.button_row
+        },
         {data: "name", title: "Name"},
         {data: "type", title: "Type"},
         {data: "id", title: "ID"},

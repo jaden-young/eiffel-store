@@ -1,2 +1,2 @@
 import "./api";
-import '/imports/ui/components/rows'
+import '/imports/api/rows/rows-table'

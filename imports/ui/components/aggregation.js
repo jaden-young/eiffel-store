@@ -2,7 +2,7 @@ import {Template} from "meteor/templating";
 import {renderGraph} from "./graph.js";
 
 import "./aggregation.html";
-import {getAggregatedGraph} from "/imports/api/events/methods.js";
+import {getAggregatedGraph} from "/imports/api/eventSequences/methods";
 import {Session} from "meteor/session";
 
 Template.aggregation.rendered = () => {
@@ -50,10 +50,12 @@ function showAggregation(from, to, limit) {
         if (error) {
             console.log(error);
         } else {
-            let container = document.getElementById('cy-aggregation');
+            let container = $('#cy-aggregation');
 
-            renderGraph(graph, container);
+
+            // console.log(graph);
             Session.set('displayedSequenceIds', graph.sequences);
+            renderGraph(graph, container);
         }
     });
 }
