@@ -18,8 +18,10 @@ Template.aggregation.rendered = () => {
             limitInput = $('#limit'),
             datepickers = $('.datepicker'),
             defaultLimit = 500,
-            defaultFrom = '2012-01-01',
-            defaultTo = '2017-01-01';
+            defaultFrom = '2015-01-01',
+            defaultTo = '2018-01-01',
+            fromTimeline = 1420070400000,// from: 1420070400000 2015
+            toTimeline = 1514764800000;// to: 1514764800000 2018
 
         // Set default input values
         fromInput.val(defaultFrom);
@@ -57,13 +59,15 @@ Template.aggregation.rendered = () => {
                     let limit = parseInt(limitInput.val());
                 if(item.id === 1){
                     let from = Date.parse(item.start),
-                        to = Date.parse(toInput.val());
+                        to = toTimeline;
                     fromInput.val(new Date(item.start).toLocaleDateString('sv'));
+                    fromTimeline = Date.parse(item.start);
                     showAggregation(from, to, limit);
                 }else if(item.id === 2){
-                    let from = Date.parse(toInput.val()),
+                    let from = fromTimeline,
                         to = Date.parse(item.start);
                     toInput.val(new Date(item.start).toLocaleDateString('sv'));
+                    toTimeline = Date.parse(item.start);
                     showAggregation(from, to, limit);
                 }
             }
