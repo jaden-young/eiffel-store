@@ -6,6 +6,7 @@ new Tabular.Table({
     name: "Rows",
     collection: Rows,
     columns: [
+
         {defaultContent: "<button type='button' class='btn btn-default showEventChainButton'>See event chain</button>", title: 'Event chain'},
         {data: "name", title: "Name"},
         {data: "type", title: "Type"},
@@ -43,5 +44,11 @@ new Tabular.Table({
         // caseInsensitive: true,
         // smart: true,
         // onEnterOnly: true
-    }
+    },
+    sub: subs = new SubsManager({
+        // maximum number of cache subscriptions
+        cacheLimit: 1000,
+        // any subscription will be expire after 5 minute, if it's not subscribed again
+        expireIn: 5
+    })
 });
