@@ -14,17 +14,13 @@ import "./eventchain.html";
 Template.eventchain.rendered = () => {
     // Runs when document is ready
     $(() => {
-        $('#graph-level3-heading').hide();
         $("time.timeago").timeago();
+        show(1);
     });
 };
 
 Template.button_row.events({
     'click .showEventChainButton': function (event) {
-
-        // showEventChain(this.sequenceId);
-        // Session.set('selectedSequenceId', this.sequenceId);
-
 
         $('html, body').animate({
             scrollTop: $("#eventchain").offset().top - 10
@@ -38,9 +34,43 @@ Template.details.onCreated(function () {
     Session.set('selectedSequenceId');
 });
 
+function showNon() {
+    $('#level3_heading_select').hide();
+    $('#level3_heading_updated').hide();
+
+    $('#sequence_loader').hide();
+
+    $('#level3_footer_select').hide();
+    $('#level3_footer_loading').hide();
+    $('#level3_footer_updated').hide();
+}
+
+function show(state) {
+    showNon();
+
+    switch (state) {
+        case 1:
+            $('#level3_heading_select').show();
+            $('#level3_footer_select').show();
+            break;
+        case 2:
+            $('#sequence_loader').show();
+
+            $('#level3_footer_loading').show();
+            break;
+        case 3:
+            $("time#sequence_updated_time").timeago("update", new Date());
+
+            $('#level3_heading_updated').show();
+            $('#level3_footer_updated').show();
+            break;
+        default:
+            break;
+    }
+}
+
 function updateSequenceGraph(sequenceId) {
-    $('#graph-level3-heading').hide();
-    $('#graph-level3-heading-alt').hide();
+    show(2);
     getEventChainGraph.call({sequenceId: sequenceId}, function (error, graph) {
         if (error) {
             console.log(error);
@@ -49,10 +79,11 @@ function updateSequenceGraph(sequenceId) {
             // console.log(graph);
             if (graph !== undefined) {
                 renderGraph(graph, container);
-                $("time#selectedSequenceUpdatedTime").timeago("update", new Date());
-                $('#graph-level3-heading').show();
+
+                $('#level3_heading_updated').html('Showing a sequence with time span ' + graph.timeStart + ' - ' + graph.timeFinish);
+                show(3);
             } else {
-                $('#graph-level3-heading-alt').show();
+                show(1);
             }
 
         }

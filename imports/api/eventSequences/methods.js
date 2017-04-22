@@ -390,7 +390,7 @@ export const getEventChainGraph = new ValidatedMethod({
             });
             // console.log(nodes);
             // console.log(edges);
-            return {nodes: nodes, edges: edges};
+            return {nodes: nodes, edges: edges, timeStart: sequence.timeStart, timeFinish:sequence.timeFinish};
         }
     }
 });
