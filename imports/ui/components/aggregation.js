@@ -13,7 +13,7 @@ Template.aggregation.rendered = () => {
             toInput = $('#date-to'),
             limitInput = $('#limit'),
             datepickers = $('.datepicker'),
-            defaultLimit = 500,
+            defaultLimit = 400,
             defaultFrom = '01/02/2012',
             defaultTo = '01/02/2018';
 
@@ -59,6 +59,8 @@ function showAggregation(from, to, limit) {
             let container = $('#cy-aggregation');
 
             Session.set('displayedSequenceIds', graph.sequences);
+
+            // console.log(graph);
             renderGraph(graph, container);
         }
     });

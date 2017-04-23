@@ -8,7 +8,7 @@ import {setProperty} from "../properties/methods";
 import {getRedirectName, isConfidenceLevelEvent, isTestEvent} from "../events/event-types";
 
 function getEventSequenceVersion() {
-    return '0.8';
+    return '0.9';
 }
 function getEventSequenceVersionPropertyName() {
     return 'eventSequenceVersion';
@@ -16,6 +16,10 @@ function getEventSequenceVersionPropertyName() {
 
 function setEventVersionProperty() {
     setProperty.call({propertyName: getEventSequenceVersionPropertyName(), propertyValue: getEventSequenceVersion()})
+}
+
+function invalidateEventVersionProperty() {
+    setProperty.call({propertyName: getEventSequenceVersionPropertyName(), propertyValue: undefined})
 }
 
 export const eventSequenceVersion = new ValidatedMethod({
@@ -39,6 +43,7 @@ export const populateEventSequences = new ValidatedMethod({
     validate: null,
     run(){
         console.log("Removing old events-sequences collection.");
+        invalidateEventVersionProperty();
         EventSequences.remove({});
 
         let total = Events.find().count();
@@ -71,7 +76,7 @@ export const populateEventSequences = new ValidatedMethod({
             'ARTIFACT',
             'SUBJECT',
             // 'ELEMENT' MongoError: document is larger than the maximum size 16777216
-            // 'BASE', RangeError: Maximum call stack size exceeded
+            // 'BASE', // RangeError: Maximum call stack size exceeded
             'CHANGE',
             'TEST_SUITE_EXECUTION',
             'TEST_CASE_EXECUTION',
@@ -83,22 +88,25 @@ export const populateEventSequences = new ValidatedMethod({
             'VERIFICATION_BASIS',
         ];
 
+        let dangerousTypes = [
+            'ELEMENT',
+        ];
+
         // Populate map
         let eventMap = {};
         _.each(events, (event) => {
             // Filtering links that would make us jump between sequences.
             if (event.type !== getRedirectName()) {
                 event.targets = _.pluck(_.filter(event.links, function (link) {
-
                     return _.contains(legalTypes, link.type);
-
-                    // return !(_.contains(illegalBridgeTypes, event.type));
-
-                    // return true;
+                }), 'target');
+                event.dangerousTargets = _.pluck(_.filter(event.links, function (link) {
+                    // return false;
+                    return _.contains(dangerousTypes, link.type);
                 }), 'target');
                 event.targetedBy = [];
                 event.dev.checked = false;
-                event.dev.stop = _.contains(illegalBridgeTypes, event.type);
+                // event.dev.stop = _.contains(illegalBridgeTypes, event.type);
             } else {
                 total--;
             }
@@ -157,7 +165,7 @@ export const populateEventSequences = new ValidatedMethod({
             return linkedEvents;
         }
 
-        let sequences = _.sortBy(_.reduce(events, function (memo, event) {
+        let sequencesIds = _.sortBy(_.reduce(events, function (memo, event) {
             let sequence = [];
             if (event.type !== getRedirectName()) {
                 sequence = getAllLinked(event.id);
@@ -169,11 +177,12 @@ export const populateEventSequences = new ValidatedMethod({
         }, []), 'timeFinish').reverse();
 
 
-        done = 0;
-        lastPrint = ((done / total) * 100);
-
+        console.log("Generating sequences.");
+        let sequences = [];
         let sequenceIndex = 0;
-        _.each(sequences, (sequence) => {
+        _.each(sequencesIds, (sequence) => {
+
+
             let timeStart = undefined;
             let timeFinish = undefined;
 
@@ -185,23 +194,64 @@ export const populateEventSequences = new ValidatedMethod({
                 if (timeFinish === undefined || event.timeFinish > timeFinish) {
                     timeFinish = event.timeFinish;
                 }
+
                 memo.push(event);
                 return memo;
             }, []);
 
-            EventSequences.insert({
+            sequences.push({
                 timeStart: timeStart,
                 timeFinish: timeFinish,
                 events: sequenceEvents,
                 id: sequenceIndex,
+                targets: [],
                 dev: {
                     // version: getEventSequenceVersion()
                 }
             });
 
             sequenceIndex++;
+        });
 
-            done = done + sequenceEvents.length;
+        done = 0;
+        lastPrint = ((done / total) * 100);
+
+        _.each(sequences, (sequence, index) => {
+            let targets = [];
+            _.each(sequence.events, (event) => {
+                _.each(event.dangerousTargets, (target) => {
+                    FindTarget:
+                        for (let s = 0; s < sequences.length; s++) {
+                            if (sequences[s].id !== sequences[index].id) {
+                                for (let e = 0; e < sequences[s].events.length; e++) {
+                                    if (sequences[s].events[e].id === target) {
+                                        targets.push(sequences[s].id);
+                                        break FindTarget;
+                                    }
+                                }
+                            }
+                        }
+                });
+
+                done++;
+                let print = Math.floor((done / total) * 100);
+                if (print >= (lastPrint + 5)) {
+                    console.log("Setting sequences targets: " + print + '% (' + done + '/' + total + ')');
+                    lastPrint = print;
+                }
+            });
+            sequence.targets = targets;
+
+
+        });
+
+
+        done = 0;
+        lastPrint = ((done / total) * 100);
+        _.each(sequences, (sequence) => {
+            EventSequences.insert(sequence);
+
+            done = done + sequence.events.length;
             let print = Math.floor((done / total) * 100);
             if (print >= (lastPrint + 5)) {
                 console.log("Populating event-sequence collection progress: " + print + '% (' + done + '/' + total + ')');
@@ -224,14 +274,27 @@ export const getAggregatedGraph = new ValidatedMethod({
             // from: 1420070400000 2015
             // to: 1514764800000 2018
 
-            let eventsSequences = EventSequences.find(
+            let eventSequences = EventSequences.find(
                 {timeStart: {$gte: parseInt(from), $lte: parseInt(to)}},
                 {sort: {timeFinish: -1}, limit: limit})
                 .fetch();
 
+            let linkedSequences = {};
+            _.each(eventSequences, (eventSequence) => {
+                _.each(eventSequence.targets, (targetId) => {
+                    if (linkedSequences[targetId] === undefined) {
+                        linkedSequences[targetId] = EventSequences.findOne({id: targetId}, {})
+                    }
+                });
+            });
+
+            _.each(linkedSequences, (eventSequence) => {
+                eventSequences = eventSequences.concat(eventSequence);
+            });
+
             let sequencesIds = [];
 
-            let events = _.reduce(eventsSequences, function (memo, sequence) {
+            let events = _.reduce(eventSequences, function (memo, sequence) {
                 sequencesIds.push(sequence.id);
                 return memo.concat(sequence.events);
             }, []);
@@ -283,7 +346,7 @@ export const getAggregatedGraph = new ValidatedMethod({
 
                 // Save the links from events -> group and group -> events to reconstruct group -> group later
                 // console.log(links);
-                groupToEvents[group] = _.reduce(events, (memo, event) => memo.concat(event.targets), []);
+                groupToEvents[group] = _.reduce(events, (memo, event) => memo.concat(event.targets.concat(event.dangerousTargets)), []);
                 _.each(events, (event) => {
                     eventToGroup[event.id] = group
                 });
@@ -301,6 +364,7 @@ export const getAggregatedGraph = new ValidatedMethod({
                 });
             });
 
+            // console.log(edges);
             return {nodes: nodes, edges: edges, sequences: sequencesIds};
         }
     }
@@ -316,7 +380,28 @@ export const getEventChainGraph = new ValidatedMethod({
         if (Meteor.isServer) {
             let sequence = EventSequences.findOne({id: sequenceId}, {});
 
+            let linkedSequences = {};
+
+            _.each(sequence.targets, (targetId) => {
+                if (linkedSequences[targetId] === undefined) {
+                    console.log(targetId);
+                    linkedSequences[targetId] = EventSequences.findOne({id: targetId}, {})
+                }
+            });
+
             let events = sequence.events;
+
+            let ignored = [];
+
+            _.each(linkedSequences, (eventSequence) => {
+                if (!(_.some(eventSequence.events, (newEvent) => {
+                        return _.some(events, (event) => {
+                            return event.name === newEvent.name
+                        });
+                    }))) {
+                    events = events.concat(eventSequence.events);
+                }
+            });
 
             let nodeMap = {};
             _.each(events, (event) => {
@@ -378,19 +463,24 @@ export const getEventChainGraph = new ValidatedMethod({
 
                 nodes.push(node);
 
-                _.each(event.targetedBy, (target) => {
-                    edges.push(
-                        {
-                            data: {
-                                source: nodeMap[target],
-                                target: event.name
-                            }
-                        })
+                _.each(event.targets.concat(event.dangerousTargets), (target) => {
+                    if (event.name !== undefined && nodeMap[target]) {
+                        edges.push(
+                            {
+                                data: {
+                                    source: event.name,
+                                    target: nodeMap[target]
+                                }
+                            })
+                    } else {
+                        console.log("Found undefined edge at event " + event.id)
+                    }
+
                 });
             });
             // console.log(nodes);
             // console.log(edges);
-            return {nodes: nodes, edges: edges, timeStart: sequence.timeStart, timeFinish:sequence.timeFinish};
+            return {nodes: nodes, edges: edges, timeStart: sequence.timeStart, timeFinish: sequence.timeFinish};
         }
     }
 });

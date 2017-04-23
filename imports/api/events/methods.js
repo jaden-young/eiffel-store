@@ -13,7 +13,7 @@ import {
 import {setProperty} from "../properties/methods";
 
 function getEventVersion() {
-    return '1.4';
+    return '1.5';
 }
 function getEventVersionPropertyName() {
     return 'eventVersion';
@@ -21,6 +21,10 @@ function getEventVersionPropertyName() {
 
 function setEventVersionProperty() {
     setProperty.call({propertyName: getEventVersionPropertyName(), propertyValue: getEventVersion()})
+}
+
+function invalidateEventVersionProperty() {
+    setProperty.call({propertyName: getEventVersionPropertyName(), propertyValue: undefined})
 }
 
 export const eventVersion = new ValidatedMethod({
@@ -44,6 +48,7 @@ export const populateEventsCollection = new ValidatedMethod({
     validate: null,
     run(){
         console.log("Removing old events collection.");
+        invalidateEventVersionProperty();
         Events.remove({});
 
         let total = EiffelEvents.find().count();
