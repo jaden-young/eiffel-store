@@ -75,25 +75,44 @@ Template.aggregation.rendered = () => {
         let timeline = new vis.Timeline(container, data, options);
         /*---------------*/
 
-        let onChange = () => {
-            let from = Date.parse(fromInput.val()),
-                to = Date.parse(toInput.val()),
-                limit = parseInt(limitInput.val());
-            timeline.setItems( new vis.DataSet([{
-                id: 1,
-                content: 'Start',
-                start: fromInput.val()
-            }, {
-                id: 2,
-                content: 'End',
-                start: toInput.val()
-            }]));
-            showAggregation(from, to, limit);
-        };
+        //Aggregates new graph when datepicker changes values
+        $('#date-from').change(
+            function() {
+                let limit = parseInt(limitInput.val());
+                fromTimeline = Date.parse(fromInput.val())
+                timeline.setItems( new vis.DataSet([{
+                    id: 1,
+                    content: 'Start',
+                    start: Date.parse(fromInput.val())
+                }, {
+                    id: 2,
+                    content: 'End',
+                    start: toTimeline
+                }]));
+                showAggregation(fromTimeline, toTimeline, limit);
+            });
 
+        $('#date-to').change(
+            function() {
+                let limit = parseInt(limitInput.val());
+                toTimeline = Date.parse(toInput.val());
+                    timeline.setItems( new vis.DataSet([{
+                    id: 1,
+                    content: 'Start',
+                    start: fromTimeline
+                }, {
+                    id: 2,
+                    content: 'End',
+                    start: Date.parse(toInput.val())
+                }]));
+                showAggregation(fromTimeline, toTimeline, limit);
+            });
 
-        datepickers.on('change', onChange);
-        limitInput.on('change', onChange);
+        $('#limit').change(
+            function() {
+                let limit = parseInt(limitInput.val());
+                showAggregation(fromTimeline, toTimeline, limit);
+            });
 
         // Trigger on change to fetch and render graph
         fromInput.trigger('change');
@@ -103,6 +122,8 @@ Template.aggregation.rendered = () => {
 // Attempt to asynchronously fetch graph from server
 function showAggregation(from, to, limit) {
     getAggregatedGraph.call({from: from, to: to, limit: limit}, function (error, graph) {
+        console.log(from);
+        console.log(to);
         if (error) {
             console.log(error);
         } else {
