@@ -3,7 +3,7 @@ import {Template} from "meteor/templating";
 import {renderGraph} from "./graph.js";
 
 import "./aggregation.html";
-import {getAggregatedGraph} from "/imports/api/events/methods.js";
+import {getAggregatedGraph, getEventCount} from "/imports/api/events/methods.js";
 import {Session} from "meteor/session";
 
 Template.aggregation.rendered = () => {
@@ -59,6 +59,17 @@ function showAggregation(from, to, limit) {
             let container = document.getElementById('cy-aggregation');
             renderGraph(graph, container);
             Session.set('displayedSequenceIds', graph.sequences);
+
+            console.log('fetching additional');
+            getEventCount.call({from: from, to: to}, function(error, count) {
+               if (error) {
+                   console.log(error);
+               } else {
+                   console.log('fetched additional', count);
+                   let additionalLabel = $('.additional');
+                   additionalLabel.text(count);
+               }
+            });
         }
     });
 }

@@ -256,3 +256,14 @@ export const getAggregatedGraph = new ValidatedMethod({
         return {nodes: nodes, edges: edges, sequences: sequencesIds};
     }
 });
+
+
+export const getEventCount = new ValidatedMethod({
+    name: 'getEventCount',
+    validate: null,
+    run({from, to}) {
+        return Events.find({
+            timeStart: {$gte: parseInt(from), $lte: parseInt(to)}
+        }).count();
+    }
+});
