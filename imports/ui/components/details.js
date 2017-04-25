@@ -1,6 +1,7 @@
 'use strict';
 import {Template} from "meteor/templating";
 import "./details.html";
+import "./button-row.html";
 
 import {$} from "meteor/jquery";
 import dataTablesBootstrap from "datatables.net-bs";
@@ -17,7 +18,7 @@ Template.aggregation.events({
 
 
         $('html, body').animate({
-            scrollTop: $("#details-container").offset().top - 10
+            scrollTop: $("#details").offset().top - 10
         }, "slow");
     }
 });

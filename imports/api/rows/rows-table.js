@@ -1,12 +1,16 @@
 'use strict';
 import Tabular from "meteor/aldeed:tabular";
-import {Rows} from "../../api/rows/rows";
+import {Rows} from "./rows";
 
 
 new Tabular.Table({
     name: "Rows",
     collection: Rows,
     columns: [
+        {data: "sequenceId", title: "sequenceId", visible: false},
+        {
+            tmpl: Meteor.isClient && Template.button_row
+        },
         {data: "name", title: "Name"},
         {data: "type", title: "Type"},
         {data: "id", title: "ID"},
@@ -43,5 +47,11 @@ new Tabular.Table({
         // caseInsensitive: true,
         // smart: true,
         // onEnterOnly: true
-    }
+    },
+    sub: new SubsManager({
+        // maximum number of cache subscriptions
+        cacheLimit: 1000,
+        // any subscription will be expire after 5 minute, if it's not subscribed again
+        expireIn: 5
+    })
 });
