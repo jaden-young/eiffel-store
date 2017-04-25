@@ -384,7 +384,7 @@ export const getEventChainGraph = new ValidatedMethod({
 
             _.each(sequence.targets, (targetId) => {
                 if (linkedSequences[targetId] === undefined) {
-                    console.log(targetId);
+                    // console.log(targetId);
                     linkedSequences[targetId] = EventSequences.findOne({id: targetId}, {})
                 }
             });
