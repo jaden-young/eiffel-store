@@ -83,7 +83,7 @@ Template.aggregation.rendered = () => {
                 timeline.setItems( new vis.DataSet([{
                     id: 1,
                     content: 'Start',
-                    start: Date.parse(fromInput.val())
+                    start: fromTimeline
                 }, {
                     id: 2,
                     content: 'End',
@@ -103,7 +103,7 @@ Template.aggregation.rendered = () => {
                 }, {
                     id: 2,
                     content: 'End',
-                    start: Date.parse(toInput.val())
+                    start: toTimeline
                 }]));
                 showAggregation(fromTimeline, toTimeline, limit);
             });
@@ -122,8 +122,6 @@ Template.aggregation.rendered = () => {
 // Attempt to asynchronously fetch graph from server
 function showAggregation(from, to, limit) {
     getAggregatedGraph.call({from: from, to: to, limit: limit}, function (error, graph) {
-        console.log(from);
-        console.log(to);
         if (error) {
             console.log(error);
         } else {
