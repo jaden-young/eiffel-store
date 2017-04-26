@@ -313,6 +313,7 @@ export const getAggregatedGraph = new ValidatedMethod({
             _.each(groupedEvents, (events, group) => {
                 let node = {
                     data: {
+                        label: group,
                         id: group,
                         events: events,
                         length: _.size(events),
@@ -394,18 +395,7 @@ export const getEventChainGraph = new ValidatedMethod({
             let ignored = [];
 
             _.each(linkedSequences, (eventSequence) => {
-                if (!(_.some(eventSequence.events, (newEvent) => {
-                        return _.some(events, (event) => {
-                            return event.name === newEvent.name
-                        });
-                    }))) {
-                    events = events.concat(eventSequence.events);
-                }
-            });
-
-            let nodeMap = {};
-            _.each(events, (event) => {
-                nodeMap[event.id] = event.name
+                events = events.concat(eventSequence.events);
             });
 
             let nodes = [];
@@ -414,7 +404,8 @@ export const getEventChainGraph = new ValidatedMethod({
             _.each(events, (event) => {
                 let node = {
                     data: {
-                        id: event.name,
+                        label: event.name,
+                        id: event.id,
                         events: [event],
                         length: 1,
                         type: event.type
@@ -464,18 +455,13 @@ export const getEventChainGraph = new ValidatedMethod({
                 nodes.push(node);
 
                 _.each(event.targets.concat(event.dangerousTargets), (target) => {
-                    if (event.name !== undefined && nodeMap[target]) {
-                        edges.push(
-                            {
-                                data: {
-                                    source: event.name,
-                                    target: nodeMap[target]
-                                }
-                            })
-                    } else {
-                        console.log("Found undefined edge at event " + event.id)
-                    }
-
+                    edges.push(
+                        {
+                            data: {
+                                source: event.id,
+                                target: target
+                            }
+                        })
                 });
             });
             // console.log(nodes);
