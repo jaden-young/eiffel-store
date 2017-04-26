@@ -1,15 +1,37 @@
 <template name="aggregation">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.19.1/vis.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.19.1/vis.css" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.19.1/vis.css" rel="stylesheet" type="text/css"/>
     <div class="panel panel-default">
         <div id="aggregation-tt"></div>
         <div id="cy-aggregation" class="cy panel-body"></div>
         <div class="panel-footer">
-            <div id="example-timeline"></div>
-            <label for="date-from">Aggregate from </label><input id="date-from" class="datepicker"/>
-            <label for="date-to">Aggregate to </label><input id="date-to" class="datepicker"/>
-            <label for="limit">Limit </label><input id="limit"/>
-            <label>Additional events</label>&nbsp;<label class="additional">0</label>
+            <div class="panel panel-default" id="example-timeline"></div>
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="input-group">
+                        <span class="input-group-addon">Aggregate from</span><input id="date-from"
+                                                                                    class="form-control datepicker"/>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="input-group">
+                        <span class="input-group-addon">Aggregate to</span><input id="date-to"
+                                                                                  class="form-control datepicker"/>
+                    </div>
+
+                </div>
+                <div class="col-lg-3">
+                    <div class="input-group">
+                        <span class="input-group-addon">Limit</span><input id="limit" class="form-control"/>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="input-group">
+                        <span class="input-group-addon">Additional sequences</span>
+                        <input type="text" value="0" id="additional_sequences" class="form-control" readonly/>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
