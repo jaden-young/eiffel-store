@@ -52,8 +52,8 @@ Template.aggregation.rendered = () => {
         let options = {
             height: '150px',
             zoomMin: 3600000, // Setting 10 minutes as minimum zoom
-            max: new Date(Date.now()).toLocaleDateString(), //Todays date
-            min: '2010-01-01',  // IS HARDCODED NOW, SHOULD BE THE DATE OF THE FIRST EVENT
+            max: '2020-01-01',//new Date(Date.now()).toLocaleDateString(), //Todays date
+            min: '2010-01-01',  
             editable: {updateTime: true},
             selectable: true,
             onMove: function (item, callback) {
