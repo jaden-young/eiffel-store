@@ -1,5 +1,7 @@
+'use strict';
 import {Template} from "meteor/templating";
 import "./details.html";
+import "./button-row.html";
 
 import {$} from "meteor/jquery";
 import dataTablesBootstrap from "datatables.net-bs";
@@ -16,17 +18,17 @@ Template.aggregation.events({
 
 
         $('html, body').animate({
-            scrollTop: $("#details-container").offset().top - 10
+            scrollTop: $("#details").offset().top - 10
         }, "slow");
     }
 });
 
 Template.details.onCreated(function () {
-
     Session.set('nodeNameFilter');
+    Session.set('displayedSequenceIds');
 });
 Template.details.helpers({
     selector() {
-        return {name: Session.get('nodeNameFilter')}; // this could be pulled from a Session var or something that is reactive
+        return {name: Session.get('nodeNameFilter'), sequenceId: {$in: (Session.get('displayedSequenceIds'))}}
     }
 });

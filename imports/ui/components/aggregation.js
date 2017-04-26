@@ -1,9 +1,11 @@
 
-import { Template } from "meteor/templating";
-import { renderGraph } from "./graph.js";
+'use strict';
+import {Template} from "meteor/templating";
+import {renderGraph} from "./graph.js";
 
-import './aggregation.html';
-import { getAggregatedGraph } from '/imports/api/events/methods.js';
+import "./aggregation.html";
+import {getAggregatedGraph} from "/imports/api/eventSequences/methods";
+import {Session} from "meteor/session";
 import vis from 'vis';
 
 
@@ -12,7 +14,6 @@ Template.aggregation.rendered = () => {
 
     // Runs when document is ready
     $(() => {
-        //console.log('document is loaded');
         let fromInput = $('#date-from'),
             toInput = $('#date-to'),
             limitInput = $('#limit'),
@@ -114,6 +115,12 @@ Template.aggregation.rendered = () => {
                 showAggregation(fromTimeline, toTimeline, limit);
             });
 
+        let from = Date.parse(fromInput.val()),
+            to = Date.parse(toInput.val()),
+            limit = parseInt(limitInput.val());
+
+        //showAggregation(from, to, limit);
+
         // Trigger on change to fetch and render graph
         fromInput.trigger('change');
     });
@@ -125,7 +132,10 @@ function showAggregation(from, to, limit) {
         if (error) {
             console.log(error);
         } else {
-            let container = document.getElementById('cy-aggregation');
+
+            let container = $('#cy-aggregation');
+
+            Session.set('displayedSequenceIds', graph.sequences);
             renderGraph(graph, container);
         }
     });

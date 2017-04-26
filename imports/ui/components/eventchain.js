@@ -1,38 +1,93 @@
+'use strict';
+import {Template} from "meteor/templating";
+import {Session} from "meteor/session";
+
+import {getEventChainGraph} from "/imports/api/eventSequences/methods";
+
+import {renderGraph} from "./graph.js";
+
 import "./eventchain.html";
 
-import {getEventAncestorGraph} from "/imports/api/eiffelevents/methods";
-import {renderGraph} from "./graph";
+
+// import {Session} from "meteor/session";
 
 Template.eventchain.rendered = () => {
-    //console.log('event chain template created');
-    let eventId = '6acc3c87-75e0-4b6d-88f5-b1a5d4e62b43';
-    showEventChain(eventId);
+    // Runs when document is ready
+    $(() => {
+        $("time.timeago").timeago();
+        show(1);
+    });
 };
 
-// Attempt to asynchronously fetch graph from server
-function showEventChain(eventId) {
-    //console.log('rendering event chain');
-    getEventAncestorGraph.call({eventId: eventId}, function (error, graph) {
+Template.button_row.events({
+    'click .showEventChainButton': function (event) {
+
+        $('html, body').animate({
+            scrollTop: $("#eventchain").offset().top - 10
+        }, "slow");
+
+        updateSequenceGraph(this.sequenceId);
+    }
+});
+
+Template.details.onCreated(function () {
+    Session.set('selectedSequenceId');
+});
+
+function showNon() {
+    $('#level3_heading_select').hide();
+    $('#level3_heading_updated').hide();
+
+    $('#sequence_loader').hide();
+
+    $('#level3_footer_select').hide();
+    $('#level3_footer_loading').hide();
+    $('#level3_footer_updated').hide();
+}
+
+function show(state) {
+    showNon();
+
+    switch (state) {
+        case 1:
+            $('#level3_heading_select').show();
+            $('#level3_footer_select').show();
+            break;
+        case 2:
+            $('#sequence_loader').show();
+
+            $('#level3_footer_loading').show();
+            break;
+        case 3:
+            $("time#sequence_updated_time").timeago("update", new Date());
+
+            $('#level3_heading_updated').show();
+            $('#level3_footer_updated').show();
+            break;
+        default:
+            break;
+    }
+}
+
+function updateSequenceGraph(sequenceId) {
+    show(2);
+    getEventChainGraph.call({sequenceId: sequenceId}, function (error, graph) {
         if (error) {
-            //console.log(error);
+            console.log(error);
         } else {
-            let container = document.getElementById('cy-event-chain');
-            //console.log('rendering graph, client', graph);
-            renderGraph(graph, container);
-            //console.log('event chain rendered');
+            let container = $('#cy-event-chain');
+            // console.log(graph);
+            if (graph !== undefined) {
+                // console.log(graph);
+                renderGraph(graph, container);
+
+
+                $('#level3_heading_updated').html('Showing a sequence with time span ' + graph.timeStart + ' - ' + graph.timeFinish);
+                show(3);
+            } else {
+                show(1);
+            }
+
         }
     })
-
-    /*getEventAncestorGraph.call({ eventId: eventId }, function (error, graph) {
-     if (error) {
-     //console.log(error);
-     } else {
-     let container = document.getElementById('cy-event-chain');
-     let onClick = (event) => {
-     //console.log(event.cyTarget.id());
-     };
-     renderGraph(graph, container, onClick);
-     //console.log('event chain rendered');
-     }
-     });*/
 }

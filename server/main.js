@@ -1,1 +1,2 @@
-import '/imports/startup/server';
+'use strict';
+import "/imports/startup/server";
