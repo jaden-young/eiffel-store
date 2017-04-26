@@ -53,7 +53,8 @@ Template.aggregation.rendered = () => {
             height: '150px',
             zoomMin: 3600000, // Setting 10 minutes as minimum zoom
             max: '2020-01-01',//new Date(Date.now()).toLocaleDateString(), //Todays date
-            min: '2010-01-01',  
+            min: '2010-01-01',
+            itemsAlwaysDraggable: true,
             editable: {updateTime: true},
             selectable: true,
             onMove: function (item, callback) {
