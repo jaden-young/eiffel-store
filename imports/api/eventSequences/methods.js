@@ -8,7 +8,7 @@ import {getProperty, setProperty} from "../properties/methods";
 import {getRedirectName, isConfidenceLevelEvent, isTestEvent} from "../events/event-types";
 
 function getEventSequenceVersion() {
-    return '0.11bbbbbb';
+    return '0.11';
 }
 function getEventSequenceVersionPropertyName() {
     return 'eventSequences.version';
