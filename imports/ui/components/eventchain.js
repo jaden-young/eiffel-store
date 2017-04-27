@@ -21,11 +21,6 @@ Template.eventchain.rendered = () => {
 
 Template.button_row.events({
     'click .showEventChainButton': function (event) {
-
-        $('html, body').animate({
-            scrollTop: $("#eventchain").offset().top - 10
-        }, "slow");
-
         updateSequenceGraph(this.sequenceId);
     }
 });
@@ -63,9 +58,9 @@ function show(state) {
             break;
         case 3:
             $("time#sequence_updated_time").timeago("update", new Date());
-
             $('#level3_heading_updated').show();
 
+            $('#level3_footer_updated').show();
             break;
         default:
             break;
@@ -74,6 +69,9 @@ function show(state) {
 
 function updateSequenceGraph(sequenceId) {
     show(2);
+    $('html, body').animate({
+        scrollTop: $("#eventchain").offset().top - 10
+    }, "slow");
     getEventChainGraph.call({sequenceId: sequenceId}, function (error, graph) {
         if (error) {
             console.log(error);

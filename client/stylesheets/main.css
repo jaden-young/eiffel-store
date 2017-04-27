@@ -235,3 +235,7 @@ h2 {
     top: 10px;
     z-index: 1000;
 }
+
+#page_footer {
+    height: 15vh;
+}

@@ -169,6 +169,9 @@ function show(state) {
 // Attempt to asynchronously fetch graph from server
 function showAggregation(from, to, limit) {
     show(2);
+    $('html, body').animate({
+        scrollTop: $("#aggregation").offset().top - 10
+    }, "slow");
     getAggregatedGraph.call({from: from, to: to, limit: limit}, function (error, graph) {
         if (error) {
             console.log(error);
