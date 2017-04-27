@@ -8,7 +8,7 @@ import {getProperty, setProperty} from "../properties/methods";
 import {getRedirectName, isConfidenceLevelEvent, isTestEvent} from "../events/event-types";
 
 function getEventSequenceVersion() {
-    return '1.0';
+    return '1.1';
 }
 function getEventSequenceVersionPropertyName() {
     return 'eventSequences.version';
@@ -173,7 +173,7 @@ export const populateEventSequences = new ValidatedMethod({
             }
         });
 
-        function getAllLinked(eventId) {
+        function getAllLinked(eventId, sequenceId) {
             // if(eventMap[eventId].dev.stop === true){
             //     let linkedEvents = [];
             //     linkedEvents.push(eventId);
@@ -183,6 +183,7 @@ export const populateEventSequences = new ValidatedMethod({
                 return [];
             }
             eventMap[eventId].dev.checked = true;
+            eventMap[eventId].sequenceId = sequenceId;
 
             let linkedEvents = [];
             linkedEvents.push(eventId);
@@ -202,7 +203,7 @@ export const populateEventSequences = new ValidatedMethod({
         let sequencesIds = _.sortBy(_.reduce(events, function (memo, event) {
             let sequence = [];
             if (event.type !== getRedirectName()) {
-                sequence = getAllLinked(event.id);
+                sequence = getAllLinked(event.id, memo.length);
             }
             if (sequence.length > 0) { // 10
                 memo.push(sequence);
@@ -215,7 +216,6 @@ export const populateEventSequences = new ValidatedMethod({
         let sequences = [];
         let sequenceIndex = 0;
         _.each(sequencesIds, (sequence) => {
-
 
             let timeStart = undefined;
             let timeFinish = undefined;
@@ -234,14 +234,14 @@ export const populateEventSequences = new ValidatedMethod({
             }, []);
 
             sequences.push({
+                id: sequenceIndex,
                 timeStart: timeStart,
                 timeFinish: timeFinish,
-                events: sequenceEvents,
-                id: sequenceIndex,
-                targets: [],
+                size: sequenceEvents.length,
                 dev: {
                     // version: getEventSequenceVersion()
-                }
+                },
+                events: sequenceEvents,
             });
 
             sequenceIndex++;
@@ -250,6 +250,7 @@ export const populateEventSequences = new ValidatedMethod({
         done = 0;
         lastPrint = ((done / total) * 100);
 
+        // TODO: use eventsMap and events sequenceId instead
         _.each(sequences, (sequence, index) => {
             let connections = [];
             _.each(sequence.events, (event) => {
