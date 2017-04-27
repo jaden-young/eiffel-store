@@ -101,7 +101,6 @@ export const populateEventSequences = new ValidatedMethod({
                     return _.contains(legalTypes, link.type);
                 }), 'target');
                 event.dangerousTargets = _.pluck(_.filter(event.links, function (link) {
-                    // return false;
                     return _.contains(dangerousTypes, link.type);
                 }), 'target');
                 event.targetedBy = [];
