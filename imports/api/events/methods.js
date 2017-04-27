@@ -13,10 +13,10 @@ import {
 import {setProperty} from "../properties/methods";
 
 function getEventVersion() {
-    return '1.5';
+    return '1.6';
 }
 function getEventVersionPropertyName() {
-    return 'eventVersion';
+    return 'events.version';
 }
 
 function setEventVersionProperty() {

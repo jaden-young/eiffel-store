@@ -4,14 +4,21 @@ import {Meteor} from "meteor/meteor";
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Events} from "../events/events";
 import {EventSequences} from "./event-sequences";
-import {setProperty} from "../properties/methods";
+import {getProperty, setProperty} from "../properties/methods";
 import {getRedirectName, isConfidenceLevelEvent, isTestEvent} from "../events/event-types";
 
 function getEventSequenceVersion() {
-    return '0.9';
+    return '0.10';
 }
 function getEventSequenceVersionPropertyName() {
-    return 'eventSequenceVersion';
+    return 'eventSequences.version';
+}
+function getEventSequenceStartTimePropertyName() {
+    return 'eventSequences.timeStart';
+}
+
+function getEventSequenceFinishTimePropertyName() {
+    return 'eventSequences.timeFinish';
 }
 
 function setEventVersionProperty() {
@@ -35,6 +42,17 @@ export const eventSequenceVersionPropertyName = new ValidatedMethod({
     validate: null,
     run(){
         return getEventSequenceVersionPropertyName();
+    }
+});
+
+export const getTimeSpan = new ValidatedMethod({
+    name: 'getTimeSpan',
+    validate: null,
+    run(){
+        return {
+            timeStart: getProperty.call({propertyName: getEventSequenceStartTimePropertyName()}),
+            timeFinish: getProperty.call({propertyName: getEventSequenceFinishTimePropertyName()})
+        };
     }
 });
 
@@ -244,10 +262,20 @@ export const populateEventSequences = new ValidatedMethod({
 
         });
 
+        let latestTime = undefined;
+        let earliestTime = undefined;
 
         done = 0;
         lastPrint = ((done / total) * 100);
         _.each(sequences, (sequence) => {
+            if (latestTime === undefined || latestTime < sequence.timeFinish) {
+                latestTime = sequence.timeFinish;
+            }
+            if (earliestTime === undefined || earliestTime > sequence.timeStart) {
+                earliestTime = sequence.timeStart;
+            }
+
+
             EventSequences.insert(sequence);
 
             done = done + sequence.events.length;
@@ -257,6 +285,9 @@ export const populateEventSequences = new ValidatedMethod({
                 lastPrint = print;
             }
         });
+
+        setProperty.call({propertyName: getEventSequenceStartTimePropertyName(), propertyValue: earliestTime});
+        setProperty.call({propertyName: getEventSequenceFinishTimePropertyName(), propertyValue: latestTime});
 
         setEventVersionProperty();
         let print = Math.floor((done / total) * 100);

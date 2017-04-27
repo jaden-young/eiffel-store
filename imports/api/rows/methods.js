@@ -5,11 +5,11 @@ import {EventSequences} from "../eventSequences/event-sequences";
 import {setProperty} from "../properties/methods";
 
 function getRowsVersion() {
-    return '1.3';
+    return '1.4';
 }
 
 function getRowsVersionPropertyName() {
-    return 'rowsVersion';
+    return 'rows.version';
 }
 
 function setRowsVersionPropertyName() {
