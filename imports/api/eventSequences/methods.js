@@ -310,6 +310,10 @@ export const getAggregatedGraph = new ValidatedMethod({
 
             let linkedSequences = {};
             _.each(eventSequences, (eventSequence) => {
+                linkedSequences[eventSequence.id] = false;
+            });
+
+            _.each(eventSequences, (eventSequence) => {
                 _.each(eventSequence.targets, (targetId) => {
                     if (linkedSequences[targetId] === undefined) {
                         linkedSequences[targetId] = EventSequences.findOne({id: targetId}, {})
@@ -318,12 +322,9 @@ export const getAggregatedGraph = new ValidatedMethod({
             });
 
             _.each(linkedSequences, (linkedSequence) => {
-                if (!_.some(eventSequences, function (sequence) {
-                        return sequence.id === linkedSequence.id;
-                    })) {
+                if (linkedSequence !== false) {
                     eventSequences.push(linkedSequence);
                 }
-
             });
 
             let sequencesIds = [];
