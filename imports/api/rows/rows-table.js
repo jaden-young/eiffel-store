@@ -39,8 +39,8 @@ new Tabular.Table({
         {data: "conclusion", title: "Conclusion"},
     ],
     // destroy: true,
-    lengthMenu: [[100, -1], [100, "All"]],
-    scrollY: "600px",
+    lengthMenu: [[10, 50, 100, -1], [10, 50, 100, "All"]],
+    scrollY: "500px",
     scrollCollapse: true,
     // paging: false,
     search: {
