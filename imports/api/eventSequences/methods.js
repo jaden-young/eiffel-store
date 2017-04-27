@@ -317,8 +317,13 @@ export const getAggregatedGraph = new ValidatedMethod({
                 });
             });
 
-            _.each(linkedSequences, (eventSequence) => {
-                eventSequences = eventSequences.concat(eventSequence);
+            _.each(linkedSequences, (linkedSequence) => {
+                if (!_.some(eventSequences, function (sequence) {
+                        return sequence.id === linkedSequence.id;
+                    })) {
+                    eventSequences.push(linkedSequence);
+                }
+
             });
 
             let sequencesIds = [];
