@@ -293,20 +293,16 @@ export const getAggregatedGraph = new ValidatedMethod({
 
             let sequencesIds = [];
 
+
             let events = _.reduce(eventSequences, function (memo, sequence) {
                 sequencesIds.push(sequence.id);
                 return memo.concat(sequence.events);
             }, []);
 
-            // console.log(events[0]);
-
             // Maps individual event node id's to their aggregated node's id and vice versa
             let groupToEvents = {};
             let eventToGroup = {};
 
-            // Assumes that the events list data.customData contains a unique value
-            // first in the list and provided to the Eiffel event by the event producer.
-            // Very brittle.
             let nodes = [];
             let groupedEvents = _.groupBy(events, (event) => event.name);
             _.each(groupedEvents, (events, group) => {
