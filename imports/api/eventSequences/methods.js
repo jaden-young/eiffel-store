@@ -8,7 +8,7 @@ import {getProperty, setProperty} from "../properties/methods";
 import {getRedirectName, isConfidenceLevelEvent, isTestEvent} from "../events/event-types";
 
 function getEventSequenceVersion() {
-    return '0.11';
+    return '1.0';
 }
 function getEventSequenceVersionPropertyName() {
     return 'eventSequences.version';
@@ -109,7 +109,7 @@ export const populateEventSequences = new ValidatedMethod({
         let dangerousTypes = [
             'ELEMENT',
             'ENVIRONMENT',
-            // 'BASE'
+            'BASE'
         ];
 
         // Populate map
@@ -124,6 +124,7 @@ export const populateEventSequences = new ValidatedMethod({
                     return _.contains(dangerousTypes, link.type);
                 }), 'target');
                 event.targetedBy = [];
+                event.dangerousTargetedBy = [];
                 event.dev.checked = false;
                 // event.dev.stop = _.contains(illegalBridgeTypes, event.type);
             } else {
@@ -143,8 +144,22 @@ export const populateEventSequences = new ValidatedMethod({
                     let exists = _.find(eventMap[target].targetedBy, function (id) {
                         return id === event.id;
                     });
-                    if (!exists) { //  && !(_.contains(illegalBridgeTypes, event.type))
+                    if (!exists) {
                         (eventMap[target].targetedBy).push(event.id)
+                    }
+                    eventMap[event.id] = event;
+                });
+
+                _.each(event.dangerousTargets, (target, index) => {
+                    if (eventMap[target].type === getRedirectName()) {
+                        eventMap[event.id].dangerousTargets[index] = eventMap[target].target;
+                        target = eventMap[target].target;
+                    }
+                    let exists = _.find(eventMap[target].dangerousTargetedBy, function (id) {
+                        return id === event.id;
+                    });
+                    if (!exists) {
+                        (eventMap[target].dangerousTargetedBy).push(event.id)
                     }
                     eventMap[event.id] = event;
                 });
@@ -236,21 +251,22 @@ export const populateEventSequences = new ValidatedMethod({
         lastPrint = ((done / total) * 100);
 
         _.each(sequences, (sequence, index) => {
-            let targets = [];
+            let connections = [];
             _.each(sequence.events, (event) => {
-                _.each(event.dangerousTargets, (target) => {
+                _.each(event.dangerousTargets.concat(event.dangerousTargetedBy), (target) => {
                     FindTarget:
                         for (let s = 0; s < sequences.length; s++) {
                             if (sequences[s].id !== sequences[index].id) {
                                 for (let e = 0; e < sequences[s].events.length; e++) {
                                     if (sequences[s].events[e].id === target) {
-                                        targets.push(sequences[s].id);
+                                        connections.push(sequences[s].id);
                                         break FindTarget;
                                     }
                                 }
                             }
                         }
                 });
+
 
                 done++;
                 let print = Math.floor((done / total) * 100);
@@ -259,7 +275,7 @@ export const populateEventSequences = new ValidatedMethod({
                     lastPrint = print;
                 }
             });
-            sequence.targets = targets;
+            sequence.connections = connections;
 
 
         });
@@ -316,7 +332,7 @@ export const getAggregatedGraph = new ValidatedMethod({
             });
 
             _.each(eventSequences, (eventSequence) => {
-                _.each(eventSequence.targets, (targetId) => {
+                _.each(eventSequence.connections, (targetId) => {
                     if (linkedSequences[targetId] === undefined) {
                         linkedSequences[targetId] = EventSequences.findOne({id: targetId}, {})
                     }
@@ -424,7 +440,7 @@ export const getEventChainGraph = new ValidatedMethod({
             let linkedSequences = {};
             linkedSequences[sequence.id] = false;
 
-            _.each(sequence.targets, (targetId) => {
+            _.each(sequence.connections, (targetId) => {
                 if (linkedSequences[targetId] === undefined) {
                     // console.log(targetId);
                     linkedSequences[targetId] = EventSequences.findOne({id: targetId}, {})
