@@ -275,7 +275,6 @@ export const populateEventSequences = new ValidatedMethod({
                 earliestTime = sequence.timeStart;
             }
 
-
             EventSequences.insert(sequence);
 
             done = done + sequence.events.length;

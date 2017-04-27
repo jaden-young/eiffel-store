@@ -10,9 +10,10 @@ import vis from "vis";
 
 Template.aggregation.rendered = () => {
 
-
     // Runs when document is ready
     $(() => {
+        $("time.timeago").timeago();
+
         let fromInput = $('#date-from'),
             toInput = $('#date-to'),
             limitInput = $('#limit'),
@@ -33,7 +34,6 @@ Template.aggregation.rendered = () => {
                 console.log(times);
             }
         });
-
 
         // Set default input values
         fromInput.val(defaultFrom);
@@ -138,8 +138,37 @@ Template.aggregation.rendered = () => {
     });
 };
 
+function showNon() {
+    $('#level1_heading_loading').hide();
+    $('#level1_heading_updated').hide();
+
+    $('#aggregation_loader').hide();
+}
+
+function show(state) {
+    showNon();
+
+    switch (state) {
+        case 1:
+            break;
+        case 2:
+            $('#aggregation_loader').show();
+
+            $('#level1_heading_loading').show();
+            break;
+        case 3:
+            $("time#aggregation_updated_time").timeago("update", new Date());
+
+            $('#level1_heading_updated').show();
+            break;
+        default:
+            break;
+    }
+}
+
 // Attempt to asynchronously fetch graph from server
 function showAggregation(from, to, limit) {
+    show(2);
     getAggregatedGraph.call({from: from, to: to, limit: limit}, function (error, graph) {
         if (error) {
             console.log(error);
@@ -149,6 +178,7 @@ function showAggregation(from, to, limit) {
 
             Session.set('displayedSequenceIds', graph.sequences);
             renderGraph(graph, container);
+            show(3);
         }
     });
 }

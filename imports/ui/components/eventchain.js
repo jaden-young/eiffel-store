@@ -36,6 +36,7 @@ Template.details.onCreated(function () {
 
 function showNon() {
     $('#level3_heading_select').hide();
+    $('#level3_heading_loading').hide();
     $('#level3_heading_updated').hide();
 
     $('#sequence_loader').hide();
@@ -54,6 +55,8 @@ function show(state) {
             $('#level3_footer_select').show();
             break;
         case 2:
+            $('#level3_heading_loading').show();
+
             $('#sequence_loader').show();
 
             $('#level3_footer_loading').show();
@@ -62,7 +65,7 @@ function show(state) {
             $("time#sequence_updated_time").timeago("update", new Date());
 
             $('#level3_heading_updated').show();
-            $('#level3_footer_updated').show();
+            $('#level3_footer_updated').html('Showing a sequence with time span ' + graph.timeStart + ' - ' + graph.timeFinish + " and its connected sequences.").show();
             break;
         default:
             break;
@@ -82,7 +85,6 @@ function updateSequenceGraph(sequenceId) {
                 renderGraph(graph, container);
 
 
-                $('#level3_heading_updated').html('Showing a sequence with time span ' + graph.timeStart + ' - ' + graph.timeFinish);
                 show(3);
             } else {
                 show(1);
