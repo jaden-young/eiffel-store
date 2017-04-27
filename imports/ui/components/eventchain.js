@@ -65,7 +65,7 @@ function show(state) {
             $("time#sequence_updated_time").timeago("update", new Date());
 
             $('#level3_heading_updated').show();
-            $('#level3_footer_updated').html('Showing a sequence with time span ' + graph.timeStart + ' - ' + graph.timeFinish + " and its connected sequences.").show();
+
             break;
         default:
             break;
@@ -79,12 +79,10 @@ function updateSequenceGraph(sequenceId) {
             console.log(error);
         } else {
             let container = $('#cy-event-chain');
-            // console.log(graph);
             if (graph !== undefined) {
-                // console.log(graph);
                 renderGraph(graph, container);
 
-
+                $('#level3_footer_updated').html('Showing a sequence with time span ' + graph.timeStart + ' - ' + graph.timeFinish + " and its connected sequences.").show();
                 show(3);
             } else {
                 show(1);
