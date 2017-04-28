@@ -26,29 +26,6 @@ Template.aggregation.rendered = () => {
             fromTimeline = 1420070400000,// from: 1420070400000 2015
             toTimeline = 1514764800000;// to: 1514764800000 2018
 
-        // Gets the time span for sequences.
-        getTimeSpan.call({}, function (error, times) {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log(times.timeStart);
-                console.log(times.timeFinish);
-                console.log(times);
-            }
-        });
-
-        // Set default input values
-        fromInput.val(defaultFrom);
-        toInput.val(defaultTo);
-        limitInput.val(defaultLimit);
-
-        // Set up datepicker;
-        datepickers.datepicker({
-            changeMonth: true,
-            changeYear: true,
-            dateFormat: "yy-mm-dd"
-        });
-
         /* TIMELINE */
         let container = document.getElementById('example-timeline');
         // Timebars in the timeline
@@ -61,18 +38,17 @@ Template.aggregation.rendered = () => {
             content: 'End',
             start: defaultTo
         }]);
-
         let options = {
             height: '150px',
             zoomMin: 3600000, // Setting 10 minutes as minimum zoom
-            max: '2020-01-01',//new Date(Date.now()).toLocaleDateString(), //Todays date
-            min: '2010-01-01',
             itemsAlwaysDraggable: true,
             editable: {updateTime: true},
             selectable: true,
             onMove: function (item, callback) {
                 let limit = parseInt(limitInput.val());
-                if (item.id === 1) {
+                console.log(new Date(item.start).valueOf());
+                console.log(new Date(options.max).valueOf());
+                if (item.id === 1 ) {
                     let from = Date.parse(item.start),
                         to = toTimeline;
                     fromInput.val(new Date(item.start).toLocaleDateString('sv'));
@@ -88,6 +64,44 @@ Template.aggregation.rendered = () => {
             }
         };
         let timeline = new vis.Timeline(container, data, options);
+        // Gets the time span for sequences.
+        getTimeSpan.call({}, function (error, times) {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log(times.timeStart);
+                console.log(times.timeFinish);
+                console.log(times);
+                timeline.destroy();
+                options.min = new Date(times.timeStart);
+                options.max = new Date(times.timeFinish);
+                data = new vis.DataSet([{
+                    id: '1',
+                    content: 'Start',
+                    start: options.min
+                }, {
+                    id: '2',
+                    content: 'End',
+                    start: options.max
+                }]);
+                timeline = new vis.Timeline(container, data, options);
+            }
+        });
+
+
+        // Set default input values
+        fromInput.val(defaultFrom);
+        toInput.val(defaultTo);
+        limitInput.val(defaultLimit);
+
+        // Set up datepicker;
+        datepickers.datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: "yy-mm-dd"
+        });
+
+
         /*---------------*/
 
         //Aggregates new graph when datepicker changes values
