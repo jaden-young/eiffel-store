@@ -5,7 +5,10 @@ import { Meteor } from 'meteor/meteor';
 import { resetDatabase } from 'meteor/xolvio:cleaner';
 
 import { EventSequences } from './event-sequences';
-import { getAggregatedGraph } from './methods';
+import {
+    getAggregatedGraph,
+    getSequenceCount }
+    from './methods';
 
 if (Meteor.isServer) {
 
@@ -81,5 +84,36 @@ if (Meteor.isServer) {
             let graph = getAggregatedGraph.call({from: from, to: to, limit: limit});
             assert(graph.sequences.length === 0);
         });
+    });
+
+    describe('getSequenceCount', function() {
+
+        beforeEach(function () {
+            resetDatabase();
+        });
+
+       it('returns correct count', function () {
+           let from = Date.parse('02/01/2010'),
+               to = Date.parse('02/01/2020'),
+               expectedEventCount = 25;
+
+           // Insert events inside time span
+           _.times(expectedEventCount, () => EventSequences.insert({
+               id: 1,
+               timeStart: from + 1,
+               events: []
+           }));
+
+           let eventCount = getSequenceCount.call({from: from, to: to});
+           assert.equal(eventCount, expectedEventCount);
+       });
+
+       it('correctly returns empty when there are no events', function() {
+           let from = Date.parse('02/01/2010'),
+               to = Date.parse('02/01/2020');
+
+               let eventCount = getSequenceCount.call({from: from, to: to});
+               assert.equal(eventCount, 0);
+       })
     });
 }

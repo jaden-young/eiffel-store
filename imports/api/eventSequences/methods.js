@@ -465,3 +465,14 @@ export const getEventChainGraph = new ValidatedMethod({
         }
     }
 });
+
+export const getSequenceCount = new ValidatedMethod({
+    name: 'getSequenceCount',
+    validate: null,
+    run({from, to}) {
+        return EventSequences.find(
+            {timeStart: {$gte: parseInt(from), $lte: parseInt(to)}})
+            .count();
+    }
+});
+

@@ -4,7 +4,10 @@ import {Template} from "meteor/templating";
 import {renderGraph} from "./graph.js";
 
 import "./aggregation.html";
-import {getAggregatedGraph} from "/imports/api/eventSequences/methods";
+import {
+    getAggregatedGraph,
+    getSequenceCount
+} from "/imports/api/eventSequences/methods";
 import {Session} from "meteor/session";
 import vis from 'vis';
 
@@ -135,9 +138,22 @@ function showAggregation(from, to, limit) {
         } else {
 
             let container = $('#cy-aggregation');
-
             Session.set('displayedSequenceIds', graph.sequences);
             renderGraph(graph, container);
+            showSequenceCount(from, to);
+        }
+    });
+}
+
+function showSequenceCount(from, to) {
+    let container = $('#additional-sequences');
+    console.log('doing it');
+    getSequenceCount.call({from: from, to: to}, function(error, count) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('got count', count);
+            container.val(count);
         }
     });
 }
