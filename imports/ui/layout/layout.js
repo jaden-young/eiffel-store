@@ -85,7 +85,6 @@ Template.layout.onDestroyed = function(){
 
 function checkConnection() {
     isAlive.call(function (e, result) {
-
         if (e) {
             $('#lost-connection-modal').modal('show');
         } else {
