@@ -104,9 +104,6 @@ function checkConnection() {
 
 var hasShownConnectionInfo = false;
 
-
-
-
 Meteor.autorun(function(){
         if( !hasShownConnectionInfo && !(Meteor.status().status === "connected")) {
             $('#lost-connection-modal').modal('show');
