@@ -168,14 +168,53 @@ function renderGraph(graph, container, level) {
         }
     }
 
+    function getLevelThreeContent(nodeData) {
+        let nodeLabel = nodeData.label;
+
+        switch (true) {
+            case /TS/.test(nodeLabel):                                              // Checks if node_id starts with 'TSF'
+                return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
+                    getTooltipButton(nodeData.id) +          // Button will take user to level 2 - 'details'
+                    '<table class="table table-bordered">' +
+                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
+                    '</table>'; // Row 3 - OTHER
+
+            case /TC/.test(nodeLabel):                                              // Checks if node_id starts with 'TSF'
+                return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
+                    getTooltipButton(nodeData.id) +          // Button will take user to level 2 - 'details'
+                    '<table class="table table-bordered">' +
+                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
+                    '</table>'; // Row 3 - OTHER
+
+            case /CLM/.test(nodeLabel):
+                return '<h4>' + nodeLabel + '</h4>' +
+                    getTooltipButton(nodeData.id) +
+                    '<table class="table table-bordered">' +
+                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
+                    '<tr><td>Jenkins:</td><td colspan="2"></td></tr>' +
+                    '</table>';
+            default:
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    getTooltipButton(nodeData.id) +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Total no. of events</td><td class="td-right">' + nodeData.length + '</td></tr>' +
+                    '</table>';
+
+        }
+    }
+
     function getTooltipButton(eiffelId) {
         return '<button type="button" class="btn btn-block btn-info aggregation-tt-btn" value="' + eiffelId + '"> Show all events </button>'
     }
 
     cy.nodes().qtip({
         content: function () {
-            return getTooltipContent(this.data()); // Ändra här för att ändra vad som ska vara i den
-            //return 'Example qTip on ele ' + this.id() + '<div class="alert alert-success" role="alert"><strong>Well done!</strong> You successfully read this important alert message. (bootstrap)</div>' // Ändra här för att ändra vad som ska vara i den
+            if (level === "aggregation") {
+                return getTooltipContent(this.data()); // Ändra här för att ändra vad som ska vara i den
+                //return 'Example qTip on ele ' + this.id() + '<div class="alert alert-success" role="alert"><strong>Well done!</strong> You successfully read this important alert message. (bootstrap)</div>' // Ändra här för att ändra vad som ska vara i den
+            } else if (level === "eventchain"){
+                return getLevelThreeContent(this.data());
+            }
         },
         position: {
             my: 'bottom center',
