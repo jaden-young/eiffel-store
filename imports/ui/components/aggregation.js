@@ -186,13 +186,13 @@ function showAggregation(from, to, limit) {
             let container = $('#cy-aggregation');
             Session.set('displayedSequenceIds', graph.sequences);
             renderGraph(graph, container);
-            showSequenceCount(from, to);
+            showSequenceCount(from, to, limit);
             show(3);
         }
     });
 }
 
-function showSequenceCount(from, to) {
+function showSequenceCount(from, to, limit) {
     let container = $('#additional-sequences');
     console.log('doing it');
     getSequenceCount.call({from: from, to: to}, function (error, count) {
@@ -200,7 +200,7 @@ function showSequenceCount(from, to) {
             console.log(error);
         } else {
             console.log('got count', count);
-            container.val(count);
+            container.val(count - limit);
         }
     });
 }
