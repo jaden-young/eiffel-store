@@ -1,31 +1,40 @@
 <template name="aggregation">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.19.1/vis.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.19.1/vis.css" rel="stylesheet" type="text/css"/>
-    <div class="panel panel-default">
+    <div id="aggregation_container" class="panel panel-default">
+        <div class="panel-heading">
+            <span id="level1_heading_loading">Aggregation graph loading...</span>
+            <span id="level1_heading_updated">Aggregation graph updated <time id="aggregation_updated_time"
+                                                    class="timeago"></time></span>
+        </div>
         <div id="aggregation-tt"></div>
         <div id="cy-aggregation" class="cy panel-body"></div>
         <div class="panel-footer">
             <div class="panel panel-default" id="example-timeline"></div>
             <div class="row">
-                <div class="col-lg-3">
+                <div class="col-lg-2">
                     <div class="input-group">
-                        <span class="input-group-addon">Aggregate from</span><input id="date-from"
+                        <span class="input-group-addon">From</span><input id="date-from"
                                                                                     class="form-control datepicker"/>
                     </div>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-2">
                     <div class="input-group">
-                        <span class="input-group-addon">Aggregate to</span><input id="date-to"
+                        <span class="input-group-addon">To</span><input id="date-to"
                                                                                   class="form-control datepicker"/>
                     </div>
 
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-2">
                     <div class="input-group">
-                        <span class="input-group-addon">Limit</span><input id="limit" class="form-control"/>
+                        <span class="input-group-addon">Soft limit</span><input id="limit" class="form-control"/>
                     </div>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-2">
+                    <div class="input-group">
+                        <span class="input-group-addon">Sequences showing</span>
+                        <input type="text" value="TODO" id="sequences_showing" class="form-control" readonly/>
+                    </div>
+                </div>
+                <div class="col-lg-2">
                     <div class="input-group">
                         <span class="input-group-addon">Additional sequences</span>
                         <input type="text" value="0" id="additional_sequences" class="form-control" readonly/>
@@ -33,6 +42,7 @@
                 </div>
             </div>
         </div>
+        <div id="aggregation_loader" class="loader"></div>
     </div>
 
 </template>

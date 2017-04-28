@@ -1,19 +1,19 @@
-
 'use strict';
 import {Template} from "meteor/templating";
 import {renderGraph} from "./graph.js";
 
 import "./aggregation.html";
-import {getAggregatedGraph} from "/imports/api/eventSequences/methods";
+import {getAggregatedGraph, getTimeSpan} from "/imports/api/eventSequences/methods";
 import {Session} from "meteor/session";
-import vis from 'vis';
+import vis from "vis";
 
 
 Template.aggregation.rendered = () => {
 
-
     // Runs when document is ready
     $(() => {
+        $("time.timeago").timeago();
+
         let fromInput = $('#date-from'),
             toInput = $('#date-to'),
             limitInput = $('#limit'),
@@ -23,6 +23,17 @@ Template.aggregation.rendered = () => {
             defaultTo = '2018-01-01',
             fromTimeline = 1420070400000,// from: 1420070400000 2015
             toTimeline = 1514764800000;// to: 1514764800000 2018
+
+        // Gets the time span for sequences.
+        getTimeSpan.call({}, function (error, times) {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log(times.timeStart);
+                console.log(times.timeFinish);
+                console.log(times);
+            }
+        });
 
         // Set default input values
         fromInput.val(defaultFrom);
@@ -58,14 +69,14 @@ Template.aggregation.rendered = () => {
             editable: {updateTime: true},
             selectable: true,
             onMove: function (item, callback) {
-                    let limit = parseInt(limitInput.val());
-                if(item.id === 1){
+                let limit = parseInt(limitInput.val());
+                if (item.id === 1) {
                     let from = Date.parse(item.start),
                         to = toTimeline;
                     fromInput.val(new Date(item.start).toLocaleDateString('sv'));
                     fromTimeline = Date.parse(item.start);
                     showAggregation(from, to, limit);
-                }else if(item.id === 2){
+                } else if (item.id === 2) {
                     let from = fromTimeline,
                         to = Date.parse(item.start);
                     toInput.val(new Date(item.start).toLocaleDateString('sv'));
@@ -79,10 +90,10 @@ Template.aggregation.rendered = () => {
 
         //Aggregates new graph when datepicker changes values
         $('#date-from').change(
-            function() {
+            function () {
                 let limit = parseInt(limitInput.val());
                 fromTimeline = Date.parse(fromInput.val())
-                timeline.setItems( new vis.DataSet([{
+                timeline.setItems(new vis.DataSet([{
                     id: 1,
                     content: 'Start',
                     start: fromTimeline
@@ -95,10 +106,10 @@ Template.aggregation.rendered = () => {
             });
 
         $('#date-to').change(
-            function() {
+            function () {
                 let limit = parseInt(limitInput.val());
                 toTimeline = Date.parse(toInput.val());
-                    timeline.setItems( new vis.DataSet([{
+                timeline.setItems(new vis.DataSet([{
                     id: 1,
                     content: 'Start',
                     start: fromTimeline
@@ -111,7 +122,7 @@ Template.aggregation.rendered = () => {
             });
 
         $('#limit').change(
-            function() {
+            function () {
                 let limit = parseInt(limitInput.val());
                 showAggregation(fromTimeline, toTimeline, limit);
             });
@@ -127,8 +138,40 @@ Template.aggregation.rendered = () => {
     });
 };
 
+function showNon() {
+    $('#level1_heading_loading').hide();
+    $('#level1_heading_updated').hide();
+
+    $('#aggregation_loader').hide();
+}
+
+function show(state) {
+    showNon();
+
+    switch (state) {
+        case 1:
+            break;
+        case 2:
+            $('#aggregation_loader').show();
+
+            $('#level1_heading_loading').show();
+            break;
+        case 3:
+            $("time#aggregation_updated_time").timeago("update", new Date());
+
+            $('#level1_heading_updated').show();
+            break;
+        default:
+            break;
+    }
+}
+
 // Attempt to asynchronously fetch graph from server
 function showAggregation(from, to, limit) {
+    show(2);
+    $('html, body').animate({
+        scrollTop: $("#aggregation").offset().top - 10
+    }, "slow");
     getAggregatedGraph.call({from: from, to: to, limit: limit}, function (error, graph) {
         if (error) {
             console.log(error);
@@ -138,6 +181,7 @@ function showAggregation(from, to, limit) {
 
             Session.set('displayedSequenceIds', graph.sequences);
             renderGraph(graph, container);
+            show(3);
         }
     });
 }

@@ -4,14 +4,21 @@ import {Meteor} from "meteor/meteor";
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Events} from "../events/events";
 import {EventSequences} from "./event-sequences";
-import {setProperty} from "../properties/methods";
+import {getProperty, setProperty} from "../properties/methods";
 import {getRedirectName, isConfidenceLevelEvent, isTestEvent} from "../events/event-types";
 
 function getEventSequenceVersion() {
-    return '0.9';
+    return '1.2';
 }
 function getEventSequenceVersionPropertyName() {
-    return 'eventSequenceVersion';
+    return 'eventSequences.version';
+}
+function getEventSequenceStartTimePropertyName() {
+    return 'eventSequences.timeStart';
+}
+
+function getEventSequenceFinishTimePropertyName() {
+    return 'eventSequences.timeFinish';
 }
 
 function setEventVersionProperty() {
@@ -38,6 +45,17 @@ export const eventSequenceVersionPropertyName = new ValidatedMethod({
     }
 });
 
+export const getTimeSpan = new ValidatedMethod({
+    name: 'getTimeSpan',
+    validate: null,
+    run(){
+        return {
+            timeStart: getProperty.call({propertyName: getEventSequenceStartTimePropertyName()}),
+            timeFinish: getProperty.call({propertyName: getEventSequenceFinishTimePropertyName()})
+        };
+    }
+});
+
 export const populateEventSequences = new ValidatedMethod({
     name: 'populateEventSequences',
     validate: null,
@@ -54,15 +72,6 @@ export const populateEventSequences = new ValidatedMethod({
         let events = Events.find().fetch();
 
         console.log('Processing events from database. Please wait.');
-
-        let illegalBridgeTypes = [
-            'EiffelArtifactCreatedEvent',
-            'EiffelDocumentationCreatedEvent',
-            'EiffelCompositionDefinedEvent',
-            'EiffelEnvironmentDefinedEvent',
-            'EiffelSourceChangeCreatedEvent',
-            'EiffelSourceChangeSubmittedEvent'
-        ];
 
         let legalTypes = [
             'CAUSE',
@@ -90,6 +99,8 @@ export const populateEventSequences = new ValidatedMethod({
 
         let dangerousTypes = [
             'ELEMENT',
+            'ENVIRONMENT',
+            'BASE'
         ];
 
         // Populate map
@@ -104,8 +115,8 @@ export const populateEventSequences = new ValidatedMethod({
                     return _.contains(dangerousTypes, link.type);
                 }), 'target');
                 event.targetedBy = [];
+                event.dangerousTargetedBy = [];
                 event.dev.checked = false;
-                // event.dev.stop = _.contains(illegalBridgeTypes, event.type);
             } else {
                 total--;
             }
@@ -123,8 +134,22 @@ export const populateEventSequences = new ValidatedMethod({
                     let exists = _.find(eventMap[target].targetedBy, function (id) {
                         return id === event.id;
                     });
-                    if (!exists) { //  && !(_.contains(illegalBridgeTypes, event.type))
+                    if (!exists) {
                         (eventMap[target].targetedBy).push(event.id)
+                    }
+                    eventMap[event.id] = event;
+                });
+
+                _.each(event.dangerousTargets, (target, index) => {
+                    if (eventMap[target].type === getRedirectName()) {
+                        eventMap[event.id].dangerousTargets[index] = eventMap[target].target;
+                        target = eventMap[target].target;
+                    }
+                    let exists = _.find(eventMap[target].dangerousTargetedBy, function (id) {
+                        return id === event.id;
+                    });
+                    if (!exists) {
+                        (eventMap[target].dangerousTargetedBy).push(event.id)
                     }
                     eventMap[event.id] = event;
                 });
@@ -132,13 +157,13 @@ export const populateEventSequences = new ValidatedMethod({
 
             done++;
             let print = Math.floor((done / total) * 100);
-            if (print >= (lastPrint + 20)) {
+            if (print >= (lastPrint + 50)) {
                 console.log("Finding event parents progress: " + print + '% (' + done + '/' + total + ')');
                 lastPrint = print;
             }
         });
 
-        function getAllLinked(eventId) {
+        function getAllLinked(eventId, sequenceId) {
             // if(eventMap[eventId].dev.stop === true){
             //     let linkedEvents = [];
             //     linkedEvents.push(eventId);
@@ -148,18 +173,19 @@ export const populateEventSequences = new ValidatedMethod({
                 return [];
             }
             eventMap[eventId].dev.checked = true;
+            eventMap[eventId].sequenceId = sequenceId;
 
             let linkedEvents = [];
             linkedEvents.push(eventId);
 
             let targets = eventMap[eventId].targets;
             for (let index = 0; index < targets.length; index++) {
-                linkedEvents = linkedEvents.concat(getAllLinked(targets[index]));
+                linkedEvents = linkedEvents.concat(getAllLinked(targets[index], sequenceId));
             }
 
             let targetedBys = eventMap[eventId].targetedBy;
             for (let index = 0; index < targetedBys.length; index++) {
-                linkedEvents = linkedEvents.concat(getAllLinked(targetedBys[index]));
+                linkedEvents = linkedEvents.concat(getAllLinked(targetedBys[index], sequenceId));
             }
             return linkedEvents;
         }
@@ -167,7 +193,7 @@ export const populateEventSequences = new ValidatedMethod({
         let sequencesIds = _.sortBy(_.reduce(events, function (memo, event) {
             let sequence = [];
             if (event.type !== getRedirectName()) {
-                sequence = getAllLinked(event.id);
+                sequence = getAllLinked(event.id, memo.length);
             }
             if (sequence.length > 0) { // 10
                 memo.push(sequence);
@@ -178,9 +204,7 @@ export const populateEventSequences = new ValidatedMethod({
 
         console.log("Generating sequences.");
         let sequences = [];
-        let sequenceIndex = 0;
         _.each(sequencesIds, (sequence) => {
-
 
             let timeStart = undefined;
             let timeFinish = undefined;
@@ -198,56 +222,50 @@ export const populateEventSequences = new ValidatedMethod({
                 return memo;
             }, []);
 
+
             sequences.push({
+                id: sequenceEvents[0].sequenceId,
                 timeStart: timeStart,
                 timeFinish: timeFinish,
+                size: sequenceEvents.length,
+                dev: {},
                 events: sequenceEvents,
-                id: sequenceIndex,
-                targets: [],
-                dev: {
-                    // version: getEventSequenceVersion()
-                }
             });
-
-            sequenceIndex++;
         });
 
         done = 0;
         lastPrint = ((done / total) * 100);
 
-        _.each(sequences, (sequence, index) => {
-            let targets = [];
+        _.each(sequences, (sequence) => {
+            let connections = [];
             _.each(sequence.events, (event) => {
-                _.each(event.dangerousTargets, (target) => {
-                    FindTarget:
-                        for (let s = 0; s < sequences.length; s++) {
-                            if (sequences[s].id !== sequences[index].id) {
-                                for (let e = 0; e < sequences[s].events.length; e++) {
-                                    if (sequences[s].events[e].id === target) {
-                                        targets.push(sequences[s].id);
-                                        break FindTarget;
-                                    }
-                                }
-                            }
-                        }
+                _.each(event.dangerousTargets.concat(event.dangerousTargetedBy), (target) => {
+                    connections.push(eventMap[target].sequenceId);
                 });
 
                 done++;
                 let print = Math.floor((done / total) * 100);
-                if (print >= (lastPrint + 5)) {
-                    console.log("Setting sequences targets: " + print + '% (' + done + '/' + total + ')');
+                if (print >= (lastPrint + 50)) {
+                    console.log("Fining sequences connections: " + print + '% (' + done + '/' + total + ')');
                     lastPrint = print;
                 }
             });
-            sequence.targets = targets;
-
-
+            sequence.connections = connections;
         });
 
+        let latestTime = undefined;
+        let earliestTime = undefined;
 
         done = 0;
         lastPrint = ((done / total) * 100);
         _.each(sequences, (sequence) => {
+            if (latestTime === undefined || latestTime < sequence.timeFinish) {
+                latestTime = sequence.timeFinish;
+            }
+            if (earliestTime === undefined || earliestTime > sequence.timeStart) {
+                earliestTime = sequence.timeStart;
+            }
+
             EventSequences.insert(sequence);
 
             done = done + sequence.events.length;
@@ -257,6 +275,9 @@ export const populateEventSequences = new ValidatedMethod({
                 lastPrint = print;
             }
         });
+
+        setProperty.call({propertyName: getEventSequenceStartTimePropertyName(), propertyValue: earliestTime});
+        setProperty.call({propertyName: getEventSequenceFinishTimePropertyName(), propertyValue: latestTime});
 
         setEventVersionProperty();
         let print = Math.floor((done / total) * 100);
@@ -273,22 +294,34 @@ export const getAggregatedGraph = new ValidatedMethod({
             // from: 1420070400000 2015
             // to: 1514764800000 2018
 
+            if(limit === 0){
+                return {nodes: [], edges: [], sequences: []};
+            }
+
             let eventSequences = EventSequences.find(
                 {timeStart: {$gte: parseInt(from), $lte: parseInt(to)}},
                 {sort: {timeFinish: -1}, limit: limit})
                 .fetch();
 
+
+
             let linkedSequences = {};
             _.each(eventSequences, (eventSequence) => {
-                _.each(eventSequence.targets, (targetId) => {
+                linkedSequences[eventSequence.id] = false;
+            });
+
+            _.each(eventSequences, (eventSequence) => {
+                _.each(eventSequence.connections, (targetId) => {
                     if (linkedSequences[targetId] === undefined) {
                         linkedSequences[targetId] = EventSequences.findOne({id: targetId}, {})
                     }
                 });
             });
 
-            _.each(linkedSequences, (eventSequence) => {
-                eventSequences = eventSequences.concat(eventSequence);
+            _.each(linkedSequences, (linkedSequence) => {
+                if (linkedSequence !== false) {
+                    eventSequences.push(linkedSequence);
+                }
             });
 
             let sequencesIds = [];
@@ -345,7 +378,6 @@ export const getAggregatedGraph = new ValidatedMethod({
                 nodes.push(node);
 
                 // Save the links from events -> group and group -> events to reconstruct group -> group later
-                // console.log(links);
                 groupToEvents[group] = _.reduce(events, (memo, event) => memo.concat(event.targets.concat(event.dangerousTargets)), []);
                 _.each(events, (event) => {
                     eventToGroup[event.id] = group
@@ -353,14 +385,21 @@ export const getAggregatedGraph = new ValidatedMethod({
             });
 
             // Construct edges between groups
+            let edgesMap = {};
+
             let edges = [];
             _.each(groupToEvents, (events, group) => {
                 let tmp1 = _.map(events, (event) => eventToGroup[event]);
                 let toGroups = (_.uniq(tmp1));
                 _.each(toGroups, (toGroup) => {
-                    // if(toGroup !== undefined){
-                    edges.push({data: {source: group, target: toGroup}})
-                    // }
+                    if (group !== undefined && toGroup !== undefined && edgesMap['' + group + toGroup] === undefined) {
+                        edgesMap['' + group + toGroup] = false;
+                        edges.push({
+                            data: {
+                                source: group, target: toGroup
+                            }
+                        })
+                    }
                 });
             });
 
@@ -381,8 +420,9 @@ export const getEventChainGraph = new ValidatedMethod({
             let sequence = EventSequences.findOne({id: sequenceId}, {});
 
             let linkedSequences = {};
+            linkedSequences[sequence.id] = false;
 
-            _.each(sequence.targets, (targetId) => {
+            _.each(sequence.connections, (targetId) => {
                 if (linkedSequences[targetId] === undefined) {
                     // console.log(targetId);
                     linkedSequences[targetId] = EventSequences.findOne({id: targetId}, {})
@@ -394,7 +434,14 @@ export const getEventChainGraph = new ValidatedMethod({
             let ignored = [];
 
             _.each(linkedSequences, (eventSequence) => {
-                events = events.concat(eventSequence.events);
+                if (eventSequence !== false) {
+                    events = events.concat(eventSequence.events);
+                }
+            });
+
+            let eventsMap = {};
+            _.each(events, (event) => {
+                eventsMap[event.id] = true;
             });
 
             let nodes = [];
@@ -453,14 +500,18 @@ export const getEventChainGraph = new ValidatedMethod({
 
                 nodes.push(node);
 
+                let edgesMap = {};
                 _.each(event.targets.concat(event.dangerousTargets), (target) => {
-                    edges.push(
-                        {
-                            data: {
-                                source: event.id,
-                                target: target
-                            }
-                        })
+                    if (eventsMap[target] !== undefined && edgesMap['' + event.id + target] === undefined) {
+                        edgesMap['' + event.id + target] = false;
+                        edges.push(
+                            {
+                                data: {
+                                    source: event.id,
+                                    target: target
+                                }
+                            });
+                    }
                 });
             });
             // console.log(nodes);

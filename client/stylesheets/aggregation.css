@@ -1,3 +1,7 @@
-#example-timeline{
+#example-timeline {
     background-color: #fff;
+}
+
+#aggregation_container {
+    position: relative;
 }

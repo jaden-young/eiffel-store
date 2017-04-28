@@ -21,11 +21,6 @@ Template.eventchain.rendered = () => {
 
 Template.button_row.events({
     'click .showEventChainButton': function (event) {
-
-        $('html, body').animate({
-            scrollTop: $("#eventchain").offset().top - 10
-        }, "slow");
-
         updateSequenceGraph(this.sequenceId);
     }
 });
@@ -36,6 +31,7 @@ Template.details.onCreated(function () {
 
 function showNon() {
     $('#level3_heading_select').hide();
+    $('#level3_heading_loading').hide();
     $('#level3_heading_updated').hide();
 
     $('#sequence_loader').hide();
@@ -54,14 +50,16 @@ function show(state) {
             $('#level3_footer_select').show();
             break;
         case 2:
+            $('#level3_heading_loading').show();
+
             $('#sequence_loader').show();
 
             $('#level3_footer_loading').show();
             break;
         case 3:
             $("time#sequence_updated_time").timeago("update", new Date());
-
             $('#level3_heading_updated').show();
+
             $('#level3_footer_updated').show();
             break;
         default:
@@ -71,18 +69,18 @@ function show(state) {
 
 function updateSequenceGraph(sequenceId) {
     show(2);
+    $('html, body').animate({
+        scrollTop: $("#eventchain").offset().top - 10
+    }, "slow");
     getEventChainGraph.call({sequenceId: sequenceId}, function (error, graph) {
         if (error) {
             console.log(error);
         } else {
             let container = $('#cy-event-chain');
-            // console.log(graph);
             if (graph !== undefined) {
-                // console.log(graph);
                 renderGraph(graph, container);
 
-
-                $('#level3_heading_updated').html('Showing a sequence with time span ' + graph.timeStart + ' - ' + graph.timeFinish);
+                $('#level3_footer_updated').html('Showing a sequence with time span ' + graph.timeStart + ' - ' + graph.timeFinish + " and its connected sequences.").show();
                 show(3);
             } else {
                 show(1);
