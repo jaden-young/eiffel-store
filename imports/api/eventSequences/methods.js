@@ -379,12 +379,15 @@ export const getAggregatedGraph = new ValidatedMethod({
             });
 
             // Construct edges between groups
+            let edgesMap = {};
+
             let edges = [];
             _.each(groupToEvents, (events, group) => {
                 let tmp1 = _.map(events, (event) => eventToGroup[event]);
                 let toGroups = (_.uniq(tmp1));
                 _.each(toGroups, (toGroup) => {
-                    if (group !== undefined && toGroup !== undefined) {
+                    if (group !== undefined && toGroup !== undefined && edgesMap['' + group + toGroup] === undefined) {
+                        edgesMap['' + group + toGroup] = false;
                         edges.push({
                             data: {
                                 source: group, target: toGroup
@@ -491,8 +494,10 @@ export const getEventChainGraph = new ValidatedMethod({
 
                 nodes.push(node);
 
+                let edgesMap = {};
                 _.each(event.targets.concat(event.dangerousTargets), (target) => {
-                    if (eventsMap[target] !== undefined) {
+                    if (eventsMap[target] !== undefined && edgesMap['' + event.id + target] === undefined) {
+                        edgesMap['' + event.id + target] = false;
                         edges.push(
                             {
                                 data: {
