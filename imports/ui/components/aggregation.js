@@ -162,6 +162,8 @@ function show(state) {
             $("time#aggregation_updated_time").timeago("update", new Date());
 
             $('#level1_heading_updated').show();
+
+            $('#sequences_showing').val(Session.get('displayedSequenceIds').length);
             break;
         default:
             break;
