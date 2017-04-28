@@ -71,6 +71,11 @@ Template.layout.events({
         }
     },
 
+    'click #retry-button': function(event){
+     //   event.preventDefault();
+
+    },
+
 });
 
 let timer = null;
@@ -97,24 +102,17 @@ function checkConnection() {
 
     */
 
-function checkConnection(){
-    if(Meteor.status().status === "connected"){
-        $('#lost-connection-modal').modal('hide');
-    }else
-    {
+var hasShownConnectionInfo = false;
+
+
+
+
+Meteor.autorun(function(){
+    if( !hasShownConnectionInfo && !(Meteor.status().status === "connected")) {
         $('#lost-connection-modal').modal('show');
+        hasShownConnectionInfo = true;
+
+    }else if(Meteor.status().status === "connected"){
+        hasShownConnectionInfo = false;
     }
-}
-
-
-if(Meteor.isClient){
-    Meteor.autorun(function(){
-            if(Meteor.status().status === "connected"){
-                $('#lost-connection-modal').modal('hide');
-            }else
-            {
-                $('#lost-connection-modal').modal('show');
-            }
-        }
-    )
-}
+});
