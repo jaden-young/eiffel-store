@@ -78,7 +78,7 @@ function updateSequenceGraph(sequenceId) {
         } else {
             let container = $('#cy-event-chain');
             if (graph !== undefined) {
-                renderGraph(graph, container);
+                renderGraph(graph, container, 'eventchain');
 
                 $('#level3_footer_updated').html('Showing a sequence with time span ' + graph.timeStart + ' - ' + graph.timeFinish + " and its connected sequences.").show();
                 show(3);

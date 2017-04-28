@@ -10,6 +10,7 @@ cydagre(cytoscape); // register extension
 panzoom(cytoscape, $); // register extension
 cyqtip(cytoscape); // register extension
 
+
 /**
  * Renders a graph using Cytoscape, with provided graph
  * in the provided DOM element.
@@ -21,7 +22,7 @@ cyqtip(cytoscape); // register extension
 const PASS_COLOR = '#22b14c';
 const FAIL_COLOR = '#af0020';
 const ELSE_COLOR = '#666';
-function renderGraph(graph, container) {
+function renderGraph(graph, container, level) {
     let cy = cytoscape({
 
         container: container,
@@ -155,6 +156,7 @@ function renderGraph(graph, container) {
                     '<tr class="danger"><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.floor(nodeData.failed / nodeData.length * 100) + '%</td></tr>' +
                     '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.floor(nodeData.inconclusive / nodeData.length) + '%</td></tr>' +
                     '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
+                    '<tr><td>Jenkins:</td><td colspan="2"></td></tr>' +
                     '</table>';
             default:
                 return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
