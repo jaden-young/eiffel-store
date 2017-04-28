@@ -156,7 +156,6 @@ function renderGraph(graph, container, level) {
                     '<tr class="danger"><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.floor(nodeData.failed / nodeData.length * 100) + '%</td></tr>' +
                     '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.floor(nodeData.inconclusive / nodeData.length) + '%</td></tr>' +
                     '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
-                    '<tr><td>Jenkins:</td><td colspan="2"></td></tr>' +
                     '</table>';
             default:
                 return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
@@ -177,6 +176,7 @@ function renderGraph(graph, container, level) {
                     getTooltipButton(nodeData.id) +          // Button will take user to level 2 - 'details'
                     '<table class="table table-bordered">' +
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
+                    '<tr><td>Jenkins:</td><td>' + console.log(nodeData.eventData) + '%</td></tr>' +
                     '</table>'; // Row 3 - OTHER
 
             case /TC/.test(nodeLabel):                                              // Checks if node_id starts with 'TSF'
@@ -184,6 +184,7 @@ function renderGraph(graph, container, level) {
                     getTooltipButton(nodeData.id) +          // Button will take user to level 2 - 'details'
                     '<table class="table table-bordered">' +
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
+                    '<tr><td>Jenkins:</td><td>' + console.log(nodeData.eventData) + '%</td></tr>' +
                     '</table>'; // Row 3 - OTHER
 
             case /CLM/.test(nodeLabel):
@@ -191,13 +192,14 @@ function renderGraph(graph, container, level) {
                     getTooltipButton(nodeData.id) +
                     '<table class="table table-bordered">' +
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
-                    '<tr><td>Jenkins:</td><td colspan="2"></td></tr>' +
+                    '<tr><td>Jenkins:</td><td>' + nodeData.eventData.name + '%</td></tr>' +
                     '</table>';
             default:
                 return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
                     getTooltipButton(nodeData.id) +
                     '<table class="table table-bordered">' +
                     '<tr><td>Total no. of events</td><td class="td-right">' + nodeData.length + '</td></tr>' +
+                    '<tr><td>Jenkins:</td><td>' + console.log(nodeData.eventData) + '%</td></tr>' +
                     '</table>';
 
         }
