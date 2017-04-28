@@ -108,11 +108,14 @@ var hasShownConnectionInfo = false;
 
 
 Meteor.autorun(function(){
-    if( !hasShownConnectionInfo && !(Meteor.status().status === "connected")) {
-        $('#lost-connection-modal').modal('show');
-        hasShownConnectionInfo = true;
+        if( !hasShownConnectionInfo && !(Meteor.status().status === "connected")) {
+            $('#lost-connection-modal').modal('show');
+            hasShownConnectionInfo = true;
+            $('#connectionStatus').html('<span class="glyphicon glyphicon-ban-circle" aria-hidden="true" style = "color:red"></span>');
 
-    }else if(Meteor.status().status === "connected"){
-        hasShownConnectionInfo = false;
+        }else if(Meteor.status().status === "connected"){
+            hasShownConnectionInfo = false;
+            $('#connectionStatus').html('<span class="glyphicon glyphicon-ok-sign" aria-hidden="true" style = "color:green"></span>');
+        }
     }
-});
+);
