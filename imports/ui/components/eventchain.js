@@ -79,13 +79,22 @@ function updateSequenceGraph(sequenceId) {
             let container = $('#cy-event-chain');
             if (graph !== undefined) {
                 renderGraph(graph, container);
-
-                $('#level3_footer_updated').html('Showing a sequence with time span ' + graph.timeStart + ' - ' + graph.timeFinish + " and its connected sequences.").show();
+                $('#level3_footer_updated').html('Showing a sequence with time span ' +
+                    formatDate(new Date(graph.timeStart)) + ' - ' +
+                    formatDate(new Date(graph.timeFinish)) + " and its connected sequences.").show();
                 show(3);
             } else {
                 show(1);
             }
-
         }
     })
+}
+
+function formatDate(timestamp) {
+    console.log('formatdate', timestamp);
+    console.log(timestamp.getFullYear());
+    let day = timestamp.getDate(),
+        month = timestamp.getMonth() + 1,
+        year = timestamp.getFullYear();
+    return year + "-" + month + "-" + day;
 }
