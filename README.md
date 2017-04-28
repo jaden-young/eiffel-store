@@ -1,8 +1,8 @@
-#Header
+# Header
 
-##API
+## API
 
-###Events v1.6
+### Events v1.6
 Events object example
 ```json
 {
@@ -55,7 +55,7 @@ Events object example
 }
 ```
 
-###EventSequences v1.2
+### EventSequences v1.2
 EventSequences object example
 
 ```json
