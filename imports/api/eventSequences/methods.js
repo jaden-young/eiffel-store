@@ -8,7 +8,7 @@ import {getProperty, setProperty} from "../properties/methods";
 import {getRedirectName, isConfidenceLevelEvent, isTestEvent} from "../events/event-types";
 
 function getEventSequenceVersion() {
-    return '1.1';
+    return '1.2';
 }
 function getEventSequenceVersionPropertyName() {
     return 'eventSequences.version';
@@ -73,15 +73,6 @@ export const populateEventSequences = new ValidatedMethod({
 
         console.log('Processing events from database. Please wait.');
 
-        let illegalBridgeTypes = [
-            'EiffelArtifactCreatedEvent',
-            'EiffelDocumentationCreatedEvent',
-            'EiffelCompositionDefinedEvent',
-            'EiffelEnvironmentDefinedEvent',
-            'EiffelSourceChangeCreatedEvent',
-            'EiffelSourceChangeSubmittedEvent'
-        ];
-
         let legalTypes = [
             'CAUSE',
             'CONTEXT',
@@ -126,7 +117,6 @@ export const populateEventSequences = new ValidatedMethod({
                 event.targetedBy = [];
                 event.dangerousTargetedBy = [];
                 event.dev.checked = false;
-                // event.dev.stop = _.contains(illegalBridgeTypes, event.type);
             } else {
                 total--;
             }
@@ -167,7 +157,7 @@ export const populateEventSequences = new ValidatedMethod({
 
             done++;
             let print = Math.floor((done / total) * 100);
-            if (print >= (lastPrint + 20)) {
+            if (print >= (lastPrint + 50)) {
                 console.log("Finding event parents progress: " + print + '% (' + done + '/' + total + ')');
                 lastPrint = print;
             }
@@ -190,12 +180,12 @@ export const populateEventSequences = new ValidatedMethod({
 
             let targets = eventMap[eventId].targets;
             for (let index = 0; index < targets.length; index++) {
-                linkedEvents = linkedEvents.concat(getAllLinked(targets[index]));
+                linkedEvents = linkedEvents.concat(getAllLinked(targets[index], sequenceId));
             }
 
             let targetedBys = eventMap[eventId].targetedBy;
             for (let index = 0; index < targetedBys.length; index++) {
-                linkedEvents = linkedEvents.concat(getAllLinked(targetedBys[index]));
+                linkedEvents = linkedEvents.concat(getAllLinked(targetedBys[index], sequenceId));
             }
             return linkedEvents;
         }
@@ -214,7 +204,6 @@ export const populateEventSequences = new ValidatedMethod({
 
         console.log("Generating sequences.");
         let sequences = [];
-        let sequenceIndex = 0;
         _.each(sequencesIds, (sequence) => {
 
             let timeStart = undefined;
@@ -233,52 +222,35 @@ export const populateEventSequences = new ValidatedMethod({
                 return memo;
             }, []);
 
+
             sequences.push({
-                id: sequenceIndex,
+                id: sequenceEvents[0].sequenceId,
                 timeStart: timeStart,
                 timeFinish: timeFinish,
                 size: sequenceEvents.length,
-                dev: {
-                    // version: getEventSequenceVersion()
-                },
+                dev: {},
                 events: sequenceEvents,
             });
-
-            sequenceIndex++;
         });
 
         done = 0;
         lastPrint = ((done / total) * 100);
 
-        // TODO: use eventsMap and events sequenceId instead
-        _.each(sequences, (sequence, index) => {
+        _.each(sequences, (sequence) => {
             let connections = [];
             _.each(sequence.events, (event) => {
                 _.each(event.dangerousTargets.concat(event.dangerousTargetedBy), (target) => {
-                    FindTarget:
-                        for (let s = 0; s < sequences.length; s++) {
-                            if (sequences[s].id !== sequences[index].id) {
-                                for (let e = 0; e < sequences[s].events.length; e++) {
-                                    if (sequences[s].events[e].id === target) {
-                                        connections.push(sequences[s].id);
-                                        break FindTarget;
-                                    }
-                                }
-                            }
-                        }
+                    connections.push(eventMap[target].sequenceId);
                 });
-
 
                 done++;
                 let print = Math.floor((done / total) * 100);
-                if (print >= (lastPrint + 5)) {
-                    console.log("Setting sequences targets: " + print + '% (' + done + '/' + total + ')');
+                if (print >= (lastPrint + 50)) {
+                    console.log("Fining sequences connections: " + print + '% (' + done + '/' + total + ')');
                     lastPrint = print;
                 }
             });
             sequence.connections = connections;
-
-
         });
 
         let latestTime = undefined;
