@@ -186,7 +186,7 @@ function showAggregation(from, to, limit) {
             let container = $('#cy-aggregation');
             Session.set('displayedSequenceIds', graph.sequences);
             renderGraph(graph, container);
-            showSequenceCount(from, to, limit);
+            showSequenceCount(from, to, graph.sequences.length);
             show(3);
         }
     });
