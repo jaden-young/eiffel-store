@@ -10,25 +10,31 @@
         <div class="panel-footer">
             <div class="panel panel-default" id="example-timeline"></div>
             <div class="row">
-                <div class="col-lg-3">
+                <div class="col-lg-2">
                     <div class="input-group">
-                        <span class="input-group-addon">Aggregate from</span><input id="date-from"
+                        <span class="input-group-addon">From</span><input id="date-from"
                                                                                     class="form-control datepicker"/>
                     </div>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-2">
                     <div class="input-group">
-                        <span class="input-group-addon">Aggregate to</span><input id="date-to"
+                        <span class="input-group-addon">To</span><input id="date-to"
                                                                                   class="form-control datepicker"/>
                     </div>
 
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-2">
                     <div class="input-group">
-                        <span class="input-group-addon">Origin sequences limit</span><input id="limit" class="form-control"/>
+                        <span class="input-group-addon">Soft limit</span><input id="limit" class="form-control"/>
                     </div>
                 </div>
-                <div class="col-lg-3">
+                <div class="col-lg-2">
+                    <div class="input-group">
+                        <span class="input-group-addon">Sequences showing</span>
+                        <input type="text" value="TODO" id="sequences_showing" class="form-control" readonly/>
+                    </div>
+                </div>
+                <div class="col-lg-2">
                     <div class="input-group">
                         <span class="input-group-addon">Additional sequences</span>
                         <input type="text" value="0" id="additional_sequences" class="form-control" readonly/>
