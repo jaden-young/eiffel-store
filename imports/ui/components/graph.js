@@ -190,7 +190,7 @@ function renderGraph(graph, container, level) {
                     getTooltipButton(nodeData.id) +          // Button will take user to level 2 - 'details'
                     '<table class="table table-bordered">' +
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
-                    '<tr><td>Jenkins:</td><td>' + console.log(nodeData.eventData.executionUri) + '%</td></tr>' +
+                    '<tr><td>Jenkins:</td><td>' + nodeData.eventData.executionUri + '</td></tr>' + //this should show a stringified link to a homepage once data exists
                     '</table>'; // Row 3 - OTHER
 
             case /CLM/.test(nodeLabel):
