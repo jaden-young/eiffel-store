@@ -157,6 +157,8 @@ function show(state) {
             $('#aggregation_loader').show();
 
             $('#level1_heading_loading').show();
+
+            $('#sequences_showing').val('0');
             break;
         case 3:
             $("time#aggregation_updated_time").timeago("update", new Date());
