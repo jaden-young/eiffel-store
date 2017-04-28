@@ -171,20 +171,6 @@ function renderGraph(graph, container, level) {
         let nodeLabel = nodeData.label;
 
         switch (true) {
-            case /TS/.test(nodeLabel):                                              // Checks if node_id starts with 'TSF'
-                return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
-                    getTooltipButton(nodeData.id) +          // Button will take user to level 2 - 'details'
-                    '<table class="table table-bordered">' +
-                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
-                    '</table>'; // Row 3 - OTHER
-
-            case /TC/.test(nodeLabel):                                              // Checks if node_id starts with 'TSF'
-                return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
-                    getTooltipButton(nodeData.id) +          // Button will take user to level 2 - 'details'
-                    '<table class="table table-bordered">' +
-                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
-                    '</table>'; // Row 3 - OTHER
-
             case /ActS/.test(nodeLabel):                                              // Checks if node_id starts with 'TSF'
                 return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
                     getTooltipButton(nodeData.id) +          // Button will take user to level 2 - 'details'
@@ -192,13 +178,6 @@ function renderGraph(graph, container, level) {
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
                     '<tr><td>Jenkins:</td><td>' + nodeData.eventData.executionUri + '</td></tr>' + //this should show a stringified link to a homepage once data exists
                     '</table>'; // Row 3 - OTHER
-
-            case /CLM/.test(nodeLabel):
-                return '<h4>' + nodeLabel + '</h4>' +
-                    getTooltipButton(nodeData.id) +
-                    '<table class="table table-bordered">' +
-                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
-                    '</table>';
             default:
                 return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
                     getTooltipButton(nodeData.id) +
