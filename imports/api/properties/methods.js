@@ -1,3 +1,4 @@
+'use strict';
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Properties} from "../properties/properties";
 
@@ -28,7 +29,18 @@ export const getProperty = new ValidatedMethod({
     name: 'getProperty',
     validate: null,
     run({propertyName}){
-        return getProperties.call()[propertyName]
+        let property = getProperties.call();
+
+        let propertyNames = propertyName.split(".");
+
+        for (let i = 0; i < propertyNames.length; i++) {
+            if (property[propertyNames[i]] === undefined) {
+                return undefined;
+            }
+            property = property[propertyNames[i]]
+        }
+        // console.log(property);
+        return property;
     }
 });
 
@@ -37,7 +49,21 @@ export const setProperty = new ValidatedMethod({
     validate: null,
     run({propertyName, propertyValue}){
         let properties = getProperties.call();
-        properties[propertyName] = propertyValue;
+
+        let property = properties;
+
+        let propertyNames = propertyName.split(".");
+
+        for (let i = 0; i < propertyNames.length; i++) {
+            if (i + 1 === propertyNames.length) {
+                property[propertyNames[i]] = propertyValue;
+            } else {
+                if (property[propertyNames[i]] === undefined) {
+                    property[propertyNames[i]] = {};
+                }
+                property = property[propertyNames[i]]
+            }
+        }
         setProperties.call({properties: properties})
     }
 });

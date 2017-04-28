@@ -1,19 +1,23 @@
 'use strict';
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Rows} from "./rows";
-import {EventSequences} from "../eventSequences/eventSequences";
+import {EventSequences} from "../eventSequences/event-sequences";
 import {setProperty} from "../properties/methods";
 
 function getRowsVersion() {
-    return '1.2';
+    return '1.4';
 }
 
 function getRowsVersionPropertyName() {
-    return 'rowsVersion';
+    return 'rows.version';
 }
 
 function setRowsVersionPropertyName() {
     setProperty.call({propertyName: getRowsVersionPropertyName(), propertyValue: getRowsVersion()})
+}
+
+function invalidateRowsVersionPropertyName() {
+    setProperty.call({propertyName: getRowsVersionPropertyName(), propertyValue: undefined})
 }
 
 export const rowsVersion = new ValidatedMethod({
@@ -36,9 +40,12 @@ export const populateRowsCollection = new ValidatedMethod({
     name: 'populateRowsCollection',
     validate: null,
     run(){
+        // return;
+
         let VALUE_UNDEFINED = '-';
 
         console.log("Removing old rows collection.");
+        invalidateRowsVersionPropertyName();
         Rows.remove({});
 
         let total = EventSequences.find().count();

@@ -9,7 +9,7 @@ import {isAlive} from "/imports/api/utils/methods"
 $(document).ready(function () {
     $(document.body).attr('data-spy', 'scroll');
     $(document.body).attr('data-target', '#navscrollspy');
-    $(document.body).scrollspy({offset: 20});
+    $(document.body).scrollspy({offset: 200});
     $('[data-spy="scroll"]').each(function () {
         $(this).scrollspy('refresh');
     });
@@ -27,6 +27,7 @@ $(function () {
         event.preventDefault();
     });
 });
+
 
 
 /**
