@@ -3,6 +3,7 @@ import "./layout.html";
 import "../components/aggregation.html";
 import "../components/details.html";
 import "../components/eventchain.html";
+import {Meteor} from "meteor/meteor";
 
 import {isAlive} from "/imports/api/utils/methods"
 
@@ -74,15 +75,15 @@ Template.layout.events({
 
 let timer = null;
 
-
+/*
 Template.layout.rendered = function() {
   this.timer = setInterval(checkConnection, 5000);
 };
 
 Template.layout.onDestroyed = function(){
     clearInterval(timer);
-}
-
+};
+/*
 function checkConnection() {
     isAlive.call(function (e, result) {
         if (e) {
@@ -92,4 +93,28 @@ function checkConnection() {
 
         }
     });
+}
+
+    */
+
+function checkConnection(){
+    if(Meteor.status().status === "connected"){
+        $('#lost-connection-modal').modal('hide');
+    }else
+    {
+        $('#lost-connection-modal').modal('show');
+    }
+}
+
+
+if(Meteor.isClient){
+    Meteor.autorun(function(){
+            if(Meteor.status().status === "connected"){
+                $('#lost-connection-modal').modal('hide');
+            }else
+            {
+                $('#lost-connection-modal').modal('show');
+            }
+        }
+    )
 }
