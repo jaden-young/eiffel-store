@@ -365,14 +365,6 @@ export const getAggregatedGraph = new ValidatedMethod({
                     node.data.timedOut = valueCount.hasOwnProperty('TIMED_OUT') ? valueCount['TIMED_OUT'] : 0;
                     node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ? valueCount['INCONCLUSIVE'] : 0;
                 }
-                else if (isActivityTriggeredEvent(node.data.type)){
-                    let typeCount = _.countBy(events, (event) => event.data.triggers.type);
-                    node.data.manual = typeCount.hasOwnProperty('MANUAL') ? typeCount['MANUAL'] : 0;
-                    node.data.eiffelEvent = typeCount.hasOwnProperty('EIFFEL_EVENT') ? typeCount['EIFFEL_EVENT'] : 0;
-                    node.data.sourceChange = typeCount.hasOwnProperty('SOURCE_CHANGE') ? typeCount['SOURCE_CHANGE'] : 0;
-                    node.data.timer= typeCount.hasOwnProperty('TIMER') ? typeCount['TIMER'] : 0;
-                    node.data.other = typeCount.hasOwnProperty('OTHER') ? typeCount['OTHER'] : 0;
-                }
                 else if (isAnnouncementPublishedEvent(node.data.type)){
                     let valueCount = _.countBy(events, (event) => event.data.severity);
                     node.data.minor = valueCount.hasOwnProperty('MINOR') ? valueCount['MINOR'] : 0;
@@ -381,20 +373,6 @@ export const getAggregatedGraph = new ValidatedMethod({
                     node.data.blocker = valueCount.hasOwnProperty('BLOCKER') ? valueCount['BLOCKER'] : 0;
                     node.data.closed = valueCount.hasOwnProperty('CLOSED') ? valueCount['CLOSED'] : 0;
                     node.data.canceled = valueCount.hasOwnProperty('CANCELED') ? valueCount['CANCELED'] : 0;
-                }
-                else if (isArtifactCreatedEvent(node.data.type)){
-                    let implementationCount = _.countBy(events, (event) => event.data.requiresImplementation);
-                    node.data.none = implementationCount.hasOwnProperty('NONE') ? implementationCount['NONE'] : 0;
-                    node.data.any = implementationCount.hasOwnProperty('ANY') ? implementationCount['ANY'] : 0;
-                    node.data.exactlyOne = implementationCount.hasOwnProperty('EXACTLY_ONE') ? implementationCount['EXACTLY_ONE'] : 0;
-                    node.data.atLeastOne = implementationCount.hasOwnProperty('AT_LEAST_ONE') ? implementationCount['AT_LEAST_ONE'] : 0;
-                }
-                else if (isArtifactPublishedEvent(node.data.type)){
-                    let locationCount = _.countBy(events, (event) => event.data.locations.type);
-                    node.data.artifactory = locationCount.hasOwnProperty('ARTIFACTORY') ? locationCount['ARTIFACTORY'] : 0;
-                    node.data.nexus = locationCount.hasOwnProperty('NEXUS') ? locationCount['NEXUS'] : 0;
-                    node.data.plain = locationCount.hasOwnProperty('PLAIN') ? locationCount['PLAIN'] : 0;
-                    node.data.other = locationCount.hasOwnProperty('OTHER') ? locationCount['OTHER'] : 0;
                 }
                 else if (isConfidenceLevelEvent(node.data.type)) {
                     let valueCount = _.countBy(events, (event) => event.data.value);
@@ -416,17 +394,6 @@ export const getAggregatedGraph = new ValidatedMethod({
                     node.data.success = valueCount.hasOwnProperty('SUCCESS') ? valueCount['SUCCESS'] : 0;
                     node.data.failure = valueCount.hasOwnProperty('FAILURE') ? valueCount['FAILURE'] : 0;
                     node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ? valueCount['INCONCLUSIVE'] : 0;
-                }
-                else if (isSourceChangeCreatedEvent(node.data.type)){
-                        // Issues not required but if issues exists, type is required
-                        /*let typeCount = _.countBy(events, (event) => event.data.issues.type);
-                        node.data.bug = typeCount.hasOwnProperty('BUG') ? typeCount['BUG'] : 0;
-                        node.data.improvement = typeCount.hasOwnProperty('IMPROVEMENT') ? typeCount['IMPROVEMENT'] : 0;
-                        node.data.feature = typeCount.hasOwnProperty('FEATURE') ? typeCount['FEATURE'] : 0;
-                        node.data.workItem = typeCount.hasOwnProperty('WORK_ITEM') ? typeCount['WORK_ITEM'] : 0;
-                        node.data.requirement = typeCount.hasOwnProperty('REQUIREMENT') ? typeCount['REQUIREMENT'] : 0;
-                        node.data.other = typeCount.hasOwnProperty('OTHER') ? typeCount['OTHER'] : 0;
-                */
                 }
                 else if (isTestEvent(node.data.type)) {
                     let valueCount = _.countBy(events, (event) => event.data.outcome.verdict);
