@@ -91,8 +91,6 @@ function updateSequenceGraph(sequenceId) {
 }
 
 function formatDate(timestamp) {
-    console.log('formatdate', timestamp);
-    console.log(timestamp.getFullYear());
     let day = timestamp.getDate(),
         month = timestamp.getMonth() + 1,
         year = timestamp.getFullYear();
