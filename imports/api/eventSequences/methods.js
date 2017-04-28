@@ -294,10 +294,16 @@ export const getAggregatedGraph = new ValidatedMethod({
             // from: 1420070400000 2015
             // to: 1514764800000 2018
 
+            if(limit === 0){
+                return {nodes: [], edges: [], sequences: []};
+            }
+
             let eventSequences = EventSequences.find(
                 {timeStart: {$gte: parseInt(from), $lte: parseInt(to)}},
                 {sort: {timeFinish: -1}, limit: limit})
                 .fetch();
+
+
 
             let linkedSequences = {};
             _.each(eventSequences, (eventSequence) => {
