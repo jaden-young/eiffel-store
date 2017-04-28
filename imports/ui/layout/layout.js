@@ -4,6 +4,8 @@ import "../components/aggregation.html";
 import "../components/details.html";
 import "../components/eventchain.html";
 
+import {isAlive} from "/imports/api/utils/methods"
+
 $(document).ready(function () {
     $(document.body).attr('data-spy', 'scroll');
     $(document.body).attr('data-target', '#navscrollspy');
@@ -68,3 +70,26 @@ Template.layout.events({
     },
 
 });
+
+let timer = null;
+
+
+Template.layout.rendered = function() {
+  this.timer = setInterval(checkConnection, 5000);
+};
+
+Template.layout.onDestroyed = function(){
+    clearInterval(timer);
+}
+
+function checkConnection() {
+    isAlive.call(function (e, result) {
+
+        if (e) {
+            $('#lost-connection-modal').modal('show');
+        } else {
+            $('#lost-connection-modal').modal('hide');
+
+        }
+    });
+}
