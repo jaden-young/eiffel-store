@@ -119,9 +119,17 @@ function renderGraph(graph, container) {
         wheelSensitivity: 0.075,
     });
 
+    function toHMS(ms_num) {
+        let hours   = Math.floor(ms_num / 3600000);
+        let minutes = Math.floor((ms_num - (hours * 3600000)) / 60000);
+        let seconds = Math.floor((ms_num - (hours * 3600000) - (minutes * 60000)) / 1000);
+        let ms = Math.floor(ms_num - (hours * 3600000) - (minutes * 60000) - (seconds * 1000));
+
+        return hours + 'h ' + minutes + 'm ' + seconds + 's ' + ms + 'ms';
+    }
+
     function getTooltipContent(nodeData) {
         let nodeLabel = nodeData.label;
-        console.log(nodeData);
         switch (true) {
             case /Act/.test(nodeLabel):
                 return '<h4>' + nodeLabel + '</h4>' +
@@ -135,8 +143,8 @@ function renderGraph(graph, container) {
                     '<tr><td>Timed out</td><td class="td-right">' + nodeData.timedOut + '</td><td class="td-right">' + Math.floor(nodeData.timedOut / nodeData.length * 100) + '%</td></tr>' +
                     '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.floor(nodeData.inconclusive / nodeData.length) + '%</td></tr>' +
                     '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
-                    '<tr class="info"><td>Average queue time</td><td colspan="2" class="td-right">' + nodeData.avgQueueTime + '</td></tr>' +
-                    '<tr class="info"><td>Average run time</td><td colspan="2" class="td-right">' + nodeData.avgRunTime + '</td></tr>' +
+                    '<tr class="info"><td>Avg queue time</td><td colspan="2" class="td-right">' + toHMS(nodeData.avgQueueTime) + '</td></tr>' +
+                    '<tr class="info"><td>Avg run time</td><td colspan="2" class="td-right">' + toHMS(nodeData.avgRunTime) + '</td></tr>' +
                     '</table>';
             case /AP/.test(nodeLabel):
                 return '<h4>' + nodeLabel + '</h4>' +
@@ -187,6 +195,7 @@ function renderGraph(graph, container) {
                     '<tr class="danger"><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.floor(nodeData.failed / nodeData.length * 100) + '%</td></tr>' +
                     '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.floor(nodeData.inconclusive / nodeData.length) + '%</td></tr>' +
                     '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
+                    '<tr class="info"><td>Avg run time</td><td colspan="2" class="td-right">' + toHMS(nodeData.avgRunTime) + '</td></tr>' +
                     '</table>'; // Row 3 - OTHER
             case /TS/.test(nodeLabel):                                              // Checks if node_id starts with 'TSF'
                 return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
@@ -197,6 +206,7 @@ function renderGraph(graph, container) {
                     '<tr class="danger"><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.floor(nodeData.failed / nodeData.length * 100) + '%</td></tr>' +
                     '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.floor(nodeData.inconclusive / nodeData.length) + '%</td></tr>' +
                     '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
+                    '<tr class="info"><td>Avg run time</td><td colspan="2" class="td-right">' + toHMS(nodeData.avgRunTime) + '</td></tr>' +
                     '</table>'; // Row 3 - OTHER
             default:
                 return '<h4 id="tt_header">' + nodeLabel + '</h4>' +

@@ -365,12 +365,11 @@ export const getAggregatedGraph = new ValidatedMethod({
                     node.data.timedOut = valueCount.hasOwnProperty('TIMED_OUT') ? valueCount['TIMED_OUT'] : 0;
                     node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ? valueCount['INCONCLUSIVE'] : 0;
                     let totalQueueTime = _.reduce(events, (memo, event) => {
-                        return memo + (event.timeStarted - event.timeTriggered);
+                        return memo + (event.timeStart - event.timeTriggered);
                     }, 0);
                     let totalRunTime = _.reduce(events, (memo, event) => {
-                        return memo + (event.timeFinished - event.timeStarted);
+                        return memo + (event.timeFinish - event.timeStart);
                     }, 0);
-                    console.log(events[0]);
                     node.data.avgQueueTime = totalQueueTime / node.data.length;
                     node.data.avgRunTime = totalRunTime / node.data.length;
                 }
@@ -411,6 +410,11 @@ export const getAggregatedGraph = new ValidatedMethod({
                     node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ? valueCount['INCONCLUSIVE'] : 0;
                     node.data.passed = passedCount;
                     node.data.failed = failedCount;
+
+                    let totalRunTime = _.reduce(events, (memo, event) => {
+                        return memo + (event.timeFinish - event.timeStart);
+                    }, 0);
+                    node.data.avgRunTime = totalRunTime / node.data.length;
                 }
 
                 nodes.push(node);
