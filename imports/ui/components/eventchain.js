@@ -80,7 +80,7 @@ function updateSequenceGraph(sequenceId) {
             if (graph !== undefined) {
                 renderGraph(graph, container);
 
-                $('#level3_footer_updated').html('Showing a sequence with time span ' + graph.timeStart + ' - ' + graph.timeFinish + " and its connected sequences.").show();
+                $('#level3_footer_updated').html('Showing a sequence with time span ' + graph.time.started + ' - ' + graph.time.finished + " and its connected sequences.").show();
                 show(3);
             } else {
                 show(1);
