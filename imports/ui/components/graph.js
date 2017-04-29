@@ -121,13 +121,12 @@ function renderGraph(graph, container) {
 
     function getTooltipContent(nodeData) {
         let nodeLabel = nodeData.label;
-
+        console.log(nodeData);
         switch (true) {
             case /Act/.test(nodeLabel):
                 return '<h4>' + nodeLabel + '</h4>' +
                     getTooltipButton(nodeData.id) +
                     '<table class="table table-bordered">' +
-                    '<tr><td colspan="3"><em>' + nodeData.name + '</em></td></tr>' +
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
                     '<tr class="success"><td>Successful</td><td class="td-right">' + nodeData.successful + '</td><td class="td-right">' + Math.floor(nodeData.successful / nodeData.length * 100) + '%</td></tr>' +
                     '<tr><td>Unsuccessful</td><td class="td-right">' + nodeData.unsuccessful + '</td><td class="td-right">' + Math.floor(nodeData.unsuccessful / nodeData.length * 100) + '%</td></tr>' +
@@ -136,12 +135,13 @@ function renderGraph(graph, container) {
                     '<tr><td>Timed out</td><td class="td-right">' + nodeData.timedOut + '</td><td class="td-right">' + Math.floor(nodeData.timedOut / nodeData.length * 100) + '%</td></tr>' +
                     '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.floor(nodeData.inconclusive / nodeData.length) + '%</td></tr>' +
                     '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
+                    '<tr class="info"><td>Average queue time</td><td colspan="2" class="td-right">' + nodeData.avgQueueTime + '</td></tr>' +
+                    '<tr class="info"><td>Average run time</td><td colspan="2" class="td-right">' + nodeData.avgRunTime + '</td></tr>' +
                     '</table>';
             case /AP/.test(nodeLabel):
                 return '<h4>' + nodeLabel + '</h4>' +
                     getTooltipButton(nodeData.id) +
                     '<table class="table table-bordered">' +
-                    '<tr><td colspan="3"><em>' + nodeData.name + '</em></td></tr>' +
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
                     '<tr><td>Minor</td><td class="td-right">' + nodeData.minor + '</td><td class="td-right">' + Math.floor(nodeData.minor / nodeData.length * 100) + '%</td></tr>' +
                     '<tr><td>Major</td><td class="td-right">' + nodeData.major + '</td><td class="td-right">' + Math.floor(nodeData.major/ nodeData.length * 100) + '%</td></tr>' +
@@ -166,7 +166,6 @@ function renderGraph(graph, container) {
                 return '<h4>' + nodeLabel + '</h4>' +
                     getTooltipButton(nodeData.id) +
                     '<table class="table table-bordered">' +
-                    '<tr><td colspan="3"><em>' + nodeData.name + '</em></td></tr>' +
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
                     '<tr class="info"><td>Success</td><td class="td-right">' + nodeData.success + '</td><td class="td-right">' + Math.floor(nodeData.passed / nodeData.length * 100) + '%</td></tr>' +
                     '<tr class="info"><td>Failure</td><td class="td-right">' + nodeData.failure + '</td><td class="td-right">' + Math.floor(nodeData.failure / nodeData.length * 100) + '%</td></tr>' +
