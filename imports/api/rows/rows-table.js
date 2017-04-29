@@ -15,14 +15,14 @@ new Tabular.Table({
         {data: "type", title: "Type"},
         {data: "id", title: "ID"},
         {
-            data: "timeStart",
+            data: "time.started",
             title: "Start time",
             // render: function (val, type, doc) {
             //     (new Date(val)).toString()
             // }
         },
         {
-            data: "timeFinish",
+            data: "time.finished",
             title: "End time",
             // render: function (val, type, doc) {
             //     (new Date(val)).toString()
