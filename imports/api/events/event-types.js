@@ -72,14 +72,18 @@ export const isTestEvent = function (eventType) {
     return _.contains(eventTypes, eventType);
 };
 
-export const getTestCaseEventName = function (eventType) {
+export const getTestCaseEventName = function () {
     return "TestCaseEvent"
 };
 
-export const getTestSuiteEventName = function (eventType) {
+export const getTestSuiteEventName = function () {
     return "TestSuiteEvent"
 };
 
-export const getRedirectName = function (eventType) {
+export const getActivityEventName = function () {
+    return "ActivityEvent"
+};
+
+export const getRedirectName = function () {
     return "Redirect"
 };
