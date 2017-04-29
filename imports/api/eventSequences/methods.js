@@ -5,8 +5,8 @@ import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Events} from "../events/events";
 import {EventSequences} from "./event-sequences";
 import {getProperty, setProperty} from "../properties/methods";
-import {isActivityFinishedEvent, isActivityTriggeredEvent, isAnnouncementPublishedEvent, isArtifactCreatedEvent, isArtifactPublishedEvent,
-    isConfidenceLevelEvent, isIssueVerifiedEvent, isSourceChangeCreatedEvent, isTestEvent, getRedirectName} from "../events/event-types";
+import {isActivityEvent, isAnnouncementPublishedEvent, isConfidenceLevelEvent,
+    isIssueVerifiedEvent, isTestEvent, getRedirectName} from "../events/event-types";
 
 function getEventSequenceVersion() {
     return '1.2';
@@ -356,7 +356,7 @@ export const getAggregatedGraph = new ValidatedMethod({
                 };
 
 
-                if (isActivityFinishedEvent(node.data.type)){
+                if (isActivityEvent(node.data.type)){
                     let valueCount = _.countBy(events, (event) => event.data.outcome.conclusion);
                     node.data.successful = valueCount.hasOwnProperty('SUCCESSFUL') ? valueCount['SUCCESSFUL'] : 0;
                     node.data.unsuccessful = valueCount.hasOwnProperty('UNSUCCESSFUL') ? valueCount['UNSUCCESSFUL'] : 0;

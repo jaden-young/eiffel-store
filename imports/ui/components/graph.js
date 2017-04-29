@@ -123,7 +123,7 @@ function renderGraph(graph, container) {
         let nodeLabel = nodeData.label;
 
         switch (true) {
-            case /ActF/.test(nodeLabel):
+            case /Act/.test(nodeLabel):
                 return '<h4>' + nodeLabel + '</h4>' +
                     getTooltipButton(nodeData.id) +
                     '<table class="table table-bordered">' +

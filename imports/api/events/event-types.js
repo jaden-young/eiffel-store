@@ -1,6 +1,6 @@
 'use strict';
 
-export const isActivityCanceledEvent = function (eventType) {
+/*export const isActivityCanceledEvent = function (eventType) {
     return eventType === 'EiffelActivityCanceledEvent';
 };
 
@@ -14,6 +14,13 @@ export const isActivityStartedEvent = function (eventType) {
 
 export const isActivityTriggeredEvent = function (eventType) {
     return eventType === 'EiffelActivityTriggeredEvent';
+};*/
+
+export const isActivityEvent = function (eventType) {
+    let eventTypes = [
+        getActivityEventName()
+    ];
+    return _.contains(eventTypes, eventType);
 };
 
 export const isAnnouncementPublishedEvent = function (eventType) {
