@@ -36,6 +36,9 @@ function renderGraph(graph, container) {
                 selector: 'node',
                 style: {
                     'background-color': ELSE_COLOR,
+                    'border-color': '#000',
+                    'border-width': '1px',
+                    'border-style': 'solid',
                     'label': 'data(label)'
                 }
             },
@@ -55,8 +58,6 @@ function renderGraph(graph, container) {
                 selector: 'node[label ^= "CLM"]', // All nodes with ID == CLM (Confidence level)
                 style: {
                     'background-color': '#fff',
-                    'border-width': '1px', // The size of the node’s border.
-                    'border-color': '#000',
                     'width': '70px',
                     'height': '70x',
                     'pie-size': '100%',
@@ -80,9 +81,6 @@ function renderGraph(graph, container) {
                 style: {
                     'background-color': FAIL_COLOR,
                     'shape': 'rectangle',
-                    'border-style': 'solid',
-                    'border-width': '1px',
-                    'border-color': '#000',
                     'height': 50,
                     'width': 100,
                     'background-image': '/images/green.png',
@@ -99,7 +97,6 @@ function renderGraph(graph, container) {
                     'shape': 'rectangle',
                     'border-style': 'double', // solid, dotted, dashed, or double.
                     'border-width': '6px', // The size of the node’s border.
-                    'border-color': '#000',
                     'height': 50,
                     'width': 100,
                     'background-color': FAIL_COLOR,
@@ -113,14 +110,10 @@ function renderGraph(graph, container) {
             },
 
             {
-                selector: 'node[id ^= "CDef"]', // All nodes with ID starting with CD (Composition Defined)
+                selector: 'node[id ^= "SCC"]', // All nodes with ID starting with CD (Composition Defined)
                 style: {
-                    'background-color': ELSE_COLOR,
                     'shape': 'polygon',
                     'shape-polygon-points': '-0.1 1 -0.17 0.77 -0.32 0.72 -0.53 0.87 -0.68 0.77 -0.6 0.53 -0.68 0.38 -0.94 0.39 -1 0.22 -0.79 0.08 -0.79 -0.08 -1 -0.22 -0.94 -0.39 -0.68 -0.38 -0.6 -0.53 -0.68 -0.77 -0.53 -0.87 -0.32 -0.72 -0.17 -0.77 -0.1 -1 0.1 -1 0.17 -0.77 0.32 -0.72 0.53 -0.87 0.68 -0.77 0.6 -0.53 0.68 -0.38 0.94 -0.39 1 -0.22 0.79 -0.08 0.79 0.08 1 0.22 0.94 0.39 0.68 0.38 0.6 0.53 0.68 0.77 0.53 0.87 0.32 0.72 0.17 0.77 0.1 1',
-                    'border-style': 'solid', // solid, dotted, dashed, or double.
-                    'border-width': '1px',
-                    'border-color': '#000',
                     'height': 70,
                     'width': 70,
                     'pie-size': '40%',
@@ -130,15 +123,33 @@ function renderGraph(graph, container) {
             },
 
             {
-                selector: 'node[id ^= "Act"]', // All nodes with ID starting with Act (Activity)
+                selector: 'node[id ^= "Art"]', // All nodes with ID starting with Act (Activity)
                 style: {
-                    'background-color': '#ffd908',
-                    'shape': 'triangle',
-                    'border-style': 'solid', // solid, dotted, dashed, or double.
-                    'border-width': '6px',
-                    'border-color': '#f14c53',
+                    'shape': 'polygon',
+                    'shape-polygon-points': '0.9 -0.4 0 -0.8 -0.9 -0.4 -0.9 0.6 0 1 0.9 0.6 0.9 -0.4 0 0 -0.9 -0.4 0 0 0 0.2 -0.9 0.6 0 0.2 0.9 0.6 0 0.2 0 1 0.9 0.6 0.9 -0.4',
                     'height': 60,
-                    'width': 70,
+                    'width': 60,
+                }
+            },
+
+            {
+                selector: 'node[id ^= "ArtC"]', // All nodes with ID starting with Act (Activity)
+                style: {
+                    'background-color': '#0F0',
+                }
+            },
+
+            {
+                selector: 'node[id ^= "ArtP"]', // All nodes with ID starting with Act (Activity)
+                style: {
+                    'background-color': '#0000ff',
+                }
+            },
+
+            {
+                selector: 'node[id ^= "ArtR"]', // All nodes with ID starting with Act (Activity)
+                style: {
+                    'background-color': '#ff0000',
                 }
             },
 
@@ -148,11 +159,18 @@ function renderGraph(graph, container) {
                     'background-color': '#ff7e37',
                     'shape': 'polygon',
                     'shape-polygon-points': '-0.2 0.98 -0.39 0.92 -0.56 0.83 -0.71 0.7 -0.83 0.55 -0.92 0.38 -0.98 0.19 -1 0 -0.98 -0.2 -0.92 -0.38 -0.83 -0.56 -0.71 -0.71 -0.55 -0.83 -0.38 -0.92 -0.19 -0.98 0 -1 0.19 -0.98 0.38 -0.92 0.55 -0.83 0.71 -0.71 0.83 -0.56 0.92 -0.38 0.98 -0.2 1 0 1 0 0.98 0.19 0.92 0.38 0.83 0.55 0.71 0.71 0.56 0.83 0.38 0.92 0.2 0.98 0.2 0.1 0.5 0.1 0 -0.5 -0.5 0.1 -0.2 0.1',
-                    'border-style': 'solid', // solid, dotted, dashed, or double.
-                    'border-width': '1px',
-                    'border-color': '#000',
                     'height': 70,
                     'width': 70,
+                }
+            },
+
+            {
+                selector: 'node[id ^= "CDef"]', // All nodes with ID Sourcs Change Submitted
+                style: {
+                    'shape': 'polygon',
+                    'shape-polygon-points': '1 0 1 0.6 0.5 0.8 0 0.6 -0.5 0.8 -1 0.6 -1 0 -0.5 -0.2 -0.5 -0.8 0 -1 0.5 -0.8 0.5 -0.2 1 0  0.5 0.2 0.5 0.8 0.5 0.2 0 0 0 0.6 0 0 -0.5 0.2 -0.5 0.8 -0.5 0.2 -1 0 -0.5 -0.2 0 0 0.5 -0.2 0 0 0 -0.6 -0.5 -0.8 0 -0.6 0.5 -0.8 0.5 -0.2 1 0',
+                    'height': 90,
+                    'width': 90,
                 }
             }
         ],
