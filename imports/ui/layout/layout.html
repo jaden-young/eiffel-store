@@ -1,19 +1,77 @@
 <template name="layout">
-    <h1>Workflow visualization </h1>
 
-    <div id = buttons>
-        <input id="level1_button"  type="submit" value="Aggregation"/>
-        <input id="level2_button"  type="submit" value="Details"/> <!-- Level 2 -->
-        <input id="level3_button"  type="submit" value="Event chain"/>
-        <input id="cy_help_button" type="submit" value="?"/>
+    <nav id="navscrollspy" class="navbar navbar-default" role="navigation">
+        <ul class="nav nav-pills nav-stacked">
+            <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
+            <!--<li class="hidden">-->
+            <!--<a class="page-scroll" href="#page-top"></a>-->
+            <!--</li>-->
+            <li>
+                <a class="page-scroll" href="#aggregation">Aggregation</a>
+            </li>
+            <li>
+                <a class="page-scroll" href="#details">Details</a>
+            </li>
+            <li>
+                <a class="page-scroll" href="#eventchain">Event chain</a>
+            </li>
+
+            <li>
+                <a href="#" data-toggle="modal" data-target="#settingsModal"><span class="glyphicon glyphicon-cog"
+                                                                                   aria-hidden="true"></span></a>
+            </li>
+            <li>
+                <a href="#" data-toggle="modal" data-target="#infoModal"><span class="glyphicon glyphicon-info-sign"
+                                                                               aria-hidden="true"></span></a>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="modal fade" id="settingsModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Settings</h4>
+                </div>
+                <div class="modal-body">
+                    <p>You will be able to trigger a data import from here soon.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
     </div>
-    <div id="cy_help_popup">
-       <h2>Help</h2>
-        "To do X, you first do Y and then Z.." <br>
-        TBI
 
+    <div class="modal fade" id="infoModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Information</h4>
+                </div>
+                <div class="modal-body">
+                    <p>You will get help here when it is implemented.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="page-header">
+        <h1>Workflow visualization </h1>
     </div>
 
     {{> yield}}
-    <hr />
+    <hr/>
 </template>

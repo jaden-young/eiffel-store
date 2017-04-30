@@ -1,124 +1,227 @@
-import {Meteor} from "meteor/meteor";
+'use strict';
+
 import {ValidatedMethod} from "meteor/mdg:validated-method";
-import {Events} from "./events.js";
+import {EiffelEvents} from "../eiffelevents/eiffelevents";
+import {Events} from "../events/events";
+import {getActivityEventName, getRedirectName, getTestCaseEventName, getTestSuiteEventName} from "./event-types";
+import {
+    isEiffelActivityCanceled,
+    isEiffelActivityExecution,
+    isEiffelActivityFinished,
+    isEiffelActivityStarted,
+    isEiffelActivityTriggered,
+    isEiffelTestCaseFinished,
+    isEiffelTestCaseStarted,
+    isEiffelTestSuiteFinished,
+    isEiffelTestSuiteStarted
+} from "../eiffelevents/eiffeleventTypes";
+import {setProperty} from "../properties/methods";
 
-/*
- * Returns a graph object in Cytoscape syntax with aggregated Eiffel events as nodes.
- */
-export const getAggregatedGraph = new ValidatedMethod({
-    name: 'getAggregatedGraph',
+function getEventVersion() {
+    return '1.8';
+}
+function getEventVersionPropertyName() {
+    return 'events.version';
+}
+
+function setEventVersionProperty() {
+    setProperty.call({propertyName: getEventVersionPropertyName(), propertyValue: getEventVersion()})
+}
+
+function invalidateEventVersionProperty() {
+    setProperty.call({propertyName: getEventVersionPropertyName(), propertyValue: undefined})
+}
+
+export const eventVersion = new ValidatedMethod({
+    name: 'eventVersion',
     validate: null,
-    run({from, to, limit}) {
-        // Below values will fetch events between 2015 and 2018
-        // from: 1420070400000 2015
-        // to: 1514764800000 2018
-
-        let events = Events.find(
-            {'meta.time': {$gte: parseInt(from), $lte: parseInt(to)}},
-            {limit: limit})
-            .fetch();
-
-        // Maps individual event node id's to their aggregated node's id and vice versa
-        let groupToEvents = {};
-        let eventToGroup = {};
-
-        // Assumes that the events list data.customData contains a unique value
-        // first in the list and provided to the Eiffel event by the event producer.
-        // Very brittle.
-        let nodes = [];
-        let groupedEvents = _.groupBy(events, (event) => event.data.customData[0].value);
-        _.each(groupedEvents, (events, group) => {
-            if (group.startsWith("TCF") || group.startsWith("TSF")) {
-                nodes.push({
-                    data: {
-                        id: group,
-                        events: events,
-                        length: _.size(events),
-                        passed: _.reduce(events, function (memo, event) {
-                            return event.data.outcome.verdict === "PASSED" ? memo + (1 / this) : memo;
-                        }, 0, _.size(events)) // Calculating rate of passed tests
-                    }
-                });
-            }
-            else if (group.startsWith("CLM")) {
-                nodes.push({
-                    data: {
-                        id: group,
-                        events: events,
-                        length: _.size(events),
-                        passed: _.reduce(events, function (memo, event) {
-                            return event.data.value === "SUCCESS" ? memo + 1 : memo;
-                        }, 0), // Calculating number of passed tests
-                        failed: _.reduce(events, function (memo, event) {
-                            return event.data.value === "FAILURE" ? memo + 1 : memo;
-                        }, 0),
-                        inconclusive: _.reduce(events, function (memo, event) {
-                            return event.data.value === "INCONCLUSIVE" ? memo + 1 : memo;
-                        }, 0)
-                    }
-                });
-            }
-            else {
-                nodes.push({
-                    data: {
-                        id: group,
-                        label: group,
-                        events: events
-                    }
-                });
-            }
-
-            // Save the links from events -> group and group -> events to reconstruct group -> group later
-            let links = _.reduce(events, (memo, event) => memo.concat(event.links), []);
-            groupToEvents[group] = _.pluck(links, 'target');
-            _.each(events, (event) => eventToGroup[event.meta.id] = group);
-        });
-        let evs = _.flatten(_.map(nodes, (n) => n.data.events));
-        let count = evs.length;
-
-        // Construct edges between groups
-        let edges = [];
-        _.each(groupToEvents, (events, group) => {
-            let toGroups = (_.uniq(_.map(events, (event) => eventToGroup[event])));
-            _.each(toGroups, (toGroup) => edges.push({data: {source: group, target: toGroup}}));
-        });
-        return {nodes: nodes, edges: edges};
+    run(){
+        return getEventVersion();
     }
 });
 
-
-export const getEventAncestorGraph = new ValidatedMethod({
-    name: 'getEventAncestorGraph',
+export const eventVersionPropertyName = new ValidatedMethod({
+    name: 'eventVersionPropertyName',
     validate: null,
-    run({eventId}) {
-        let emptyGraph = {nodes: {}, edges: {}};
-        if (Meteor.isClient) {
-            return emptyGraph;
+    run(){
+        return getEventVersionPropertyName();
+    }
+});
+
+export const populateEventsCollection = new ValidatedMethod({
+    name: 'populateEventsCollection',
+    validate: null,
+    run(){
+        console.log("Removing old events collection.");
+        invalidateEventVersionProperty();
+        Events.remove({});
+
+        let total = EiffelEvents.find().count();
+        let done = 0;
+        let lastPrint = ((done / total) * 100);
+
+        console.log('Fetching ' + total + ' eiffel events from database. Please wait.');
+        let events = EiffelEvents.find().fetch();
+
+        let toBePared = {};
+
+        function isToBePared(type) {
+            return isEiffelTestCaseStarted(type) || isEiffelTestSuiteStarted(type) || isEiffelActivityTriggered(type);
         }
 
-        if (Meteor.isServer) {
-            let createAncestorGraph = function (graph, eventId) {
-                let event = Events.findOne({'meta.id': eventId});
-                let parentIds = _.map(event.links, (link) => link.target);
+        _.each(events, (event) => {
+            if (isToBePared(event.meta.type)) {
+                toBePared[event.meta.id] = event;
+            }
+        });
 
-                // Save nodes in a map to prevent duplicates
-                graph.nodes[eventId] = ({data: {id: event.meta.id, label: event.meta.type}});
+        _.each(events, (event) => {
+            if (isEiffelTestCaseFinished(event.meta.type)) {
+                let startEvent = toBePared[event.links[0].target];
+                if (startEvent === undefined) {
+                    console.log(startEvent);
+                }
+                delete toBePared[event.links[0].target];
 
-                // Save edges in a map to prevent duplicates
-                _.each(parentIds, (parentId) => {
-                    let id = eventId + ':' + parentId;
-                    graph.edges[id] = {
-                        data: {
-                            source: eventId,
-                            target: parentId
-                        }
-                    }
+                let regex = /^(\D+)\D(\d)+$/g;
+                let str = event.data.customData[0].value;
+                let match = regex.exec(str);
+
+                Events.insert({
+                    type: getTestCaseEventName(), // *
+                    version: event.meta.version, // *
+                    name: match[1] + match[2], // *
+                    id: event.meta.id, // *
+                    links: startEvent.links, // *
+                    source: startEvent.meta.source, //*
+                    time: {
+                        started: startEvent.meta.time,
+                        finished: event.meta.time,
+                    },
+                    data: Object.assign(startEvent.data, event.data), // *
+                    dev: {},
+
+                    startEvent: startEvent.meta.id,
+                    finishEvent: event.meta.id,
+                })
+            } else if (isEiffelTestSuiteFinished(event.meta.type)) {
+                let startEvent = toBePared[event.links[0].target];
+                if (startEvent === undefined) {
+                    console.log(startEvent);
+                }
+                delete toBePared[event.links[0].target];
+
+                let regex = /^(\D+)\D(\d)+$/g;
+                let str = event.data.customData[0].value;
+                let match = regex.exec(str);
+
+                Events.insert({
+                    type: getTestSuiteEventName(), // *
+                    version: event.meta.version, // *
+                    name: match[1] + match[2], // *
+                    id: event.meta.id, // *
+                    time: {
+                        started: startEvent.meta.time,
+                        finished: event.meta.time,
+                    },
+                    links: startEvent.links, // *
+                    source: startEvent.meta.source, //*
+                    data: Object.assign(startEvent.data, event.data), // *
+                    dev: {},
+
+                    startEvent: startEvent.meta.id,
+                    finishEvent: event.meta.id,
                 });
-                return _.reduce(parentIds, createAncestorGraph, graph);
-            };
 
-            let graph = createAncestorGraph(emptyGraph, eventId);
-            return {nodes: _.values(graph.nodes), edges: _.values(graph.edges)};
-        }
+                Events.insert({
+                    type: getRedirectName(), // *
+                    id: startEvent.meta.id,
+                    dev: {},
+
+                    target: event.meta.id
+                });
+            }
+            else if (isEiffelActivityCanceled(event.meta.type)) {
+                // TODO
+            }
+            else if (isEiffelActivityExecution(event.meta.type)) {
+                let mergingEvent = toBePared[event.links[0].target];
+
+                if (mergingEvent.event === undefined) {
+
+                    let regex = /^(\D+)\D(\d)+$/g;
+                    let str = mergingEvent.data.customData[0].value;
+                    let match = regex.exec(str);
+
+                    mergingEvent.event = {
+                        type: getActivityEventName(), // *
+                        version: mergingEvent.meta.version, // *
+                        name: match[1] + match[2], // *
+                        id: mergingEvent.meta.id, // *
+
+                        links: mergingEvent.links, // *
+                        source: mergingEvent.meta.source, //*
+                        time: {
+                            triggered: mergingEvent.meta.time,
+                        },
+                        data: Object.assign(mergingEvent.data, event.data), // *
+                        dev: {},
+                    };
+                } else {
+                    mergingEvent.event.data = Object.assign(mergingEvent.event.data, event.data)
+                }
+
+                if (isEiffelActivityStarted(event.meta.type)) {
+                    mergingEvent.event.time.started = event.meta.time;
+                    mergingEvent.event.startEvent = event.meta.id;
+                } else if (isEiffelActivityFinished(event.meta.type)) {
+                    mergingEvent.event.time.finished = event.meta.time;
+                    mergingEvent.event.finishEvent = event.meta.id;
+                }
+
+                Events.insert({
+                    type: getRedirectName(), // *
+                    id: event.meta.id,
+                    dev: {},
+
+                    target: mergingEvent.meta.id
+                });
+
+                if (mergingEvent.event.startEvent !== undefined && mergingEvent.event.finishEvent !== undefined) {
+                    Events.insert(mergingEvent.event);
+                    delete toBePared[event.meta.id]
+                }
+            }
+            else if (isToBePared(event.meta.type)) {
+                // No
+            }
+            else {
+                Events.insert({
+                    type: event.meta.type, // *
+                    version: event.meta.version, // *
+                    name: event.data.customData[0].value, // *
+                    id: event.meta.id, // *
+                    time: {
+                        started: event.meta.time,
+                        finished: event.meta.time,
+                    },
+                    links: event.links, // *
+                    source: event.meta.source, // *
+                    data: event.data, // *
+                    dev: {},
+                });
+            }
+
+            done++;
+            let print = Math.floor((done / total) * 100);
+            if (print >= (lastPrint + 5)) {
+                console.log("Populating events progress: " + print + '% (' + done + '/' + total + ')');
+                lastPrint = print;
+            }
+        });
+
+        setEventVersionProperty();
+        let print = Math.floor((done / total) * 100);
+        console.log("Events collection is populated. [" + print + "%] (" + done + "/" + total + ")");
     }
 });

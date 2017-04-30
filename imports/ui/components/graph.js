@@ -1,3 +1,4 @@
+'use strict';
 import cytoscape from "cytoscape";
 import cydagre from "cytoscape-dagre";
 
@@ -35,7 +36,7 @@ function renderGraph(graph, container) {
                 selector: 'node',
                 style: {
                     'background-color': ELSE_COLOR,
-                    'label': 'data(id)'
+                    'label': 'data(label)'
                 }
             },
 
@@ -51,7 +52,7 @@ function renderGraph(graph, container) {
             },
 
             {
-                selector: 'node[id ^= "CLM"]', // All nodes with ID == CLM (Confidence level)
+                selector: 'node[label ^= "CLM"]', // All nodes with ID == CLM (Confidence level)
                 style: {
                     'background-color': '#fff',
                     'border-width': '1px', // The size of the node’s border.
@@ -75,7 +76,7 @@ function renderGraph(graph, container) {
             },
 
             {
-                selector: 'node[id ^= "TC"]', // All nodes with ID starting with TC(Test Case)
+                selector: 'node[label ^= "TC"]', // All nodes with ID starting with TC(Test Case)
                 style: {
                     'background-color': FAIL_COLOR,
                     'shape': 'rectangle',
@@ -83,44 +84,31 @@ function renderGraph(graph, container) {
                     'border-width': '1px',
                     'border-color': '#000',
                     'height': 50,
-                    'width': 100
-                }
-            },
-
-            {
-                selector: 'node[id ^= "TCF"]', // All nodes with ID starting with TCF(Test Case Finished)
-                style: {
+                    'width': 100,
                     'background-image': '/images/green.png',
                     'background-height': '100%',
                     'background-width': function (ele) {
-                        return (ele.data("passed") * 100).toString() + '%';
+                        return (ele.data("passed") * 100 / ele.data("length") ).toString() + '%';
                     },
                     'background-position-x': '0px'
                 }
             },
-
             {
-                selector: 'node[id ^= "TS"]', // All nodes with ID starting with TS(Test Suite)
+                selector: 'node[label ^= "TS"]', // All nodes with ID starting with TSF(Test Suite Finished)
                 style: {
-                    'background-color': FAIL_COLOR,
                     'shape': 'rectangle',
                     'border-style': 'double', // solid, dotted, dashed, or double.
                     'border-width': '6px', // The size of the node’s border.
                     'border-color': '#000',
                     'height': 50,
-                    'width': 100
-                }
-            },
-
-            {
-                selector: 'node[id ^= "TSF"]', // All nodes with ID starting with TSF(Test Suite Finished)
-                style: {
+                    'width': 100,
+                    'background-color': FAIL_COLOR,
                     'background-position-x': '0px',
                     'background-image': '/images/green.png',
                     'background-height': '100%',
                     'background-width': function (ele) {
-                        return (ele.data("passed") * 100).toString() + '%';
-                    }
+                        return (ele.data("passed") * 100 / ele.data("length") ).toString() + '%';
+                    },
                 }
             },
 
@@ -178,21 +166,75 @@ function renderGraph(graph, container) {
         wheelSensitivity: 0.075,
     });
 
+    function getTooltipContent(nodeData) {
+        let nodeLabel = nodeData.label;
+
+        switch (true) {
+            case /TS/.test(nodeLabel):                                              // Checks if node_id starts with 'TSF'
+                return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
+                    getTooltipButton(nodeData.id) +          // Button will take user to level 2 - 'details'
+                    '<table class="table table-bordered">' +
+                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
+                    '<tr class="success"><td>Passed</td><td class="td-right">' + nodeData.passed + '</td><td class="td-right">' + Math.floor(nodeData.passed / nodeData.length * 100) + '%</td></tr>' +
+                    '<tr class="danger"><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.floor(nodeData.failed / nodeData.length * 100) + '%</td></tr>' +
+                    '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.floor(nodeData.inconclusive / nodeData.length) + '%</td></tr>' +
+                    '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
+                    '</table>'; // Row 3 - OTHER
+
+            case /TC/.test(nodeLabel):                                              // Checks if node_id starts with 'TSF'
+                return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
+                    getTooltipButton(nodeData.id) +          // Button will take user to level 2 - 'details'
+                    '<table class="table table-bordered">' +
+                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
+                    '<tr class="success"><td>Passed</td><td class="td-right">' + nodeData.passed + '</td><td class="td-right">' + Math.floor(nodeData.passed / nodeData.length * 100) + '%</td></tr>' +
+                    '<tr class="danger"><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.floor(nodeData.failed / nodeData.length * 100) + '%</td></tr>' +
+                    '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.floor(nodeData.inconclusive / nodeData.length) + '%</td></tr>' +
+                    '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
+                    '</table>'; // Row 3 - OTHER
+
+            case /CLM/.test(nodeLabel):
+                return '<h4>' + nodeLabel + '</h4>' +
+                    getTooltipButton(nodeData.id) +
+                    '<table class="table table-bordered">' +
+                    '<tr><td colspan="3"><em>' + nodeData.name + '</em></td></tr>' +
+                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
+                    '<tr class="success"><td>Passed</td><td class="td-right">' + nodeData.passed + '</td><td class="td-right">' + Math.floor(nodeData.passed / nodeData.length * 100) + '%</td></tr>' +
+                    '<tr class="danger"><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.floor(nodeData.failed / nodeData.length * 100) + '%</td></tr>' +
+                    '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.floor(nodeData.inconclusive / nodeData.length) + '%</td></tr>' +
+                    '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
+                    '</table>';
+            default:
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    getTooltipButton(nodeData.id) +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Total no. of events</td><td class="td-right">' + nodeData.length + '</td></tr>' +
+                    '</table>';
+
+        }
+    }
+
+    function getTooltipButton(eiffelId) {
+        return '<button type="button" class="btn btn-block btn-info aggregation-tt-btn" value="' + eiffelId + '"> Show all events </button>'
+    }
+
     cy.nodes().qtip({
         content: function () {
-            return 'Example qTip on ele ' + this.id() + '<div class="alert alert-success" role="alert"><strong>Well done!</strong> You successfully read this important alert message. (bootstrap)</div>' // Ändra här för att ändra vad som ska vara i den
+            return getTooltipContent(this.data()); // Ändra här för att ändra vad som ska vara i den
+            //return 'Example qTip on ele ' + this.id() + '<div class="alert alert-success" role="alert"><strong>Well done!</strong> You successfully read this important alert message. (bootstrap)</div>' // Ändra här för att ändra vad som ska vara i den
         },
         position: {
-            my: 'center center',
-            at: 'center center',
+            my: 'bottom center',
+            at: 'top center',
+            container: $('#aggregation-tt')
         },
         show: {
-            event: 'mouseover',
-            // event: 'click', om den ska trigga på klick istället
+            //event: 'mouseover',
+            event: 'click', //om den ska trigga på klick istället
             solo: true,
         },
         hide: {
-            event: 'mouseout'
+            //event: 'mouseout'
+            event: 'unfocus'
         },
         style: {
             classes: 'qtip-viswiz qtip-shadow',

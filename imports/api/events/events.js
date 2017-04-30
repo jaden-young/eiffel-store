@@ -1,1 +1,3 @@
-export const Events = new Mongo.Collection('eiffel-events');
+'use strict';
+export const Events = new Mongo.Collection('events');
+
