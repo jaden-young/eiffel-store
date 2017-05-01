@@ -3,8 +3,13 @@
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {EiffelEvents} from "../eiffelevents/eiffelevents";
 import {Events} from "../events/events";
-import {getRedirectName, getTestCaseEventName, getTestSuiteEventName} from "./event-types";
+import {getActivityEventName, getRedirectName, getTestCaseEventName, getTestSuiteEventName} from "./event-types";
 import {
+    isEiffelActivityCanceled,
+    isEiffelActivityExecution,
+    isEiffelActivityFinished,
+    isEiffelActivityStarted,
+    isEiffelActivityTriggered,
     isEiffelTestCaseFinished,
     isEiffelTestCaseStarted,
     isEiffelTestSuiteFinished,
@@ -13,7 +18,7 @@ import {
 import {setProperty} from "../properties/methods";
 
 function getEventVersion() {
-    return '1.6';
+    return '1.8';
 }
 function getEventVersionPropertyName() {
     return 'events.version';
@@ -60,8 +65,12 @@ export const populateEventsCollection = new ValidatedMethod({
 
         let toBePared = {};
 
+        function isToBePared(type) {
+            return isEiffelTestCaseStarted(type) || isEiffelTestSuiteStarted(type) || isEiffelActivityTriggered(type);
+        }
+
         _.each(events, (event) => {
-            if (isEiffelTestCaseStarted(event.meta.type) || isEiffelTestSuiteStarted(event.meta.type)) {
+            if (isToBePared(event.meta.type)) {
                 toBePared[event.meta.id] = event;
             }
         });
@@ -83,14 +92,14 @@ export const populateEventsCollection = new ValidatedMethod({
                     version: event.meta.version, // *
                     name: match[1] + match[2], // *
                     id: event.meta.id, // *
-                    timeStart: startEvent.meta.time, // *
-                    timeFinish: event.meta.time, // *
                     links: startEvent.links, // *
                     source: startEvent.meta.source, //*
-                    data: Object.assign(startEvent.data, event.data), // *
-                    dev: {
-                        version: getEventVersion() // *
+                    time: {
+                        started: startEvent.meta.time,
+                        finished: event.meta.time,
                     },
+                    data: Object.assign(startEvent.data, event.data), // *
+                    dev: {},
 
                     startEvent: startEvent.meta.id,
                     finishEvent: event.meta.id,
@@ -111,14 +120,14 @@ export const populateEventsCollection = new ValidatedMethod({
                     version: event.meta.version, // *
                     name: match[1] + match[2], // *
                     id: event.meta.id, // *
-                    timeStart: startEvent.meta.time, // *
-                    timeFinish: event.meta.time, // *
+                    time: {
+                        started: startEvent.meta.time,
+                        finished: event.meta.time,
+                    },
                     links: startEvent.links, // *
                     source: startEvent.meta.source, //*
                     data: Object.assign(startEvent.data, event.data), // *
-                    dev: {
-                        // version: getEventVersion() // *
-                    },
+                    dev: {},
 
                     startEvent: startEvent.meta.id,
                     finishEvent: event.meta.id,
@@ -127,31 +136,80 @@ export const populateEventsCollection = new ValidatedMethod({
                 Events.insert({
                     type: getRedirectName(), // *
                     id: startEvent.meta.id,
-                    dev: {
-                        // version: getEventVersion() // *
-                    },
+                    dev: {},
 
                     target: event.meta.id
                 });
             }
-            else if (isEiffelTestCaseStarted(event.meta.type) || isEiffelTestSuiteStarted(event.meta.type)) {
-                // toBePared[event.meta.id] = event;
+            else if (isEiffelActivityCanceled(event.meta.type)) {
+                // TODO
+            }
+            else if (isEiffelActivityExecution(event.meta.type)) {
+                let mergingEvent = toBePared[event.links[0].target];
+
+                if (mergingEvent.event === undefined) {
+
+                    let regex = /^(\D+)\D(\d)+$/g;
+                    let str = mergingEvent.data.customData[0].value;
+                    let match = regex.exec(str);
+
+                    mergingEvent.event = {
+                        type: getActivityEventName(), // *
+                        version: mergingEvent.meta.version, // *
+                        name: match[1] + match[2], // *
+                        id: mergingEvent.meta.id, // *
+
+                        links: mergingEvent.links, // *
+                        source: mergingEvent.meta.source, //*
+                        time: {
+                            triggered: mergingEvent.meta.time,
+                        },
+                        data: Object.assign(mergingEvent.data, event.data), // *
+                        dev: {},
+                    };
+                } else {
+                    mergingEvent.event.data = Object.assign(mergingEvent.event.data, event.data)
+                }
+
+                if (isEiffelActivityStarted(event.meta.type)) {
+                    mergingEvent.event.time.started = event.meta.time;
+                    mergingEvent.event.startEvent = event.meta.id;
+                } else if (isEiffelActivityFinished(event.meta.type)) {
+                    mergingEvent.event.time.finished = event.meta.time;
+                    mergingEvent.event.finishEvent = event.meta.id;
+                }
+
+                Events.insert({
+                    type: getRedirectName(), // *
+                    id: event.meta.id,
+                    dev: {},
+
+                    target: mergingEvent.meta.id
+                });
+
+                if (mergingEvent.event.startEvent !== undefined && mergingEvent.event.finishEvent !== undefined) {
+                    Events.insert(mergingEvent.event);
+                    delete toBePared[event.meta.id]
+                }
+            }
+            else if (isToBePared(event.meta.type)) {
+                // No
             }
             else {
-                Events.insert(({
+                Events.insert({
                     type: event.meta.type, // *
                     version: event.meta.version, // *
                     name: event.data.customData[0].value, // *
                     id: event.meta.id, // *
-                    timeStart: event.meta.time, // *
-                    timeFinish: event.meta.time, // *
+                    time: {
+                        started: event.meta.time,
+                        finished: event.meta.time,
+                    },
                     links: event.links, // *
                     source: event.meta.source, // *
                     data: event.data, // *
-                    dev: {
-                        // version: getEventVersion() // *
-                    },
-                }))
+                    dev: {},
+                });
             }
 
             done++;

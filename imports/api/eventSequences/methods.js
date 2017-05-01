@@ -8,17 +8,17 @@ import {getProperty, setProperty} from "../properties/methods";
 import {getRedirectName, isConfidenceLevelEvent, isTestEvent} from "../events/event-types";
 
 function getEventSequenceVersion() {
-    return '1.2';
+    return '1.3';
 }
 function getEventSequenceVersionPropertyName() {
     return 'eventSequences.version';
 }
 function getEventSequenceStartTimePropertyName() {
-    return 'eventSequences.timeStart';
+    return 'eventSequences.time.started';
 }
 
 function getEventSequenceFinishTimePropertyName() {
-    return 'eventSequences.timeFinish';
+    return 'eventSequences.time.finished';
 }
 
 function setEventVersionProperty() {
@@ -199,7 +199,7 @@ export const populateEventSequences = new ValidatedMethod({
                 memo.push(sequence);
             }
             return memo;
-        }, []), 'timeFinish').reverse();
+        }, []), 'time.finished').reverse();
 
 
         console.log("Generating sequences.");
@@ -211,11 +211,11 @@ export const populateEventSequences = new ValidatedMethod({
 
             let sequenceEvents = _.reduce(sequence, function (memo, eventId) {
                 let event = eventMap[eventId];
-                if (timeStart === undefined || event.timeStart < timeStart) {
-                    timeStart = event.timeStart;
+                if (timeStart === undefined || event.time.started < timeStart) {
+                    timeStart = event.time.started;
                 }
-                if (timeFinish === undefined || event.timeFinish > timeFinish) {
-                    timeFinish = event.timeFinish;
+                if (timeFinish === undefined || event.time.finished > timeFinish) {
+                    timeFinish = event.time.finished;
                 }
 
                 memo.push(event);
@@ -225,8 +225,10 @@ export const populateEventSequences = new ValidatedMethod({
 
             sequences.push({
                 id: sequenceEvents[0].sequenceId,
-                timeStart: timeStart,
-                timeFinish: timeFinish,
+                time: {
+                    started: timeStart,
+                    finished: timeFinish,
+                },
                 size: sequenceEvents.length,
                 dev: {},
                 events: sequenceEvents,
@@ -294,15 +296,14 @@ export const getAggregatedGraph = new ValidatedMethod({
             // from: 1420070400000 2015
             // to: 1514764800000 2018
 
-            if(limit === 0){
+            if (limit === 0) {
                 return {nodes: [], edges: [], sequences: []};
             }
 
             let eventSequences = EventSequences.find(
-                {timeStart: {$gte: parseInt(from), $lte: parseInt(to)}},
-                {sort: {timeFinish: -1}, limit: limit})
+                {"time.started": {$gte: parseInt(from), $lte: parseInt(to)}},
+                {sort: {"time.finished": -1}, limit: limit})
                 .fetch();
-
 
 
             let linkedSequences = {};
@@ -512,7 +513,11 @@ export const getEventChainGraph = new ValidatedMethod({
             });
             // console.log(nodes);
             // console.log(edges);
-            return {nodes: nodes, edges: edges, timeStart: sequence.timeStart, timeFinish: sequence.timeFinish};
+            return {
+                nodes: nodes,
+                edges: edges,
+                time: sequence.time,
+            };
         }
     }
 });
@@ -522,7 +527,7 @@ export const getSequenceCount = new ValidatedMethod({
     validate: null,
     run({from, to}) {
         return EventSequences.find(
-            {timeStart: {$gte: parseInt(from), $lte: parseInt(to)}})
+            {"time.started": {$gte: parseInt(from), $lte: parseInt(to)}})
             .count();
     }
 });
