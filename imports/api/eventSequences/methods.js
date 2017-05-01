@@ -5,11 +5,17 @@ import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Events} from "../events/events";
 import {EventSequences} from "./event-sequences";
 import {getProperty, setProperty} from "../properties/methods";
-import {isActivityEvent, isAnnouncementPublishedEvent, isConfidenceLevelEvent,
-    isIssueVerifiedEvent, isTestEvent, getRedirectName} from "../events/event-types";
+import {
+    getRedirectName,
+    isActivityEvent,
+    isAnnouncementPublishedEvent,
+    isConfidenceLevelEvent,
+    isIssueVerifiedEvent,
+    isTestEvent
+} from "../events/event-types";
 
 function getEventSequenceVersion() {
-    return '1.3';
+    return '1.4';
 }
 function getEventSequenceVersionPropertyName() {
     return 'eventSequences.version';
@@ -51,8 +57,8 @@ export const getTimeSpan = new ValidatedMethod({
     validate: null,
     run(){
         return {
-            timeStart: getProperty.call({propertyName: getEventSequenceStartTimePropertyName()}),
-            timeFinish: getProperty.call({propertyName: getEventSequenceFinishTimePropertyName()})
+            started: getProperty.call({propertyName: getEventSequenceStartTimePropertyName()}),
+            finished: getProperty.call({propertyName: getEventSequenceFinishTimePropertyName()})
         };
     }
 });
@@ -263,10 +269,10 @@ export const populateEventSequences = new ValidatedMethod({
         lastPrint = ((done / total) * 100);
         _.each(sequences, (sequence) => {
             if (latestTime === undefined || latestTime < sequence.timeFinish) {
-                latestTime = sequence.timeFinish;
+                latestTime = sequence.time.finished;
             }
             if (earliestTime === undefined || earliestTime > sequence.timeStart) {
-                earliestTime = sequence.timeStart;
+                earliestTime = sequence.time.started;
             }
 
             EventSequences.insert(sequence);
@@ -357,7 +363,7 @@ export const getAggregatedGraph = new ValidatedMethod({
                 };
 
 
-                if (isActivityEvent(node.data.type)){
+                if (isActivityEvent(node.data.type)) {
                     let valueCount = _.countBy(events, (event) => event.data.outcome.conclusion);
                     node.data.successful = valueCount.hasOwnProperty('SUCCESSFUL') ? valueCount['SUCCESSFUL'] : 0;
                     node.data.unsuccessful = valueCount.hasOwnProperty('UNSUCCESSFUL') ? valueCount['UNSUCCESSFUL'] : 0;
@@ -374,7 +380,7 @@ export const getAggregatedGraph = new ValidatedMethod({
                     node.data.avgQueueTime = totalQueueTime / node.data.length;
                     node.data.avgRunTime = totalRunTime / node.data.length;
                 }
-                else if (isAnnouncementPublishedEvent(node.data.type)){
+                else if (isAnnouncementPublishedEvent(node.data.type)) {
                     let valueCount = _.countBy(events, (event) => event.data.severity);
                     node.data.minor = valueCount.hasOwnProperty('MINOR') ? valueCount['MINOR'] : 0;
                     node.data.major = valueCount.hasOwnProperty('MAJOR') ? valueCount['MAJOR'] : 0;
@@ -390,7 +396,7 @@ export const getAggregatedGraph = new ValidatedMethod({
                     node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ? valueCount['INCONCLUSIVE'] : 0;
                     node.data.name = events[0].data.name;
                 }
-                else if (isIssueVerifiedEvent(node.data.type)){
+                else if (isIssueVerifiedEvent(node.data.type)) {
                     let typeCount = _.countBy(events, (event) => event.data.issues.type);
                     node.data.bug = typeCount.hasOwnProperty('BUG') ? typeCount['BUG'] : 0;
                     node.data.improvement = typeCount.hasOwnProperty('IMPROVEMENT') ? typeCount['IMPROVEMENT'] : 0;
