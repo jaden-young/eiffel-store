@@ -27,13 +27,13 @@ Template.aggregation.rendered = () => {
             toTimeline = 1514764800000;// to: 1514764800000 2018
 
         // Gets the time span for sequences.
-        getTimeSpan.call({}, function (error, times) {
+        getTimeSpan.call({}, function (error, time) {
             if (error) {
                 console.log(error);
             } else {
-                console.log(times.timeStart);
-                console.log(times.timeFinish);
-                console.log(times);
+                console.log(time.started);
+                console.log(time.finished);
+                console.log(time);
             }
         });
 
