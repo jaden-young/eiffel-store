@@ -50,6 +50,12 @@ function renderGraph(graph, container) {
                     'target-arrow-shape': 'triangle'
                 }
             },
+            {
+                selector: 'edge[label = "dangerous"]',
+                style: {
+                    'line-style': 'dashed',
+                }
+            },
 
             {
                 selector: 'node[label ^= "CLM"]', // All nodes with ID == CLM (Confidence level)
@@ -120,7 +126,7 @@ function renderGraph(graph, container) {
     });
 
     function toHMS(ms_num) {
-        let hours   = Math.floor(ms_num / 3600000);
+        let hours = Math.floor(ms_num / 3600000);
         let minutes = Math.floor((ms_num - (hours * 3600000)) / 60000);
         let seconds = Math.floor((ms_num - (hours * 3600000) - (minutes * 60000)) / 1000);
         let ms = Math.floor(ms_num - (hours * 3600000) - (minutes * 60000) - (seconds * 1000));
@@ -136,12 +142,12 @@ function renderGraph(graph, container) {
                     getTooltipButton(nodeData.id) +
                     '<table class="table table-bordered">' +
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
-                    '<tr class="success"><td>Successful</td><td class="td-right">' + nodeData.successful + '</td><td class="td-right">' + Math.round(10*(nodeData.successful / nodeData.length * 100) / 10) + '%</td></tr>' +
-                    '<tr><td>Unsuccessful</td><td class="td-right">' + nodeData.unsuccessful + '</td><td class="td-right">' + Math.round(10*(nodeData.unsuccessful / nodeData.length * 100) / 10) + '%</td></tr>' +
-                    '<tr><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.round(10*(nodeData.failed / nodeData.length * 100) / 10) + '%</td></tr>' +
-                    '<tr><td>Aborted</td><td class="td-right">' + nodeData.aborted + '</td><td class="td-right">' + Math.round(10*(nodeData.aborted / nodeData.length) / 10) + '%</td></tr>' +
-                    '<tr><td>Timed out</td><td class="td-right">' + nodeData.timedOut + '</td><td class="td-right">' + Math.round(10*(nodeData.timedOut / nodeData.length * 100) / 10) + '%</td></tr>' +
-                    '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.round(10*(nodeData.inconclusive / nodeData.length) / 10) + '%</td></tr>' +
+                    '<tr class="success"><td>Successful</td><td class="td-right">' + nodeData.successful + '</td><td class="td-right">' + Math.round(10 * (nodeData.successful / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Unsuccessful</td><td class="td-right">' + nodeData.unsuccessful + '</td><td class="td-right">' + Math.round(10 * (nodeData.unsuccessful / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.round(10 * (nodeData.failed / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Aborted</td><td class="td-right">' + nodeData.aborted + '</td><td class="td-right">' + Math.round(10 * (nodeData.aborted / nodeData.length) / 10) + '%</td></tr>' +
+                    '<tr><td>Timed out</td><td class="td-right">' + nodeData.timedOut + '</td><td class="td-right">' + Math.round(10 * (nodeData.timedOut / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.round(10 * (nodeData.inconclusive / nodeData.length) / 10) + '%</td></tr>' +
                     '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
                     '<tr class="info"><td>Avg queue time</td><td colspan="2" class="td-right">' + toHMS(nodeData.avgQueueTime) + '</td></tr>' +
                     '<tr class="info"><td>Avg run time</td><td colspan="2" class="td-right">' + toHMS(nodeData.avgRunTime) + '</td></tr>' +
@@ -151,12 +157,12 @@ function renderGraph(graph, container) {
                     getTooltipButton(nodeData.id) +
                     '<table class="table table-bordered">' +
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
-                    '<tr><td>Minor</td><td class="td-right">' + nodeData.minor + '</td><td class="td-right">' + Math.round(10*(nodeData.minor / nodeData.length * 100) / 10) + '%</td></tr>' +
-                    '<tr><td>Major</td><td class="td-right">' + nodeData.major + '</td><td class="td-right">' + Math.round(10*(nodeData.major/ nodeData.length * 100) / 10) + '%</td></tr>' +
-                    '<tr><td>Critical</td><td class="td-right">' + nodeData.critical + '</td><td class="td-right">' + Math.round(10*(nodeData.critical / nodeData.length * 100) / 10) + '%</td></tr>' +
-                    '<tr><td>Blocker</td><td class="td-right">' + nodeData.blocker + '</td><td class="td-right">' + Math.round(10*(nodeData.blocker / nodeData.length) / 10) + '%</td></tr>' +
-                    '<tr><td>Closed</td><td class="td-right">' + nodeData.closed + '</td><td class="td-right">' + Math.round(10*(nodeData.closed / nodeData.length * 100) / 10) + '%</td></tr>' +
-                    '<tr><td>Canceled</td><td class="td-right">' + nodeData.canceled + '</td><td class="td-right">' + Math.round(10*(nodeData.canceled / nodeData.length) / 10) + '%</td></tr>' +
+                    '<tr><td>Minor</td><td class="td-right">' + nodeData.minor + '</td><td class="td-right">' + Math.round(10 * (nodeData.minor / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Major</td><td class="td-right">' + nodeData.major + '</td><td class="td-right">' + Math.round(10 * (nodeData.major / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Critical</td><td class="td-right">' + nodeData.critical + '</td><td class="td-right">' + Math.round(10 * (nodeData.critical / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Blocker</td><td class="td-right">' + nodeData.blocker + '</td><td class="td-right">' + Math.round(10 * (nodeData.blocker / nodeData.length) / 10) + '%</td></tr>' +
+                    '<tr><td>Closed</td><td class="td-right">' + nodeData.closed + '</td><td class="td-right">' + Math.round(10 * (nodeData.closed / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Canceled</td><td class="td-right">' + nodeData.canceled + '</td><td class="td-right">' + Math.round(10 * (nodeData.canceled / nodeData.length) / 10) + '%</td></tr>' +
                     '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
                     '</table>';
             case /CLM/.test(nodeLabel):
@@ -175,15 +181,15 @@ function renderGraph(graph, container) {
                     getTooltipButton(nodeData.id) +
                     '<table class="table table-bordered">' +
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
-                    '<tr class="info"><td>Success</td><td class="td-right">' + nodeData.success + '</td><td class="td-right">' + Math.round(10*(nodeData.passed / nodeData.length * 100) / 10) + '%</td></tr>' +
-                    '<tr class="info"><td>Failure</td><td class="td-right">' + nodeData.failure + '</td><td class="td-right">' + Math.round(10*(nodeData.failure / nodeData.length * 100) / 10) + '%</td></tr>' +
-                    '<tr class="info"><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.round(10*(nodeData.inconclusive / nodeData.length) / 10) + '%</td></tr>' +
-                    '<tr><td>Bug</td><td class="td-right">' + nodeData.bug + '</td><td class="td-right">' + Math.round(10*(nodeData.bug / nodeData.length * 100) / 10) + '%</td></tr>' +
-                    '<tr><td>Improvement</td><td class="td-right">' + nodeData.improvement + '</td><td class="td-right">' + Math.round(10*(nodeData.improvement / nodeData.length * 100) / 10) + '%</td></tr>' +
-                    '<tr><td>Feature</td><td class="td-right">' + nodeData.feature + '</td><td class="td-right">' + Math.round(10*(nodeData.feature / nodeData.length) / 10) + '%</td></tr>' +
-                    '<tr><td>Work Item</td><td class="td-right">' + nodeData.workItem + '</td><td class="td-right">' + Math.round(10*(nodeData.workItem / nodeData.length * 100) / 10) + '%</td></tr>' +
-                    '<tr><td>Requirement</td><td class="td-right">' + nodeData.requirement + '</td><td class="td-right">' + Math.round(10*(nodeData.requirement / nodeData.length * 100) / 10) + '%</td></tr>' +
-                    '<tr><td>Other</td><td class="td-right">' + nodeData.other + '</td><td class="td-right">' + Math.round(10*(nodeData.other / nodeData.length) / 10) + '%</td></tr>' +
+                    '<tr class="info"><td>Success</td><td class="td-right">' + nodeData.success + '</td><td class="td-right">' + Math.round(10 * (nodeData.passed / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr class="info"><td>Failure</td><td class="td-right">' + nodeData.failure + '</td><td class="td-right">' + Math.round(10 * (nodeData.failure / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr class="info"><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.round(10 * (nodeData.inconclusive / nodeData.length) / 10) + '%</td></tr>' +
+                    '<tr><td>Bug</td><td class="td-right">' + nodeData.bug + '</td><td class="td-right">' + Math.round(10 * (nodeData.bug / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Improvement</td><td class="td-right">' + nodeData.improvement + '</td><td class="td-right">' + Math.round(10 * (nodeData.improvement / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Feature</td><td class="td-right">' + nodeData.feature + '</td><td class="td-right">' + Math.round(10 * (nodeData.feature / nodeData.length) / 10) + '%</td></tr>' +
+                    '<tr><td>Work Item</td><td class="td-right">' + nodeData.workItem + '</td><td class="td-right">' + Math.round(10 * (nodeData.workItem / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Requirement</td><td class="td-right">' + nodeData.requirement + '</td><td class="td-right">' + Math.round(10 * (nodeData.requirement / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Other</td><td class="td-right">' + nodeData.other + '</td><td class="td-right">' + Math.round(10 * (nodeData.other / nodeData.length) / 10) + '%</td></tr>' +
                     '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
                     '</table>';
             case /TC/.test(nodeLabel):                                              // Checks if node_id starts with 'TSF'

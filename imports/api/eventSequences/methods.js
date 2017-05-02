@@ -549,13 +549,29 @@ export const getEventChainGraph = new ValidatedMethod({
 
                 nodes.push(node);
 
+                //.concat(event.dangerousTargets)
+
                 let edgesMap = {};
-                _.each(event.targets.concat(event.dangerousTargets), (target) => {
-                    if (eventsMap[target] !== undefined && edgesMap['' + event.id + target] === undefined) {
-                        edgesMap['' + event.id + target] = false;
+                _.each(event.targets, (target) => {
+                    if (eventsMap[target] !== undefined && edgesMap[event.id + target] === undefined) {
+                        edgesMap[event.id + target] = false;
                         edges.push(
                             {
                                 data: {
+                                    label: 'safe',
+                                    source: event.id,
+                                    target: target
+                                }
+                            });
+                    }
+                });
+                _.each(event.dangerousTargets, (target) => {
+                    if (eventsMap[target] !== undefined && edgesMap[event.id + target] === undefined) {
+                        edgesMap[event.id + target] = false;
+                        edges.push(
+                            {
+                                data: {
+                                    label: 'dangerous',
                                     source: event.id,
                                     target: target
                                 }
