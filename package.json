@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "babel-runtime": "^6.23.0",
+    "chart.js": "^2.5.0",
     "cytoscape": "^2.7.16",
     "cytoscape-dagre": "^1.4.0",
     "cytoscape-panzoom": "^2.4.1",

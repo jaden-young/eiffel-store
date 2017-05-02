@@ -21,7 +21,7 @@ Template.eventchain.rendered = () => {
 
 Template.button_row.events({
     'click .showEventChainButton': function (event) {
-        updateSequenceGraph(this.sequenceId);
+        updateSequenceGraph(this.sequenceId, this.id);
     }
 });
 
@@ -67,12 +67,12 @@ function show(state) {
     }
 }
 
-function updateSequenceGraph(sequenceId) {
+function updateSequenceGraph(sequenceId, eventId) {
     show(2);
     $('html, body').animate({
         scrollTop: $("#eventchain").offset().top - 10
     }, "slow");
-    getEventChainGraph.call({sequenceId: sequenceId}, function (error, graph) {
+    getEventChainGraph.call({sequenceId: sequenceId, eventId: eventId}, function (error, graph) {
         if (error) {
             console.log(error);
         } else {
@@ -80,7 +80,7 @@ function updateSequenceGraph(sequenceId) {
             if (graph !== undefined) {
                 renderGraph(graph, container);
 
-                $('#level3_footer_updated').html('Showing a sequence with time span ' + graph.timeStart + ' - ' + graph.timeFinish + " and its connected sequences.").show();
+                $('#level3_footer_updated').html('Showing a sequence with time span ' + graph.time.started + ' - ' + graph.time.finished + " and its connected sequences.").show();
                 show(3);
             } else {
                 show(1);

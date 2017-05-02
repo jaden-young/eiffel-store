@@ -10,6 +10,21 @@ import {Session} from "meteor/session";
 
 dataTablesBootstrap(window, $);
 
+Template.details.rendered = () => {
+    // Runs when document is ready
+    $(() => {
+        $(function () {
+            $('#details_toggle').change(function () {
+                if ($(this).prop('checked')) {
+                    $('#detailsTable').hide()
+                } else {
+                    $('#detailsTable').show()
+                }
+            });
+        })
+    });
+};
+
 Template.aggregation.events({
     'click .aggregation-tt-btn': function (event) {
 
