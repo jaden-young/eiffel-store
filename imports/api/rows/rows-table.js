@@ -8,12 +8,12 @@ new Tabular.Table({
     collection: Rows,
     columns: [
         {data: "sequenceId", title: "sequenceId", visible: false},
+        {data: "id", title: "id", visible: false},
         {
             tmpl: Meteor.isClient && Template.button_row
         },
-        {data: "name", title: "Name"},
+        // {data: "name", title: "Name"},
         {data: "type", title: "Type"},
-        {data: "id", title: "ID"},
         {
             data: "time.started",
             title: "Start time",

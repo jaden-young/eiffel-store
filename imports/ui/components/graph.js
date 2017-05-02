@@ -113,6 +113,13 @@ function renderGraph(graph, container) {
                         return (ele.data("passed") * 100 / ele.data("length") ).toString() + '%';
                     },
                 }
+            },
+            {
+                selector: 'node[extra = "highlight"]', // All nodes with ID starting with TSF(Test Suite Finished)
+                style: {
+                    'border-width': '8px', // The size of the node’s border.
+                    'border-color': '#ffea22',
+                }
             }
         ],
 

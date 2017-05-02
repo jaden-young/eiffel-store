@@ -461,7 +461,7 @@ export const getAggregatedGraph = new ValidatedMethod({
 export const getEventChainGraph = new ValidatedMethod({
     name: 'getEventChainGraph',
     validate: null,
-    run({sequenceId}) {
+    run({sequenceId, eventId}) {
         if (sequenceId === undefined) {
             return undefined;
         }
@@ -497,13 +497,18 @@ export const getEventChainGraph = new ValidatedMethod({
             let edges = [];
 
             _.each(events, (event) => {
+                let extra = 'null';
+                if (eventId === event.id) {
+                    extra = 'highlight'
+                }
                 let node = {
                     data: {
                         label: event.name,
                         id: event.id,
                         events: [event],
                         length: 1,
-                        type: event.type
+                        type: event.type,
+                        extra: extra
                     }
                 };
 
