@@ -78,14 +78,22 @@ function updateSequenceGraph(sequenceId, eventId) {
         } else {
             let container = $('#cy-event-chain');
             if (graph !== undefined) {
+                renderGraph(graph, container);
+                $('#level3_footer_updated').html('Showing a sequence with time span ' +
+                    formatDate(new Date(graph.time.started)) + ' - ' +
+                    formatDate(new Date(graph.time.finished)) + " and its connected sequences.").show();
                 renderGraph(graph, container, 'eventchain');
-
-                $('#level3_footer_updated').html('Showing a sequence with time span ' + graph.time.started + ' - ' + graph.time.finished + " and its connected sequences.").show();
                 show(3);
             } else {
                 show(1);
             }
-
         }
     })
+}
+
+function formatDate(timestamp) {
+    let day = timestamp.getDate(),
+        month = timestamp.getMonth() + 1,
+        year = timestamp.getFullYear();
+    return year + "-" + month + "-" + day;
 }
