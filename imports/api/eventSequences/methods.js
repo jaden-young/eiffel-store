@@ -559,8 +559,17 @@ export const getEventChainGraph = new ValidatedMethod({
 
                 let edgesMap = {};
                 _.each(event.targets, (target) => {
-                    if (eventsMap[target] !== undefined && edgesMap[event.id + target] === undefined) {
-                        edgesMap[event.id + target] = false;
+                    if (edgesMap[event.id + target] === undefined) {
+                        if (eventsMap[target] === undefined) {
+                            eventsMap[target] = 1;
+                            nodes.push({
+                                data: {
+                                    id: target,
+                                    extra: 'hidden'
+                                }
+                            })
+                        }
+                        edgesMap[event.id + target] = 1;
                         edges.push(
                             {
                                 data: {
@@ -572,8 +581,17 @@ export const getEventChainGraph = new ValidatedMethod({
                     }
                 });
                 _.each(event.dangerousTargets, (target) => {
-                    if (eventsMap[target] !== undefined && edgesMap[event.id + target] === undefined) {
-                        edgesMap[event.id + target] = false;
+                    if (edgesMap[event.id + target] === undefined) {
+                        edgesMap[event.id + target] = 1;
+                        if (eventsMap[target] === undefined) {
+                            eventsMap[target] = 1;
+                            nodes.push({
+                                data: {
+                                    id: target,
+                                    extra: 'hidden'
+                                }
+                            })
+                        }
                         edges.push(
                             {
                                 data: {
@@ -584,6 +602,28 @@ export const getEventChainGraph = new ValidatedMethod({
                             });
                     }
                 });
+                // _.each(event.dangerousTargetedBy, (source) => {
+                //     if (edgesMap[source + event.id] === undefined) {
+                //         edgesMap[source + event.id] = 1;
+                //         if (eventsMap[source] === undefined) {
+                //             eventsMap[source] = 1;
+                //             nodes.push({
+                //                 data: {
+                //                     id: source,
+                //                     extra: 'hidden'
+                //                 }
+                //             })
+                //         }
+                //         edges.push(
+                //             {
+                //                 data: {
+                //                     label: 'dangerous',
+                //                     source: source,
+                //                     target: event.id
+                //                 }
+                //             });
+                //     }
+                // });
             });
             // console.log(nodes);
             // console.log(edges);

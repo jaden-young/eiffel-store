@@ -121,6 +121,12 @@ function renderGraph(graph, container, level) {
                     'border-width': '8px', // The size of the node’s border.
                     'border-color': '#ffea22',
                 }
+            },
+            {
+                selector: 'node[extra = "hidden"]', // All nodes with ID starting with TSF(Test Suite Finished)
+                style: {
+                    opacity: 0
+                }
             }
         ],
 
