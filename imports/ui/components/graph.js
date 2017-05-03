@@ -205,9 +205,9 @@ function renderGraph(graph, container, level) {
                     getTooltipButton(nodeData.id) +          // Button will take user to level 2 - 'details'
                     '<table class="table table-bordered">' +
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
-                    '<tr class="success"><td>Passed</td><td class="td-right">' + nodeData.passed + '</td><td class="td-right">' + Math.round(10*(nodeData.passed / nodeData.length * 100) / 10) + '%</td></tr>' +
-                    '<tr class="danger"><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.round(10*(nodeData.failed / nodeData.length * 100) / 10) + '%</td></tr>' +
-                    '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.round(10*(nodeData.inconclusive / nodeData.length) / 10) + '%</td></tr>' +
+                    '<tr class="success"><td>Passed</td><td class="td-right">' + nodeData.passed + '</td><td class="td-right">' + Math.round(10 * (nodeData.passed / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr class="danger"><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.round(10 * (nodeData.failed / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.round(10 * (nodeData.inconclusive / nodeData.length) / 10) + '%</td></tr>' +
                     '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
                     '<tr class="info"><td>Avg run time</td><td colspan="2" class="td-right">' + toHMS(nodeData.avgRunTime) + '</td></tr>' +
                     '</table>'; // Row 3 - OTHER
@@ -217,9 +217,9 @@ function renderGraph(graph, container, level) {
                     '<table class="table table-bordered">' +
                     '<tr><td colspan="3"><em>' + nodeData.name + '</em></td></tr>' +
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
-                    '<tr class="success"><td>Passed</td><td class="td-right">' + nodeData.passed + '</td><td class="td-right">' + Math.round(10*(nodeData.passed / nodeData.length * 100) / 10) + '%</td></tr>' +
-                    '<tr class="danger"><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.round(10*(nodeData.failed / nodeData.length * 100) / 10) + '%</td></tr>' +
-                    '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.round(10*(nodeData.inconclusive / nodeData.length) / 10) + '%</td></tr>' +
+                    '<tr class="success"><td>Passed</td><td class="td-right">' + nodeData.passed + '</td><td class="td-right">' + Math.round(10 * (nodeData.passed / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr class="danger"><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.round(10 * (nodeData.failed / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.round(10 * (nodeData.inconclusive / nodeData.length) / 10) + '%</td></tr>' +
                     '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
                     '<tr class="info"><td>Avg run time</td><td colspan="2" class="td-right">' + toHMS(nodeData.avgRunTime) + '</td></tr>' +
                     '</table>'; // Row 3 - OTHER
@@ -238,7 +238,7 @@ function renderGraph(graph, container, level) {
         let possible_jenkins = nodeData.eventData.executionUri;
         switch (true) {
             case /Act/.test(nodeLabel):                                              // Checks if node_id starts with 'TSF'
-                if (typeof possible_jenkins === 'string' || possible_jenkins instanceof String){
+                if (typeof possible_jenkins === 'string' || possible_jenkins instanceof String) {
                     return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
                         getTooltipButton(nodeData.id) +          // Button will take user to level 2 - ‘details’
                         '<table class="table table-bordered">' +
@@ -246,7 +246,7 @@ function renderGraph(graph, container, level) {
                         '<tr><td>Jenkins:</td><td>' + possible_jenkins + '</td></tr>' + //this should show a stringified link to a homepage once data exists
                         '</table>'; // Row 3 - OTHER
                 }
-                else{
+                else {
                     return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
                         getTooltipButton(nodeData.id) +          // Button will take user to level 2 - ‘details’
                         '<table class="table table-bordered">' +
@@ -271,8 +271,7 @@ function renderGraph(graph, container, level) {
         content: function () {
             if (level === "aggregation") {
                 return getTooltipContent(this.data()); // Ändra här för att ändra vad som ska vara i den
-                //return 'Example qTip on ele ' + this.id() + '<div class="alert alert-success" role="alert"><strong>Well done!</strong> You successfully read this important alert message. (bootstrap)</div>' // Ändra här för att ändra vad som ska vara i den
-            } else if (level === "eventchain"){
+            } else if (level === "eventchain") {
                 return getLevelThreeContent(this.data());
             }
         },
