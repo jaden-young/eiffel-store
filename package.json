@@ -12,7 +12,7 @@
     "cytoscape-panzoom": "^2.4.1",
     "cytoscape-qtip": "^2.6.1",
     "datatables.net": "^1.10.13",
-    "datatables.net-bs": "^1.10.13",
+    "datatables.net-bs": "^1.10.15",
     "jquery": "^3.2.1",
     "meteor-node-stubs": "^0.2.6",
     "moment": "^2.18.1",

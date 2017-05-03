@@ -18,7 +18,7 @@ import {
 import {setProperty} from "../properties/methods";
 
 function getEventVersion() {
-    return '1.8';
+    return '1.9';
 }
 function getEventVersionPropertyName() {
     return 'events.version';
@@ -81,7 +81,6 @@ export const populateEventsCollection = new ValidatedMethod({
                 if (startEvent === undefined) {
                     console.log(startEvent);
                 }
-                delete toBePared[event.links[0].target];
 
                 let regex = /^(\D+)\D(\d)+$/g;
                 let str = event.data.customData[0].value;
@@ -89,7 +88,6 @@ export const populateEventsCollection = new ValidatedMethod({
 
                 Events.insert({
                     type: getTestCaseEventName(), // *
-                    version: event.meta.version, // *
                     name: match[1] + match[2], // *
                     id: event.meta.id, // *
                     links: startEvent.links, // *
@@ -109,7 +107,6 @@ export const populateEventsCollection = new ValidatedMethod({
                 if (startEvent === undefined) {
                     console.log(startEvent);
                 }
-                delete toBePared[event.links[0].target];
 
                 let regex = /^(\D+)\D(\d)+$/g;
                 let str = event.data.customData[0].value;
@@ -117,7 +114,6 @@ export const populateEventsCollection = new ValidatedMethod({
 
                 Events.insert({
                     type: getTestSuiteEventName(), // *
-                    version: event.meta.version, // *
                     name: match[1] + match[2], // *
                     id: event.meta.id, // *
                     time: {
@@ -142,7 +138,34 @@ export const populateEventsCollection = new ValidatedMethod({
                 });
             }
             else if (isEiffelActivityCanceled(event.meta.type)) {
-                // TODO
+                let mergingEvent = toBePared[event.links[0].target];
+
+                let regex = /^(\D+)\D(\d)+$/g;
+                let str = mergingEvent.data.customData[0].value;
+                let match = regex.exec(str);
+
+                Events.insert({
+                    type: getActivityEventName(), // *
+                    name: match[1] + match[2], // *
+                    id: mergingEvent.meta.id, // *
+
+                    links: mergingEvent.links, // *
+                    source: mergingEvent.meta.source, //*
+                    time: {
+                        triggered: mergingEvent.meta.time,
+                        canceled: event.meta.time,
+                    },
+                    data: Object.assign(mergingEvent.data, event.data), // *
+                    dev: {},
+                });
+
+                Events.insert({
+                    type: getRedirectName(), // *
+                    id: event.meta.id,
+                    dev: {},
+
+                    target: mergingEvent.meta.id
+                });
             }
             else if (isEiffelActivityExecution(event.meta.type)) {
                 let mergingEvent = toBePared[event.links[0].target];
@@ -155,7 +178,6 @@ export const populateEventsCollection = new ValidatedMethod({
 
                     mergingEvent.event = {
                         type: getActivityEventName(), // *
-                        version: mergingEvent.meta.version, // *
                         name: match[1] + match[2], // *
                         id: mergingEvent.meta.id, // *
 
@@ -189,7 +211,6 @@ export const populateEventsCollection = new ValidatedMethod({
 
                 if (mergingEvent.event.startEvent !== undefined && mergingEvent.event.finishEvent !== undefined) {
                     Events.insert(mergingEvent.event);
-                    delete toBePared[event.meta.id]
                 }
             }
             else if (isToBePared(event.meta.type)) {
@@ -198,7 +219,6 @@ export const populateEventsCollection = new ValidatedMethod({
             else {
                 Events.insert({
                     type: event.meta.type, // *
-                    version: event.meta.version, // *
                     name: event.data.customData[0].value, // *
                     id: event.meta.id, // *
                     time: {
