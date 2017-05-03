@@ -194,12 +194,10 @@ function showAggregation(from, to, limit) {
 
 function showSequenceCount(from, to, limit) {
     let container = $('#additional-sequences');
-    console.log('doing it');
     getSequenceCount.call({from: from, to: to}, function (error, count) {
         if (error) {
             console.log(error);
         } else {
-            console.log('got count', count);
             container.val(count - limit);
         }
     });
