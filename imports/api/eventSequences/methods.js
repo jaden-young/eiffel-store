@@ -508,6 +508,7 @@ export const getEventChainGraph = new ValidatedMethod({
                         events: [event],
                         length: 1,
                         type: event.type,
+                        eventData: event.data,
                         extra: extra
                     }
                 };
