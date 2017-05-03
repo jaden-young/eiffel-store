@@ -26,6 +26,19 @@ Template.aggregation.rendered = () => {
             fromTimeline = 1420070400000,// from: 1420070400000 2015
             toTimeline = 1514764800000;// to: 1514764800000 2018
 
+        // Set default input values
+        fromInput.val(defaultFrom);
+        toInput.val(defaultTo);
+        limitInput.val(defaultLimit);
+
+
+        // Set up datepicker;
+        datepickers.datepicker({
+            changeMonth: true,
+            changeYear: true,
+            dateFormat: "yy-mm-dd"
+        });
+
         /* TIMELINE */
         let container = document.getElementById('example-timeline');
         // Timebars in the timeline
@@ -44,10 +57,8 @@ Template.aggregation.rendered = () => {
             itemsAlwaysDraggable: true,
             editable: {updateTime: true},
             selectable: true,
-            onMove: function (item, callback) {
+            onMove: function (item) {
                 let limit = parseInt(limitInput.val());
-                console.log(new Date(item.start).valueOf());
-                console.log(new Date(options.max).valueOf());
                 if (item.id === 1 ) {
                     let from = Date.parse(item.start),
                         to = toTimeline;
@@ -69,46 +80,32 @@ Template.aggregation.rendered = () => {
             if (error) {
                 console.log(error);
             } else {
-                console.log(times.timeStart);
-                console.log(times.timeFinish);
-                console.log(times);
-                timeline.destroy();
                 options.min = new Date(times.timeStart);
                 options.max = new Date(times.timeFinish);
-                data = new vis.DataSet([{
-                    id: '1',
-                    content: 'Start',
-                    start: options.min
-                }, {
-                    id: '2',
-                    content: 'End',
-                    start: options.max
-                }]);
+                data.clear();
+                data.add({id: 1,
+                            content: 'Start',
+                            start: options.min});
+                data.add({id: 2,
+                            content: 'End',
+                            start: options.max});
+                timeline.destroy();
                 timeline = new vis.Timeline(container, data, options);
+                fromInput.val((options.min).toLocaleDateString('sv'));
+                toInput.val((options.max).toLocaleDateString('sv'));
             }
         });
-
-
-        // Set default input values
-        fromInput.val(defaultFrom);
-        toInput.val(defaultTo);
-        limitInput.val(defaultLimit);
-
-        // Set up datepicker;
-        datepickers.datepicker({
-            changeMonth: true,
-            changeYear: true,
-            dateFormat: "yy-mm-dd"
-        });
-
-
         /*---------------*/
 
         //Aggregates new graph when datepicker changes values
         $('#date-from').change(
             function () {
                 let limit = parseInt(limitInput.val());
-                fromTimeline = Date.parse(fromInput.val())
+                fromTimeline = Date.parse(fromInput.val());
+                if(options.min.getTime() > fromTimeline){
+                    fromTimeline = options.min.getTime();
+                    fromInput.val(options.min.toLocaleDateString('sv'));
+                }
                 timeline.setItems(new vis.DataSet([{
                     id: 1,
                     content: 'Start',
@@ -116,7 +113,7 @@ Template.aggregation.rendered = () => {
                 }, {
                     id: 2,
                     content: 'End',
-                    start: toTimeline
+                    start: Date.parse(toInput.val())
                 }]));
                 showAggregation(fromTimeline, toTimeline, limit);
             });
@@ -125,10 +122,16 @@ Template.aggregation.rendered = () => {
             function () {
                 let limit = parseInt(limitInput.val());
                 toTimeline = Date.parse(toInput.val());
+                console.log(options.min);
+                console.log(options.max);
+                if(options.max.getTime() < toTimeline){
+                    toTimeline = options.max.getTime();
+                    toInput.val(options.max.toLocaleDateString('sv'));
+                }
                 timeline.setItems(new vis.DataSet([{
                     id: 1,
                     content: 'Start',
-                    start: fromTimeline
+                    start: Date.parse(fromInput.val())
                 }, {
                     id: 2,
                     content: 'End',
@@ -147,10 +150,10 @@ Template.aggregation.rendered = () => {
             to = Date.parse(toInput.val()),
             limit = parseInt(limitInput.val());
 
-        //showAggregation(from, to, limit);
+        showAggregation(from, to, limit);
 
         // Trigger on change to fetch and render graph
-        fromInput.trigger('change');
+        //fromInput.trigger('change');
     });
 };
 
@@ -192,7 +195,6 @@ function showAggregation(from, to, limit) {
         if (error) {
             console.log(error);
         } else {
-
             let container = $('#cy-aggregation');
             Session.set('displayedSequenceIds', graph.sequences);
             renderGraph(graph, container);
