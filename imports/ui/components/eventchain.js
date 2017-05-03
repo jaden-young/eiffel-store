@@ -21,7 +21,7 @@ Template.eventchain.rendered = () => {
 
 Template.button_row.events({
     'click .showEventChainButton': function (event) {
-        updateSequenceGraph(this.sequenceId);
+        updateSequenceGraph(this.sequenceId, this.id);
     }
 });
 
@@ -67,12 +67,12 @@ function show(state) {
     }
 }
 
-function updateSequenceGraph(sequenceId) {
+function updateSequenceGraph(sequenceId, eventId) {
     show(2);
     $('html, body').animate({
         scrollTop: $("#eventchain").offset().top - 10
     }, "slow");
-    getEventChainGraph.call({sequenceId: sequenceId}, function (error, graph) {
+    getEventChainGraph.call({sequenceId: sequenceId, eventId: eventId}, function (error, graph) {
         if (error) {
             console.log(error);
         } else {
@@ -82,6 +82,7 @@ function updateSequenceGraph(sequenceId) {
                 $('#level3_footer_updated').html('Showing a sequence with time span ' +
                     formatDate(new Date(graph.time.started)) + ' - ' +
                     formatDate(new Date(graph.time.finished)) + " and its connected sequences.").show();
+                renderGraph(graph, container, 'eventchain');
                 show(3);
             } else {
                 show(1);
