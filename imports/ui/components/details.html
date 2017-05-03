@@ -8,9 +8,10 @@
                    data-on="Graph" data-off="Table" data-size="small" class="col-lg-2">
 
         </div>
-        <div id="detailsTable" class="panel-body">
-            {{> tabular id="detailsTable" table=TabularTables.Rows selector=selector class="table table-striped table-bordered table-condensed nowrap"}}
+        <div id="details_table" class="panel-body">
+            {{> tabular table=TabularTables.Rows selector=selector class="table table-striped table-bordered table-condensed nowrap"}}
         </div>
+        <canvas id="details_chart"></canvas>
         <div class="panel-footer">
 
         </div>
