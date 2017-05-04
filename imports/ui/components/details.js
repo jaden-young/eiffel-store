@@ -7,72 +7,43 @@ import {$} from "meteor/jquery";
 import dataTablesBootstrap from "datatables.net-bs";
 import "datatables.net-bs/css/dataTables.bootstrap.css";
 import {Session} from "meteor/session";
-import Chart from "chart.js";
+import {getResultOverTime} from "../../api/rows/methods";
+
 
 dataTablesBootstrap(window, $);
 
 Template.details.rendered = () => {
     // Runs when document is ready
     $(() => {
-        let ctx = $('#details_chart');
-        $('#details_table').show();
-        ctx.hide();
+        let table = $('#details_table');
+        let chart = $('#details_chart');
+
+        table.show();
+        chart.hide();
 
         $(function () {
             $('#details_toggle').change(function () {
                 if ($(this).prop('checked')) {
-                    $('#details_table').hide();
-                    ctx.show();
+                    table.hide();
+                    chart.show();
+
+                    console.log('called');
+
+                    renderSuccessRateGraph();
+
                 } else {
-                    $('#details_table').show();
-                    ctx.hide();
+                    table.show();
+                    chart.hide();
                 }
             });
-        })
-
-        let detailsChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
         });
     });
 };
 
 Template.aggregation.events({
     'click .aggregation-tt-btn': function (event) {
-
-        Session.set('nodeNameFilter', event.target.value);
+        Session.set('nodeNameFilter', (event.target.value).split(';')[0]);
+        Session.set('nodeTypeFilter', (event.target.value).split(';')[1]);
         $('#table-level2-heading').html(Session.get('nodeNameFilter'));
 
 
@@ -83,6 +54,7 @@ Template.aggregation.events({
 });
 
 Template.details.onCreated(function () {
+    Session.set('nodeTypeFilter');
     Session.set('nodeNameFilter');
     Session.set('displayedSequenceIds');
 });
@@ -91,3 +63,19 @@ Template.details.helpers({
         return {name: Session.get('nodeNameFilter'), sequenceId: {$in: (Session.get('displayedSequenceIds'))}}
     }
 });
+
+function renderSuccessRateGraph() {
+    getResultOverTime.call({
+        eventName: Session.get('nodeNameFilter'),
+        eventType: Session.get('nodeTypeFilter'),
+        sequenceIds: Session.get('displayedSequenceIds')
+    }, function (error, data) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('returned');
+            console.log(data);
+            // renderDetailedGraph(chart, data);
+        }
+    });
+}

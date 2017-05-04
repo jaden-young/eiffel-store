@@ -644,5 +644,7 @@ export const getSequenceCount = new ValidatedMethod({
             {"time.started": {$gte: parseInt(from), $lte: parseInt(to)}})
             .count();
     }
+
+
 });
 
