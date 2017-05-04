@@ -57,24 +57,41 @@ Template.aggregation.rendered = () => {
             itemsAlwaysDraggable: true,
             editable: {updateTime: true},
             selectable: true,
-            onMove: function (item) {
+            onMove: function (item, callback) {
                 let limit = parseInt(limitInput.val());
                 if (item.id === 1 ) {
+                    if(item.start > options.max || item.start < options.min){
+                        item.start = options.min;
+                    }
+                    if(item.start.toLocaleDateString('sv') === fromInput.val()){
+                        callback(item);
+                        return;                 //doesnt aggregate if it was changed to the same date
+                    }
                     let from = Date.parse(item.start),
                         to = toTimeline;
                     fromInput.val(new Date(item.start).toLocaleDateString('sv'));
                     fromTimeline = Date.parse(item.start);
                     showAggregation(from, to, limit);
                 } else if (item.id === 2) {
+                    if(item.start > options.max || item.start < options.min){
+                        item.start = options.max;
+                    }
+                    if(item.start.toLocaleDateString('sv') === toInput.val()){
+                        callback(item);
+                        return;                 //doesnt aggregate if it was changed to the same date
+                    }
                     let from = fromTimeline,
                         to = Date.parse(item.start);
                     toInput.val(new Date(item.start).toLocaleDateString('sv'));
                     toTimeline = Date.parse(item.start);
                     showAggregation(from, to, limit);
                 }
+                callback(item);
             }
         };
         let timeline = new vis.Timeline(container, data, options);
+        /*---------------*/
+
         // Gets the time span for sequences.
         getTimeSpan.call({}, function (error, times) {
             if (error) {
@@ -95,26 +112,28 @@ Template.aggregation.rendered = () => {
                 toInput.val((options.max).toLocaleDateString('sv'));
             }
         });
-        /*---------------*/
 
         //Aggregates new graph when datepicker changes values
         $('#date-from').change(
             function () {
                 let limit = parseInt(limitInput.val());
                 fromTimeline = Date.parse(fromInput.val());
-                if(options.min.getTime() > fromTimeline){
+                if((fromTimeline > options.max.getTime()) || (options.min.getTime() > fromTimeline)){
                     fromTimeline = options.min.getTime();
                     fromInput.val(options.min.toLocaleDateString('sv'));
                 }
-                timeline.setItems(new vis.DataSet([{
+                let lastToTimeline = data.get(2).start;
+                data.clear();
+                data = new vis.DataSet([{
                     id: 1,
                     content: 'Start',
                     start: fromTimeline
                 }, {
                     id: 2,
                     content: 'End',
-                    start: Date.parse(toInput.val())
-                }]));
+                    start: lastToTimeline
+                }]);
+                timeline.setItems(data);
                 showAggregation(fromTimeline, toTimeline, limit);
             });
 
@@ -122,21 +141,22 @@ Template.aggregation.rendered = () => {
             function () {
                 let limit = parseInt(limitInput.val());
                 toTimeline = Date.parse(toInput.val());
-                console.log(options.min);
-                console.log(options.max);
-                if(options.max.getTime() < toTimeline){
+                if((options.max.getTime() < toTimeline) || (toTimeline < options.min.getTime())){
                     toTimeline = options.max.getTime();
                     toInput.val(options.max.toLocaleDateString('sv'));
                 }
-                timeline.setItems(new vis.DataSet([{
+                let lastFromTimeline = data.get(1).start;
+                data.clear();
+                data = new vis.DataSet([{
                     id: 1,
                     content: 'Start',
-                    start: Date.parse(fromInput.val())
+                    start: lastFromTimeline
                 }, {
                     id: 2,
                     content: 'End',
                     start: toTimeline
-                }]));
+                }]);
+                timeline.setItems(data);
                 showAggregation(fromTimeline, toTimeline, limit);
             });
 
