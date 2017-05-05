@@ -5,10 +5,17 @@ import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Events} from "../events/events";
 import {EventSequences} from "./event-sequences";
 import {getProperty, setProperty} from "../properties/methods";
-import {getRedirectName, isConfidenceLevelEvent, isTestEvent} from "../events/event-types";
+import {
+    getRedirectName,
+    isActivityEvent,
+    isAnnouncementPublishedEvent,
+    isConfidenceLevelEvent,
+    isIssueVerifiedEvent,
+    isTestEvent
+} from "../events/event-types";
 
 function getEventSequenceVersion() {
-    return '1.3';
+    return '1.4';
 }
 function getEventSequenceVersionPropertyName() {
     return 'eventSequences.version';
@@ -50,8 +57,8 @@ export const getTimeSpan = new ValidatedMethod({
     validate: null,
     run(){
         return {
-            timeStart: getProperty.call({propertyName: getEventSequenceStartTimePropertyName()}),
-            timeFinish: getProperty.call({propertyName: getEventSequenceFinishTimePropertyName()})
+            started: getProperty.call({propertyName: getEventSequenceStartTimePropertyName()}),
+            finished: getProperty.call({propertyName: getEventSequenceFinishTimePropertyName()})
         };
     }
 });
@@ -262,10 +269,10 @@ export const populateEventSequences = new ValidatedMethod({
         lastPrint = ((done / total) * 100);
         _.each(sequences, (sequence) => {
             if (latestTime === undefined || latestTime < sequence.timeFinish) {
-                latestTime = sequence.timeFinish;
+                latestTime = sequence.time.finished;
             }
             if (earliestTime === undefined || earliestTime > sequence.timeStart) {
-                earliestTime = sequence.timeStart;
+                earliestTime = sequence.time.started;
             }
 
             EventSequences.insert(sequence);
@@ -355,21 +362,66 @@ export const getAggregatedGraph = new ValidatedMethod({
                     }
                 };
 
-                if (isTestEvent(node.data.type)) {
+
+                if (isActivityEvent(node.data.type)) {
+                    let valueCount = _.countBy(events, (event) => event.data.outcome.conclusion);
+                    node.data.successful = valueCount.hasOwnProperty('SUCCESSFUL') ? valueCount['SUCCESSFUL'] : 0;
+                    node.data.unsuccessful = valueCount.hasOwnProperty('UNSUCCESSFUL') ? valueCount['UNSUCCESSFUL'] : 0;
+                    node.data.failed = valueCount.hasOwnProperty('FAILED') ? valueCount['FAILED'] : 0;
+                    node.data.aborted = valueCount.hasOwnProperty('ABORTED') ? valueCount['ABORTED'] : 0;
+                    node.data.timedOut = valueCount.hasOwnProperty('TIMED_OUT') ? valueCount['TIMED_OUT'] : 0;
+                    node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ? valueCount['INCONCLUSIVE'] : 0;
+                    let totalQueueTime = _.reduce(events, (memo, event) => {
+                        return memo + (event.time.started - event.time.triggered);
+                    }, 0);
+                    let totalRunTime = _.reduce(events, (memo, event) => {
+                        return memo + (event.time.finished - event.time.started);
+                    }, 0);
+                    node.data.avgQueueTime = totalQueueTime / node.data.length;
+                    node.data.avgRunTime = totalRunTime / node.data.length;
+                }
+                else if (isAnnouncementPublishedEvent(node.data.type)) {
+                    let valueCount = _.countBy(events, (event) => event.data.severity);
+                    node.data.minor = valueCount.hasOwnProperty('MINOR') ? valueCount['MINOR'] : 0;
+                    node.data.major = valueCount.hasOwnProperty('MAJOR') ? valueCount['MAJOR'] : 0;
+                    node.data.critical = valueCount.hasOwnProperty('CRITICAL') ? valueCount['CRITICAL'] : 0;
+                    node.data.blocker = valueCount.hasOwnProperty('BLOCKER') ? valueCount['BLOCKER'] : 0;
+                    node.data.closed = valueCount.hasOwnProperty('CLOSED') ? valueCount['CLOSED'] : 0;
+                    node.data.canceled = valueCount.hasOwnProperty('CANCELED') ? valueCount['CANCELED'] : 0;
+                }
+                else if (isConfidenceLevelEvent(node.data.type)) {
+                    let valueCount = _.countBy(events, (event) => event.data.value);
+                    node.data.passed = valueCount.hasOwnProperty('SUCCESS') ? valueCount['SUCCESS'] : 0;
+                    node.data.failed = valueCount.hasOwnProperty('FAILURE') ? valueCount['FAILURE'] : 0;
+                    node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ? valueCount['INCONCLUSIVE'] : 0;
+                    node.data.name = events[0].data.name;
+                }
+                else if (isIssueVerifiedEvent(node.data.type)) {
+                    let typeCount = _.countBy(events, (event) => event.data.issues.type);
+                    node.data.bug = typeCount.hasOwnProperty('BUG') ? typeCount['BUG'] : 0;
+                    node.data.improvement = typeCount.hasOwnProperty('IMPROVEMENT') ? typeCount['IMPROVEMENT'] : 0;
+                    node.data.feature = typeCount.hasOwnProperty('FEATURE') ? typeCount['FEATURE'] : 0;
+                    node.data.workItem = typeCount.hasOwnProperty('WORK_ITEM') ? typeCount['WORK_ITEM'] : 0;
+                    node.data.requirement = typeCount.hasOwnProperty('REQUIREMENT') ? typeCount['REQUIREMENT'] : 0;
+                    node.data.other = typeCount.hasOwnProperty('OTHER') ? typeCount['OTHER'] : 0;
+
+                    let valueCount = _.countBy(events, (event) => event.data.issues.value);
+                    node.data.success = valueCount.hasOwnProperty('SUCCESS') ? valueCount['SUCCESS'] : 0;
+                    node.data.failure = valueCount.hasOwnProperty('FAILURE') ? valueCount['FAILURE'] : 0;
+                    node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ? valueCount['INCONCLUSIVE'] : 0;
+                }
+                else if (isTestEvent(node.data.type)) {
                     let valueCount = _.countBy(events, (event) => event.data.outcome.verdict);
                     let passedCount = valueCount.hasOwnProperty('PASSED') ? valueCount['PASSED'] : 0;
                     let failedCount = valueCount.hasOwnProperty('FAILED') ? valueCount['FAILED'] : 0;
                     node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ? valueCount['INCONCLUSIVE'] : 0;
                     node.data.passed = passedCount;
                     node.data.failed = failedCount;
-                }
 
-                if (isConfidenceLevelEvent(node.data.type)) {
-                    let valueCount = _.countBy(events, (event) => event.data.value);
-                    node.data.passed = valueCount.hasOwnProperty('SUCCESS') ? valueCount['SUCCESS'] : 0;
-                    node.data.failed = valueCount.hasOwnProperty('FAILURE') ? valueCount['FAILURE'] : 0;
-                    node.data.inconclusive = valueCount.hasOwnProperty('INCONCLUSIVE') ? valueCount['INCONCLUSIVE'] : 0;
-                    node.data.name = events[0].data.name;
+                    let totalRunTime = _.reduce(events, (memo, event) => {
+                        return memo + (event.time.finished - event.time.started);
+                    }, 0);
+                    node.data.avgRunTime = totalRunTime / node.data.length;
                 }
 
                 nodes.push(node);
@@ -409,7 +461,7 @@ export const getAggregatedGraph = new ValidatedMethod({
 export const getEventChainGraph = new ValidatedMethod({
     name: 'getEventChainGraph',
     validate: null,
-    run({sequenceId}) {
+    run({sequenceId, eventId}) {
         if (sequenceId === undefined) {
             return undefined;
         }
@@ -445,13 +497,19 @@ export const getEventChainGraph = new ValidatedMethod({
             let edges = [];
 
             _.each(events, (event) => {
+                let extra = 'null';
+                if (eventId === event.id) {
+                    extra = 'highlight'
+                }
                 let node = {
                     data: {
                         label: event.name,
                         id: event.id,
                         events: [event],
                         length: 1,
-                        type: event.type
+                        type: event.type,
+                        eventData: event.data,
+                        extra: extra
                     }
                 };
 
@@ -497,19 +555,75 @@ export const getEventChainGraph = new ValidatedMethod({
 
                 nodes.push(node);
 
+                //.concat(event.dangerousTargets)
+
                 let edgesMap = {};
-                _.each(event.targets.concat(event.dangerousTargets), (target) => {
-                    if (eventsMap[target] !== undefined && edgesMap['' + event.id + target] === undefined) {
-                        edgesMap['' + event.id + target] = false;
+                _.each(event.targets, (target) => {
+                    if (edgesMap[event.id + target] === undefined) {
+                        if (eventsMap[target] === undefined) {
+                            eventsMap[target] = 1;
+                            nodes.push({
+                                data: {
+                                    id: target,
+                                    extra: 'hidden'
+                                }
+                            })
+                        }
+                        edgesMap[event.id + target] = 1;
                         edges.push(
                             {
                                 data: {
+                                    label: 'safe',
                                     source: event.id,
                                     target: target
                                 }
                             });
                     }
                 });
+                _.each(event.dangerousTargets, (target) => {
+                    if (edgesMap[event.id + target] === undefined) {
+                        edgesMap[event.id + target] = 1;
+                        if (eventsMap[target] === undefined) {
+                            eventsMap[target] = 1;
+                            nodes.push({
+                                data: {
+                                    id: target,
+                                    extra: 'hidden'
+                                }
+                            })
+                        }
+                        edges.push(
+                            {
+                                data: {
+                                    label: 'dangerous',
+                                    source: event.id,
+                                    target: target
+                                }
+                            });
+                    }
+                });
+                // _.each(event.dangerousTargetedBy, (source) => {
+                //     if (edgesMap[source + event.id] === undefined) {
+                //         edgesMap[source + event.id] = 1;
+                //         if (eventsMap[source] === undefined) {
+                //             eventsMap[source] = 1;
+                //             nodes.push({
+                //                 data: {
+                //                     id: source,
+                //                     extra: 'hidden'
+                //                 }
+                //             })
+                //         }
+                //         edges.push(
+                //             {
+                //                 data: {
+                //                     label: 'dangerous',
+                //                     source: source,
+                //                     target: event.id
+                //                 }
+                //             });
+                //     }
+                // });
             });
             // console.log(nodes);
             // console.log(edges);
