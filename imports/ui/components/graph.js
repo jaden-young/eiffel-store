@@ -179,8 +179,7 @@ function renderGraph(graph, container, level) {
                     'height': 90,
                     'width': 90,
                 }
-            }
-
+            },
             {
                 selector: 'node[extra = "highlight"]', // All nodes with ID starting with TSF(Test Suite Finished)
                 style: {
