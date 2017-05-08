@@ -13,28 +13,42 @@ import {renderDetailedGraph} from "./detailed-graph";
 
 dataTablesBootstrap(window, $);
 
+let table = undefined;
+let plot = undefined;
+let plotContainer = undefined;
+let invalidPlotEvent = undefined;
+let loader = undefined;
+let graph2d = undefined;
+let waitLock = false;
+
 Template.details.rendered = () => {
     // Runs when document is ready
     $(() => {
-        let table = $('#details_table');
-        let graph = $('#details_chart');
+        table = $('#details_table');
+        plot = $('#details_chart');
+        plotContainer = $('#plot_container');
+        loader = $('#details_loader');
+        invalidPlotEvent = $('#invalid_plot_event');
+
 
         table.show();
-        graph.hide();
+        plotContainer.hide();
+
+        invalidPlotEvent.hide();
+        loader.hide();
 
         $(function () {
             $('#details_toggle').change(function () {
                 if ($(this).prop('checked')) {
                     table.hide();
-                    graph.show();
+                    plotContainer.show();
 
-                    console.log('called');
-
-                    renderSuccessRateGraph(graph);
-
+                    if (waitLock === false && graph2d === undefined) {
+                        renderSuccessRateGraph(plot);
+                    }
                 } else {
                     table.show();
-                    graph.hide();
+                    plotContainer.hide();
                 }
             });
         });
@@ -46,6 +60,15 @@ Template.aggregation.events({
         Session.set('nodeNameFilter', (event.target.value).split(';')[0]);
         Session.set('nodeTypeFilter', (event.target.value).split(';')[1]);
         $('#table-level2-heading').html(Session.get('nodeNameFilter'));
+
+        invalidPlotEvent.hide();
+        plot.hide();
+
+        if (graph2d !== undefined) {
+            graph2d.destroy();
+            graph2d = undefined;
+        }
+        $('#details_toggle').prop('checked', false).change();
 
 
         $('html, body').animate({
@@ -66,6 +89,8 @@ Template.details.helpers({
 });
 
 function renderSuccessRateGraph(container) {
+    loader.show();
+    waitLock = true;
     getResultOverTime.call({
         eventName: Session.get('nodeNameFilter'),
         eventType: Session.get('nodeTypeFilter'),
@@ -73,10 +98,21 @@ function renderSuccessRateGraph(container) {
     }, function (error, data) {
         if (error) {
             console.log(error);
+            waitLock = false;
+            loader.hide();
         } else {
             // console.log('returned');
             console.log(data);
-            renderDetailedGraph(container, data);
+            graph2d = renderDetailedGraph(container, data);
+            waitLock = false;
+            loader.hide();
+            if (graph2d === undefined) {
+                invalidPlotEvent.show();
+                plot.hide();
+            } else {
+                invalidPlotEvent.hide();
+                plot.show();
+            }
         }
     });
 }

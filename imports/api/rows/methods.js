@@ -131,8 +131,8 @@ export const getResultOverTime = new ValidatedMethod({
             let items = [];
             let pass = undefined;
             let fail = undefined;
-            let lastPass = 0;
-            let lastFail = 0;
+            let lastPass = undefined;
+            let lastFail = undefined;
 
             items.push({
                 x: getTimeString(data.time.start),
@@ -159,6 +159,23 @@ export const getResultOverTime = new ValidatedMethod({
                         fail = 0;
                         break;
                 }
+                if (lastPass === undefined) {
+                    lastPass = pass;
+                    items.push({
+                        x: getTimeString(row.time.finished),
+                        y: lastPass,
+                        group: gP
+                    });
+                }
+                if (lastFail === undefined) {
+                    lastFail = fail;
+                    items.push({
+                        x: getTimeString(row.time.finished),
+                        y: lastFail,
+                        group: gF
+                    });
+                }
+
                 items.push({
                     x: getTimeString(row.time.finished),
                     y: y,

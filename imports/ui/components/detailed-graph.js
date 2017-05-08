@@ -2,7 +2,7 @@ import vis from "vis";
 
 function renderDetailedGraph(graph, data) {
     if (graph === undefined || data === undefined) {
-        return false;
+        return undefined;
     }
 
     let groups = new vis.DataSet();
@@ -33,10 +33,12 @@ function renderDetailedGraph(graph, data) {
         }
     });
 
+    let groundColor = '#808080';
+
     groups.add({
         id: 2,
         content: 'Ground',
-        style: 'stroke:black;',
+        style: 'stroke:' + groundColor + ';',
         options: {
             drawPoints: false,
         }
@@ -84,6 +86,8 @@ function renderDetailedGraph(graph, data) {
 
     };
     let Graph2d = new vis.Graph2d(container, dataset, groups, options);
+    // console.log(Graph2d);
+    return Graph2d;
 }
 
 export {renderDetailedGraph}

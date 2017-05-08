@@ -11,10 +11,15 @@
         <div id="details_table" class="panel-body">
             {{> tabular table=TabularTables.Rows selector=selector class="table table-striped table-bordered table-condensed nowrap"}}
         </div>
-        <div id="details_chart"></div>
+        <div id="plot_container">
+            <div id="details_chart"></div>
+            <div id="invalid_plot_event" class="alert alert-info" role="alert">Could not generate plot for this type of
+                event...
+            </div>
+        </div>
         <div class="panel-footer">
 
         </div>
-
+        <div id="details_loader" class="loader"></div>
     </div>
 </template>
