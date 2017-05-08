@@ -5,7 +5,7 @@ import {EventSequences} from "../eventSequences/event-sequences";
 import {setProperty} from "../properties/methods";
 
 function getRowsVersion() {
-    return '1.4';
+    return '1.5';
 }
 
 function getRowsVersionPropertyName() {
@@ -73,9 +73,8 @@ export const populateRowsCollection = new ValidatedMethod({
                     type: event.type,
                     id: event.id,
                     sequenceId: sequence.id,
-                    timeStart: event.timeStart,
-                    timeFinish: event.timeFinish,
-                    timeExecution: event.timeFinish - event.timeStart,
+                    time: event.time,
+                    timeExecution: event.time.finished - event.time.started,
                     verdict: verdict,
                     conclusion: conclusion,
                     dev: {

@@ -97,8 +97,10 @@ Template.aggregation.rendered = () => {
             if (error) {
                 console.log(error);
             } else {
-                options.min = new Date(times.timeStart);
-                options.max = new Date(times.timeFinish);
+                console.log(times.started);
+                console.log(times.finished);
+                options.min = new Date(times.started);
+                options.max = new Date(times.finished);
                 data.clear();
                 data.add({id: 1,
                             content: 'Start',
@@ -194,11 +196,15 @@ function show(state) {
             $('#aggregation_loader').show();
 
             $('#level1_heading_loading').show();
+
+            $('#sequences_showing').val('0');
             break;
         case 3:
             $("time#aggregation_updated_time").timeago("update", new Date());
 
             $('#level1_heading_updated').show();
+
+            $('#sequences_showing').val(Session.get('displayedSequenceIds').length);
             break;
         default:
             break;
@@ -217,22 +223,20 @@ function showAggregation(from, to, limit) {
         } else {
             let container = $('#cy-aggregation');
             Session.set('displayedSequenceIds', graph.sequences);
-            renderGraph(graph, container);
-            showSequenceCount(from, to);
+            renderGraph(graph, container, 'aggregation');
+            showSequenceCount(from, to, graph.sequences.length);
             show(3);
         }
     });
 }
 
-function showSequenceCount(from, to) {
+function showSequenceCount(from, to, limit) {
     let container = $('#additional-sequences');
-    console.log('doing it');
     getSequenceCount.call({from: from, to: to}, function (error, count) {
         if (error) {
             console.log(error);
         } else {
-            console.log('got count', count);
-            container.val(count);
+            container.val(count - limit);
         }
     });
 }

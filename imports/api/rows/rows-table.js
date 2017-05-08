@@ -8,21 +8,21 @@ new Tabular.Table({
     collection: Rows,
     columns: [
         {data: "sequenceId", title: "sequenceId", visible: false},
+        {data: "id", title: "id", visible: false},
         {
             tmpl: Meteor.isClient && Template.button_row
         },
-        {data: "name", title: "Name"},
+        // {data: "name", title: "Name"},
         {data: "type", title: "Type"},
-        {data: "id", title: "ID"},
         {
-            data: "timeStart",
+            data: "time.started",
             title: "Start time",
             // render: function (val, type, doc) {
             //     (new Date(val)).toString()
             // }
         },
         {
-            data: "timeFinish",
+            data: "time.finished",
             title: "End time",
             // render: function (val, type, doc) {
             //     (new Date(val)).toString()

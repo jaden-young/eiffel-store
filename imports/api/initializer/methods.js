@@ -13,15 +13,15 @@ import {EventSequences} from "../eventSequences/event-sequences";
 import {getProperty} from "../properties/methods";
 
 Meteor.startup(function () {
-    if (getProperty.call({propertyName: eventVersionPropertyName.call()}) !== eventVersion.call() || Events.find().count() === 0) {
-        populateEventsCollection.call();
-        populateEventSequences.call();
-        populateRowsCollection.call();
-    } else if (getProperty.call({propertyName: eventSequenceVersionPropertyName.call()}) !== eventSequenceVersion.call() || EventSequences.find().count() === 0) {
-        populateEventSequences.call();
-        populateRowsCollection.call();
-    } else if (getProperty.call({propertyName: rowsVersionPropertyName.call()}) !== rowsVersion.call() || Rows.find().count() === 0) {
-        populateRowsCollection.call();
+    switch (true) {
+        case (getProperty.call({propertyName: eventVersionPropertyName.call()}) !== eventVersion.call() || Events.find().count() === 0):
+            populateEventsCollection.call();
+        case (getProperty.call({propertyName: eventSequenceVersionPropertyName.call()}) !== eventSequenceVersion.call() || EventSequences.find().count() === 0):
+            populateEventSequences.call();
+        case (getProperty.call({propertyName: rowsVersionPropertyName.call()}) !== rowsVersion.call() || Rows.find().count() === 0):
+            populateRowsCollection.call();
+        default:
+            break;
     }
 
     // Uncomment to force repopulate collections

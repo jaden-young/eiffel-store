@@ -1,14 +1,11 @@
 /**
  * Created by seba on 2017-04-27.
  */
-import { Meteor } from 'meteor/meteor';
-import { resetDatabase } from 'meteor/xolvio:cleaner';
+import {Meteor} from "meteor/meteor";
+import {resetDatabase} from "meteor/xolvio:cleaner";
 
-import { EventSequences } from './event-sequences';
-import {
-    getAggregatedGraph,
-    getSequenceCount }
-    from './methods';
+import {EventSequences} from "./event-sequences";
+import {getAggregatedGraph, getSequenceCount} from "./methods";
 
 if (Meteor.isServer) {
 
@@ -26,9 +23,9 @@ if (Meteor.isServer) {
             // Insert event inside time span
             EventSequences.insert({
                 id: 1,
-                timeStart: from + 1,
+                "time.started": from + 1,
                 events: [{
-                    name : 'name',
+                    name: 'name',
                     targets: []
 
                 }]
@@ -37,9 +34,9 @@ if (Meteor.isServer) {
             // Insert event outside time span
             EventSequences.insert({
                 id: 2,
-                timeStart: from - 1,
+                "time.started": from - 1,
                 events: [{
-                    name : 'name',
+                    name: 'name',
                     targets: []
                 }]
             });
@@ -58,7 +55,7 @@ if (Meteor.isServer) {
             // Insert dummy events into collection
             _.times(aboveLimit, () => EventSequences.insert({
                 id: 1,
-                timeStart: from + 1,
+                "time.started": from + 1,
                 events: []
             }));
 
@@ -76,7 +73,7 @@ if (Meteor.isServer) {
 
             EventSequences.insert({
                 id: 1,
-                timeStart: from + 1,
+                "time.started": from + 1,
                 events: []
             });
 
@@ -86,34 +83,34 @@ if (Meteor.isServer) {
         });
     });
 
-    describe('getSequenceCount', function() {
+    describe('getSequenceCount', function () {
 
         beforeEach(function () {
             resetDatabase();
         });
 
-       it('returns correct count', function () {
-           let from = Date.parse('02/01/2010'),
-               to = Date.parse('02/01/2020'),
-               expectedEventCount = 25;
+        it('returns correct count', function () {
+            let from = Date.parse('02/01/2010'),
+                to = Date.parse('02/01/2020'),
+                expectedEventCount = 25;
 
-           // Insert events inside time span
-           _.times(expectedEventCount, () => EventSequences.insert({
-               id: 1,
-               timeStart: from + 1,
-               events: []
-           }));
+            // Insert events inside time span
+            _.times(expectedEventCount, () => EventSequences.insert({
+                id: 1,
+                "time.started": from + 1,
+                events: []
+            }));
 
-           let eventCount = getSequenceCount.call({from: from, to: to});
-           assert.equal(eventCount, expectedEventCount);
-       });
+            let eventCount = getSequenceCount.call({from: from, to: to});
+            assert.equal(eventCount, expectedEventCount);
+        });
 
-       it('correctly returns empty when there are no events', function() {
-           let from = Date.parse('02/01/2010'),
-               to = Date.parse('02/01/2020');
+        it('correctly returns empty when there are no events', function () {
+            let from = Date.parse('02/01/2010'),
+                to = Date.parse('02/01/2020');
 
-               let eventCount = getSequenceCount.call({from: from, to: to});
-               assert.equal(eventCount, 0);
-       })
+            let eventCount = getSequenceCount.call({from: from, to: to});
+            assert.equal(eventCount, 0);
+        })
     });
 }
