@@ -3,10 +3,10 @@ import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Rows} from "./rows";
 import {EventSequences} from "../eventSequences/event-sequences";
 import {setProperty} from "../properties/methods";
-import {getTestCaseEventName, getTestSuiteEventName} from "../events/event-types";
+import {getConfidenceLevelEventName, getTestCaseEventName, getTestSuiteEventName} from "../events/event-types";
 
 function getRowsVersion() {
-    return '1.5';
+    return '1.6';
 }
 
 function getRowsVersionPropertyName() {
@@ -62,11 +62,15 @@ export const populateRowsCollection = new ValidatedMethod({
                 let verdict = VALUE_UNDEFINED;
                 if (event.data.outcome !== undefined && event.data.outcome.verdict !== undefined) {
                     verdict = event.data.outcome.verdict
+                } else if (event.type === getConfidenceLevelEventName()) {
+                    verdict = event.data.value;
                 }
 
                 let conclusion = VALUE_UNDEFINED;
                 if (event.data.outcome !== undefined && event.data.outcome.conclusion !== undefined) {
                     conclusion = event.data.outcome.conclusion
+                } else if (event.type === getConfidenceLevelEventName()) {
+                    conclusion = event.data.name;
                 }
 
                 Rows.insert({
@@ -106,9 +110,20 @@ export const getResultOverTime = new ValidatedMethod({
             if (eventName === undefined || eventType === undefined || sequenceIds === undefined) {
                 return undefined;
             }
-            if (eventType !== getTestCaseEventName() && eventType !== getTestSuiteEventName()) {
+            let passString = undefined;
+            let failString = undefined;
+
+            if (eventType === getTestCaseEventName() || eventType === getTestSuiteEventName()) {
+                passString = 'PASSED';
+                failString = 'FAILED';
+            } else if (eventType === getConfidenceLevelEventName()) {
+                passString = 'SUCCESS';
+                failString = 'FAILURE';
+            } else {
                 return undefined;
             }
+
+
             let rows = Rows.find({name: eventName, sequenceId: {$in: (sequenceIds)}}).fetch();
 
             rows = rows.sort(function (a, b) {
@@ -143,12 +158,12 @@ export const getResultOverTime = new ValidatedMethod({
             _.each(rows, (row) => {
                 let y;
                 switch (row.verdict) {
-                    case 'PASSED':
+                    case passString:
                         y = 1;
                         pass = 1;
                         fail = 0;
                         break;
-                    case 'FAILED':
+                    case failString:
                         y = -1;
                         pass = 0;
                         fail = -1;

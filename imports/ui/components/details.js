@@ -102,7 +102,7 @@ function renderSuccessRateGraph(container) {
             loader.hide();
         } else {
             // console.log('returned');
-            console.log(data);
+            // console.log(data);
             graph2d = renderDetailedGraph(container, data);
             waitLock = false;
             loader.hide();

@@ -7,10 +7,12 @@ function renderDetailedGraph(graph, data) {
 
     let groups = new vis.DataSet();
 
+    let borderWidth = 1;
+
     groups.add({
         id: 0,
         content: 'Passed',
-        style: 'stroke:green;',
+        style: 'stroke:green;stroke-width:' + borderWidth + ';',
         options: {
             drawPoints: false,
             shaded: {
@@ -23,7 +25,7 @@ function renderDetailedGraph(graph, data) {
     groups.add({
         id: 1,
         content: 'Failed',
-        style: 'stroke:red;',
+        style: 'stroke:red;stroke-width:' + borderWidth + ';',
         options: {
             drawPoints: false,
             shaded: {
@@ -33,12 +35,12 @@ function renderDetailedGraph(graph, data) {
         }
     });
 
-    let groundColor = '#808080';
+    let groundColor = '#bfbfbf';
 
     groups.add({
         id: 2,
         content: 'Ground',
-        style: 'stroke:' + groundColor + ';',
+        style: 'stroke:' + groundColor + ';stroke-width:' + (borderWidth + 1) + ';',
         options: {
             drawPoints: false,
         }
@@ -47,13 +49,14 @@ function renderDetailedGraph(graph, data) {
     groups.add({
         id: 3,
         content: 'Result',
-        style: 'stroke:black;',
+        style: 'stroke:black;stroke-width:' + borderWidth + ';',
         options: {
             style: 'points',
             drawPoints: {
-                styles: 'stroke:black;fill:none;'
+                styles: 'stroke:black;fill:none;',
+                size: 4,
             }
-        }
+        },
     });
 
     let container = graph[0];
@@ -78,11 +81,17 @@ function renderDetailedGraph(graph, data) {
                         }
                     }
                     return '';
+                },
+                range: {
+                    min: -1.25,
+                    max: 1.25,
                 }
             }
         },
         interpolation: false,
         sort: false,
+        graphHeight: '200px',
+
 
     };
     let Graph2d = new vis.Graph2d(container, dataset, groups, options);
