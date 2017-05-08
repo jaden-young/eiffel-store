@@ -4,7 +4,6 @@ import {Rows} from "./rows";
 import {EventSequences} from "../eventSequences/event-sequences";
 import {setProperty} from "../properties/methods";
 import {getTestCaseEventName, getTestSuiteEventName} from "../events/event-types";
-import moment from "moment";
 
 function getRowsVersion() {
     return '1.5';
@@ -103,22 +102,23 @@ export const getResultOverTime = new ValidatedMethod({
     name: 'getResultOverTime',
     validate: null,
     run({eventName, eventType, sequenceIds}){
-        console.log(eventName);
-        console.log(eventType);
-        console.log(sequenceIds.length);
         if (Meteor.isServer) {
+            if (eventName === undefined || eventType === undefined || sequenceIds === undefined) {
+                return undefined;
+            }
             if (eventType !== getTestCaseEventName() && eventType !== getTestSuiteEventName()) {
                 return undefined;
             }
             let rows = Rows.find({name: eventName, sequenceId: {$in: (sequenceIds)}}).fetch();
 
-            console.log(rows.length);
+            rows = rows.sort(function (a, b) {
+                return a.time.finished - b.time.finished;
+            });
 
             let data = {
                 time: {
                     start: getTimeString(rows[0].time.started),
-                    end:
-                        getTimeString(rows[rows.length - 1].time.finished),
+                    end: getTimeString(rows[rows.length - 1].time.finished),
                 }
             };
             // console.log(data);
@@ -131,12 +131,11 @@ export const getResultOverTime = new ValidatedMethod({
             let items = [];
             let pass = undefined;
             let fail = undefined;
-            let lastPass = undefined;
-            let lastFail = undefined;
+            let lastPass = 0;
+            let lastFail = 0;
 
             items.push({
-                x:
-                    getTimeString(data.time.start),
+                x: getTimeString(data.time.start),
                 y: 0,
                 group: gG,
             });
@@ -161,22 +160,19 @@ export const getResultOverTime = new ValidatedMethod({
                         break;
                 }
                 items.push({
-                    x:
-                        getTimeString(row.time.finished),
+                    x: getTimeString(row.time.finished),
                     y: y,
                     group: gR
                 });
 
                 if (pass !== lastPass) {
                     items.push({
-                        x:
-                            getTimeString(row.time.finished),
+                        x: getTimeString(row.time.finished),
                         y: lastPass,
                         group: gP
                     });
                     items.push({
-                        x:
-                            getTimeString(row.time.finished),
+                        x: getTimeString(row.time.finished),
                         y: pass,
                         group: gP
                     });
@@ -184,14 +180,12 @@ export const getResultOverTime = new ValidatedMethod({
                 }
                 if (fail !== lastFail) {
                     items.push({
-                        x:
-                            getTimeString(row.time.finished),
+                        x: getTimeString(row.time.finished),
                         y: lastFail,
                         group: gF
                     });
                     items.push({
-                        x:
-                            getTimeString(row.time.finished),
+                        x: getTimeString(row.time.finished),
                         y: fail,
                         group: gF
                     });
@@ -200,8 +194,18 @@ export const getResultOverTime = new ValidatedMethod({
             });
 
             items.push({
-                x:
-                    getTimeString(data.time.end),
+                x: getTimeString(data.time.end),
+                y: lastPass,
+                group: gP
+            });
+            items.push({
+                x: getTimeString(data.time.end),
+                y: lastFail,
+                group: gF
+            });
+
+            items.push({
+                x: getTimeString(data.time.end),
                 y: 0,
                 group: gG,
             });
@@ -214,5 +218,7 @@ export const getResultOverTime = new ValidatedMethod({
 });
 
 function getTimeString(long) {
-    return moment(long).format();
+    // return moment(long).format();
+    // return '2014-06-11';
+    return new Date(long);
 }

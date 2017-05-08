@@ -1,6 +1,9 @@
 import vis from "vis";
 
-function renderDetailedGraph(chartContainer, data) {
+function renderDetailedGraph(graph, data) {
+    if (graph === undefined || data === undefined) {
+        return false;
+    }
 
     let groups = new vis.DataSet();
 
@@ -51,7 +54,7 @@ function renderDetailedGraph(chartContainer, data) {
         }
     });
 
-    let container = chartContainer[0];
+    let container = graph[0];
 
     let dataset = new vis.DataSet(data.items);
     let options = {

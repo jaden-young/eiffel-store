@@ -8,6 +8,7 @@ import dataTablesBootstrap from "datatables.net-bs";
 import "datatables.net-bs/css/dataTables.bootstrap.css";
 import {Session} from "meteor/session";
 import {getResultOverTime} from "../../api/rows/methods";
+import {renderDetailedGraph} from "./detailed-graph";
 
 
 dataTablesBootstrap(window, $);
@@ -16,24 +17,24 @@ Template.details.rendered = () => {
     // Runs when document is ready
     $(() => {
         let table = $('#details_table');
-        let chart = $('#details_chart');
+        let graph = $('#details_chart');
 
         table.show();
-        chart.hide();
+        graph.hide();
 
         $(function () {
             $('#details_toggle').change(function () {
                 if ($(this).prop('checked')) {
                     table.hide();
-                    chart.show();
+                    graph.show();
 
                     console.log('called');
 
-                    renderSuccessRateGraph();
+                    renderSuccessRateGraph(graph);
 
                 } else {
                     table.show();
-                    chart.hide();
+                    graph.hide();
                 }
             });
         });
@@ -64,7 +65,7 @@ Template.details.helpers({
     }
 });
 
-function renderSuccessRateGraph() {
+function renderSuccessRateGraph(container) {
     getResultOverTime.call({
         eventName: Session.get('nodeNameFilter'),
         eventType: Session.get('nodeTypeFilter'),
@@ -73,9 +74,9 @@ function renderSuccessRateGraph() {
         if (error) {
             console.log(error);
         } else {
-            console.log('returned');
+            // console.log('returned');
             console.log(data);
-            // renderDetailedGraph(chart, data);
+            renderDetailedGraph(container, data);
         }
     });
 }
