@@ -102,27 +102,14 @@ export const populateRowsCollection = new ValidatedMethod({
     }
 });
 
-export const getResultOverTime = new ValidatedMethod({
-    name: 'getResultOverTime',
+export const getDetailedPlots = new ValidatedMethod({
+    name: 'getDetailedPlots',
     validate: null,
     run({eventName, eventType, sequenceIds}){
         if (Meteor.isServer) {
             if (eventName === undefined || eventType === undefined || sequenceIds === undefined) {
                 return undefined;
             }
-            let passString = undefined;
-            let failString = undefined;
-
-            if (eventType === getTestCaseEventName() || eventType === getTestSuiteEventName()) {
-                passString = 'PASSED';
-                failString = 'FAILED';
-            } else if (eventType === getConfidenceLevelEventName()) {
-                passString = 'SUCCESS';
-                failString = 'FAILURE';
-            } else {
-                return undefined;
-            }
-
 
             let rows = Rows.find({name: eventName, sequenceId: {$in: (sequenceIds)}}).fetch();
 
@@ -130,124 +117,145 @@ export const getResultOverTime = new ValidatedMethod({
                 return a.time.finished - b.time.finished;
             });
 
-            let data = {
-                time: {
-                    start: getTimeString(rows[0].time.started),
-                    end: getTimeString(rows[rows.length - 1].time.finished),
-                }
-            };
-            // console.log(data);
+            return {
+                plotPassFail: getPassFailPlot(rows, eventType),
+                plotExecTime: undefined,
+            }
+        }
+    }
+});
 
-            let gP = 0;
-            let gF = 1;
-            let gG = 2;
-            let gR = 3;
+function getPassFailPlot(rows, eventType) {
 
-            let items = [];
-            let pass = undefined;
-            let fail = undefined;
-            let lastPass = undefined;
-            let lastFail = undefined;
+    let passString = undefined;
+    let failString = undefined;
 
+    if (eventType === getTestCaseEventName() || eventType === getTestSuiteEventName()) {
+        passString = 'PASSED';
+        failString = 'FAILED';
+    } else if (eventType === getConfidenceLevelEventName()) {
+        passString = 'SUCCESS';
+        failString = 'FAILURE';
+    } else {
+        return undefined;
+    }
+
+    let data = {
+        time: {
+            start: getTimeString(rows[0].time.started),
+            end: getTimeString(rows[rows.length - 1].time.finished),
+        }
+    };
+    // console.log(data);
+
+    let gP = 0;
+    let gF = 1;
+    let gG = 2;
+    let gR = 3;
+
+    let items = [];
+    let pass = undefined;
+    let fail = undefined;
+    let lastPass = undefined;
+    let lastFail = undefined;
+
+    items.push({
+        x: getTimeString(data.time.start),
+        y: 0,
+        group: gG,
+    });
+
+    _.each(rows, (row) => {
+        let y;
+        switch (row.verdict) {
+            case passString:
+                y = 1;
+                pass = 1;
+                fail = 0;
+                break;
+            case failString:
+                y = -1;
+                pass = 0;
+                fail = -1;
+                break;
+            default:
+                y = 0;
+                pass = 0;
+                fail = 0;
+                break;
+        }
+        if (lastPass === undefined) {
+            lastPass = pass;
             items.push({
-                x: getTimeString(data.time.start),
-                y: 0,
-                group: gG,
+                x: getTimeString(row.time.finished),
+                y: lastPass,
+                group: gP
             });
-
-            _.each(rows, (row) => {
-                let y;
-                switch (row.verdict) {
-                    case passString:
-                        y = 1;
-                        pass = 1;
-                        fail = 0;
-                        break;
-                    case failString:
-                        y = -1;
-                        pass = 0;
-                        fail = -1;
-                        break;
-                    default:
-                        y = 0;
-                        pass = 0;
-                        fail = 0;
-                        break;
-                }
-                if (lastPass === undefined) {
-                    lastPass = pass;
-                    items.push({
-                        x: getTimeString(row.time.finished),
-                        y: lastPass,
-                        group: gP
-                    });
-                }
-                if (lastFail === undefined) {
-                    lastFail = fail;
-                    items.push({
-                        x: getTimeString(row.time.finished),
-                        y: lastFail,
-                        group: gF
-                    });
-                }
-
-                items.push({
-                    x: getTimeString(row.time.finished),
-                    y: y,
-                    group: gR
-                });
-
-                if (pass !== lastPass) {
-                    items.push({
-                        x: getTimeString(row.time.finished),
-                        y: lastPass,
-                        group: gP
-                    });
-                    items.push({
-                        x: getTimeString(row.time.finished),
-                        y: pass,
-                        group: gP
-                    });
-                    lastPass = pass;
-                }
-                if (fail !== lastFail) {
-                    items.push({
-                        x: getTimeString(row.time.finished),
-                        y: lastFail,
-                        group: gF
-                    });
-                    items.push({
-                        x: getTimeString(row.time.finished),
-                        y: fail,
-                        group: gF
-                    });
-                    lastFail = fail;
-                }
-            });
-
+        }
+        if (lastFail === undefined) {
+            lastFail = fail;
             items.push({
-                x: getTimeString(data.time.end),
+                x: getTimeString(row.time.finished),
+                y: lastFail,
+                group: gF
+            });
+        }
+
+        items.push({
+            x: getTimeString(row.time.finished),
+            y: y,
+            group: gR
+        });
+
+        if (pass !== lastPass) {
+            items.push({
+                x: getTimeString(row.time.finished),
                 y: lastPass,
                 group: gP
             });
             items.push({
-                x: getTimeString(data.time.end),
+                x: getTimeString(row.time.finished),
+                y: pass,
+                group: gP
+            });
+            lastPass = pass;
+        }
+        if (fail !== lastFail) {
+            items.push({
+                x: getTimeString(row.time.finished),
                 y: lastFail,
                 group: gF
             });
-
             items.push({
-                x: getTimeString(data.time.end),
-                y: 0,
-                group: gG,
+                x: getTimeString(row.time.finished),
+                y: fail,
+                group: gF
             });
-
-            data.items = items;
-            // console.log(data);
-            return data;
+            lastFail = fail;
         }
-    }
-});
+    });
+
+    items.push({
+        x: getTimeString(data.time.end),
+        y: lastPass,
+        group: gP
+    });
+    items.push({
+        x: getTimeString(data.time.end),
+        y: lastFail,
+        group: gF
+    });
+
+    items.push({
+        x: getTimeString(data.time.end),
+        y: 0,
+        group: gG,
+    });
+
+    data.items = items;
+    // console.log(data);
+    return data;
+}
 
 function getTimeString(long) {
     // return moment(long).format();
