@@ -57,11 +57,16 @@ Template.aggregation.rendered = () => {
             itemsAlwaysDraggable: true,
             editable: {updateTime: true},
             selectable: true,
+            onMoving: function(item,callback){
+                item.content = item.content.replace(/\./g,' ')
+                callback(item);
+            },
             onMove: function (item, callback) {
                 let limit = parseInt(limitInput.val());
                 if (item.id === 1 ) {
                     if(item.start > options.max || item.start < options.min){
                         item.start = options.min;
+                        item.content = '.......Start';
                     }
                     if(item.start.toLocaleDateString('sv') === fromInput.val()){
                         callback(item);
@@ -75,6 +80,7 @@ Template.aggregation.rendered = () => {
                 } else if (item.id === 2) {
                     if(item.start > options.max || item.start < options.min){
                         item.start = options.max;
+                        item.content = 'End.......';
                     }
                     if(item.start.toLocaleDateString('sv') === toInput.val()){
                         callback(item);
@@ -97,16 +103,14 @@ Template.aggregation.rendered = () => {
             if (error) {
                 console.log(error);
             } else {
-                console.log(times.started);
-                console.log(times.finished);
                 options.min = new Date(times.started);
                 options.max = new Date(times.finished);
                 data.clear();
                 data.add({id: 1,
-                            content: 'Start',
+                            content: '.......Start',
                             start: options.min});
                 data.add({id: 2,
-                            content: 'End',
+                            content: 'End.......',
                             start: options.max});
                 timeline.destroy();
                 timeline = new vis.Timeline(container, data, options);
