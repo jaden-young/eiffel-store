@@ -8,33 +8,35 @@ import dataTablesBootstrap from "datatables.net-bs";
 import "datatables.net-bs/css/dataTables.bootstrap.css";
 import {Session} from "meteor/session";
 import {getDetailedPlots} from "../../api/rows/methods";
-import {renderDetailedGraph} from "./detailed-graph";
+import {renderExecTimePlot, renderPassFailPlot} from "./detailed-plots";
 
 
 dataTablesBootstrap(window, $);
 
 let table = undefined;
 let plotPassFail = undefined;
+let plotExecTime = undefined;
 let plotContainer = undefined;
-let invalidPlotEvent = undefined;
 let loader = undefined;
 let graph2dPassFail = undefined;
+let graph2dExecTime = undefined;
 let waitLock = false;
+let plotsLoaded = false;
 
 Template.details.rendered = () => {
     // Runs when document is ready
     $(() => {
         table = $('#details_table');
-        plotPassFail = $('#plot_pass_fail');
-        plotContainer = $('#plot_container');
-        loader = $('#details_loader');
-        invalidPlotEvent = $('#invalid_plot_event');
 
+        plotContainer = $('#plot_container');
+        plotPassFail = $('#plot_pass_fail');
+        plotExecTime = $('#plot_exec_time');
+
+        loader = $('#details_loader');
 
         table.show();
         plotContainer.hide();
 
-        invalidPlotEvent.hide();
         loader.hide();
 
         $(function () {
@@ -43,8 +45,8 @@ Template.details.rendered = () => {
                     table.hide();
                     plotContainer.show();
 
-                    if (waitLock === false && graph2dPassFail === undefined) {
-                        renderSuccessRateGraph(plotPassFail);
+                    if (waitLock === false && plotsLoaded === false) {
+                        renderPlots();
                     }
                 } else {
                     table.show();
@@ -61,15 +63,18 @@ Template.aggregation.events({
         Session.set('nodeTypeFilter', (event.target.value).split(';')[1]);
         $('#table-level2-heading').html(Session.get('nodeNameFilter'));
 
-        invalidPlotEvent.hide();
-        plotPassFail.hide();
 
         if (graph2dPassFail !== undefined) {
             graph2dPassFail.destroy();
             graph2dPassFail = undefined;
         }
-        $('#details_toggle').prop('checked', false).change();
+        if (graph2dExecTime !== undefined) {
+            graph2dExecTime.destroy();
+            graph2dExecTime = undefined;
+        }
+        plotsLoaded = false;
 
+        $('#details_toggle').prop('checked', false).change();
 
         $('html, body').animate({
             scrollTop: $("#details").offset().top - 10
@@ -88,9 +93,13 @@ Template.details.helpers({
     }
 });
 
-function renderSuccessRateGraph(container) {
-    loader.show();
+function renderPlots() {
     waitLock = true;
+
+    plotPassFail.hide();
+    plotExecTime.hide();
+    loader.show();
+
     getDetailedPlots.call({
         eventName: Session.get('nodeNameFilter'),
         eventType: Session.get('nodeTypeFilter'),
@@ -99,20 +108,23 @@ function renderSuccessRateGraph(container) {
         if (error) {
             console.log(error);
             waitLock = false;
-            loader.hide();
+            plotsLoaded = false;
         } else {
             // console.log('returned');
             console.log(data);
-            graph2dPassFail = renderDetailedGraph(container, data.plotPassFail);
-            waitLock = false;
-            loader.hide();
-            if (graph2dPassFail === undefined) {
-                invalidPlotEvent.show();
-                plotPassFail.hide();
-            } else {
-                invalidPlotEvent.hide();
+            graph2dPassFail = renderPassFailPlot(plotPassFail, data.plotPassFail);
+            graph2dExecTime = renderExecTimePlot(plotExecTime, data.plotExecTime);
+
+            if (graph2dPassFail !== undefined) {
                 plotPassFail.show();
             }
+            if (graph2dExecTime !== undefined) {
+                plotExecTime.show();
+            }
+            loader.hide();
+
+            waitLock = false;
+            plotsLoaded = true;
         }
     });
 }

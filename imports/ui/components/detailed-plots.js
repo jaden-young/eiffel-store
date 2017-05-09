@@ -1,6 +1,6 @@
 import vis from "vis";
 
-function renderDetailedGraph(graph, data) {
+function renderPassFailPlot(graph, data) {
     if (graph === undefined || data === undefined) {
         return undefined;
     }
@@ -99,4 +99,40 @@ function renderDetailedGraph(graph, data) {
     return Graph2d;
 }
 
-export {renderDetailedGraph}
+function renderExecTimePlot(graph, data) {
+    if (graph === undefined || data === undefined) {
+        return undefined;
+    }
+
+    if (data.items.length === 0) {
+        return undefined;
+    }
+
+    let groups = new vis.DataSet();
+
+    let borderWidth = 1;
+
+    let container = graph[0];
+
+    let dataset = new vis.DataSet(data.items);
+    let options = {
+        start: data.time.start,
+        end: data.time.end,
+        dataAxis: {
+            left: {
+                format: function (value) {
+                    return value;
+                },
+            }
+        },
+        interpolation: false,
+        sort: true,
+        graphHeight: '400px',
+    };
+    let Graph2d = new vis.Graph2d(container, dataset, groups, options);
+    // console.log(Graph2d);
+    return undefined;
+    return Graph2d;
+}
+
+export {renderPassFailPlot, renderExecTimePlot}

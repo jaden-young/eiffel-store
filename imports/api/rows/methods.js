@@ -126,7 +126,6 @@ export const getDetailedPlots = new ValidatedMethod({
 });
 
 function getPassFailPlot(rows, eventType) {
-
     let passString = undefined;
     let failString = undefined;
 
@@ -254,6 +253,24 @@ function getPassFailPlot(rows, eventType) {
 
     data.items = items;
     // console.log(data);
+    return data;
+}
+
+function getExecTimePlot(rows, eventType) {
+    let data = {
+        time: {
+            start: getTimeString(rows[0].time.started),
+            end: getTimeString(rows[rows.length - 1].time.finished),
+        }
+    };
+
+    let items = [];
+
+    _.each(rows, (row) => {
+
+    });
+
+    data.items = items;
     return data;
 }
 
