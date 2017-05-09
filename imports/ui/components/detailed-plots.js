@@ -112,6 +112,22 @@ function renderExecTimePlot(graph, data) {
 
     let borderWidth = 1;
 
+    groups.add({
+        id: 0,
+        content: 'Average execution time (ms)',
+        style: 'stroke:black;stroke-width:' + borderWidth + ';',
+        options: {
+            drawPoints: {
+                styles: 'stroke:black;fill:none;',
+                size: 4,
+            },
+            shaded: {
+                orientation: 'zero',
+                style: 'fill:black;'
+            }
+        },
+    });
+
     let container = graph[0];
 
     let dataset = new vis.DataSet(data.items);
@@ -121,17 +137,25 @@ function renderExecTimePlot(graph, data) {
         dataAxis: {
             left: {
                 format: function (value) {
-                    return value;
+                    if (Math.floor(value) === value) {
+                        return value;
+                    }
+                    return '';
                 },
+                range: {
+                    max: (data.range.max * 1.15),
+                    min: 0,
+                }
             }
         },
-        interpolation: false,
+        legend: {
+            enabled: true,
+        },
         sort: true,
         graphHeight: '400px',
     };
     let Graph2d = new vis.Graph2d(container, dataset, groups, options);
     // console.log(Graph2d);
-    return undefined;
     return Graph2d;
 }
 

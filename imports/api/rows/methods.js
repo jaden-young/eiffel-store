@@ -119,7 +119,7 @@ export const getDetailedPlots = new ValidatedMethod({
 
             return {
                 plotPassFail: getPassFailPlot(rows, eventType),
-                plotExecTime: undefined,
+                plotExecTime: getExecTimePlot(rows),
             }
         }
     }
@@ -256,7 +256,7 @@ function getPassFailPlot(rows, eventType) {
     return data;
 }
 
-function getExecTimePlot(rows, eventType) {
+function getExecTimePlot(rows) {
     let data = {
         time: {
             start: getTimeString(rows[0].time.started),
@@ -264,12 +264,26 @@ function getExecTimePlot(rows, eventType) {
         }
     };
 
+    let highest = 1;
+
     let items = [];
 
     _.each(rows, (row) => {
-
+        let avgTime = (row.time.finished - row.time.started);
+        if (avgTime > highest) {
+            highest = avgTime;
+        }
+        items.push({
+            x: getTimeString(row.time.finished),
+            // y: Math.floor((Math.random() * avgTime)), // For testing
+            y: avgTime,
+            group: 0
+        });
     });
 
+    data.range = {
+        max: highest
+    };
     data.items = items;
     return data;
 }

@@ -40,7 +40,7 @@ Template.aggregation.rendered = () => {
         });
 
         /* TIMELINE */
-        let container = document.getElementById('example-timeline');
+        let container = document.getElementById('aggregation_time_line');
         // Timebars in the timeline
         let data = new vis.DataSet([{
             id: '1',

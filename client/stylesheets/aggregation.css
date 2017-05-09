@@ -1,5 +1,6 @@
-#example-timeline {
+#aggregation_time_line {
     background-color: #fff;
+    cursor: default;
 }
 
 #aggregation_container {
