@@ -1,4 +1,4 @@
-# VisWiz
+# ViCi
 
 ## Table of contents
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -27,10 +27,10 @@
 
 ### Install Node
  https://nodejs.org/en/download/
-
  
 ### Install Meteor
 https://www.meteor.com/install
+https://guide.meteor.com/
 
 ### Install MongoDB
 https://docs.mongodb.com/manual/installation/
