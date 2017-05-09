@@ -6,7 +6,6 @@
 
 
 - [Installation](#installation)
-  - [Install Node](#install-node)
   - [Install Meteor](#install-meteor)
   - [Install MongoDB](#install-mongodb)
   - [Import data to MongoDB](#import-data-to-mongodb)
@@ -24,15 +23,13 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Installation
-
-### Install Node
- https://nodejs.org/en/download/
  
 ### Install Meteor
 https://www.meteor.com/install
 https://guide.meteor.com/
 
 ### Install MongoDB
+This is so you will be able to import the eiffel data.
 https://docs.mongodb.com/manual/installation/
 
 ### Import data to MongoDB
@@ -41,7 +38,7 @@ If you have the data (named **events.json**) and the server is running, run the 
 ```
 mongoimport --host localhost:3001 --jsonArray --drop --db meteor --collection eiffel-events --file "events.json"
 ```
-If you want to download sample data, you can find it [here](https://github.com/Ericsson/eiffel/blob/master/examples/reference-data-sets/default/events.zip).
+If you want to download sample data, you can find it [here](https://gitlab.ida.liu.se/tddd96/visualization/blob/development/public/examples/eiffelevents.zip).
 
 
 
