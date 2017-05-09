@@ -59,10 +59,10 @@ Template.details.rendered = () => {
 
 Template.aggregation.events({
     'click .aggregation-tt-btn': function (event) {
-        Session.set('nodeNameFilter', (event.target.value).split(';')[0]);
-        Session.set('nodeTypeFilter', (event.target.value).split(';')[1]);
+        let eventSplit = (event.target.value).split(';');
+        Session.set('nodeNameFilter', eventSplit[0]);
+        Session.set('nodeTypeFilter', eventSplit[1]);
         $('#table-level2-heading').html(Session.get('nodeNameFilter'));
-
 
         if (graph2dPassFail !== undefined) {
             graph2dPassFail.destroy();
@@ -94,6 +94,7 @@ Template.details.helpers({
 });
 
 function renderPlots() {
+    // console.log(Session.get('nodeTypeFilter'));
     waitLock = true;
 
     plotPassFail.hide();
@@ -110,16 +111,17 @@ function renderPlots() {
             waitLock = false;
             plotsLoaded = false;
         } else {
-            // console.log('returned');
-            console.log(data);
-            graph2dPassFail = renderPassFailPlot(plotPassFail, data.plotPassFail);
-            graph2dExecTime = renderExecTimePlot(plotExecTime, data.plotExecTime);
+            // console.log(data);
+            if (data !== undefined) {
+                graph2dPassFail = renderPassFailPlot(plotPassFail, data.plotPassFail);
+                graph2dExecTime = renderExecTimePlot(plotExecTime, data.plotExecTime);
 
-            if (graph2dPassFail !== undefined) {
-                plotPassFail.show();
-            }
-            if (graph2dExecTime !== undefined) {
-                plotExecTime.show();
+                if (graph2dPassFail !== undefined) {
+                    plotPassFail.show();
+                }
+                if (graph2dExecTime !== undefined) {
+                    plotExecTime.show();
+                }
             }
             loader.hide();
 

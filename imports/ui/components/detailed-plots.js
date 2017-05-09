@@ -114,7 +114,7 @@ function renderExecTimePlot(graph, data) {
 
     groups.add({
         id: 0,
-        content: 'Average execution time (ms)',
+        content: 'Execution time (ms)',
         style: 'stroke:black;stroke-width:' + borderWidth + ';',
         options: {
             drawPoints: {
