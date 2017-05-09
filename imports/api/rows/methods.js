@@ -3,9 +3,10 @@ import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {Rows} from "./rows";
 import {EventSequences} from "../eventSequences/event-sequences";
 import {setProperty} from "../properties/methods";
+import {getConfidenceLevelEventName, getTestCaseEventName, getTestSuiteEventName} from "../events/event-types";
 
 function getRowsVersion() {
-    return '1.5';
+    return '1.6';
 }
 
 function getRowsVersionPropertyName() {
@@ -61,11 +62,15 @@ export const populateRowsCollection = new ValidatedMethod({
                 let verdict = VALUE_UNDEFINED;
                 if (event.data.outcome !== undefined && event.data.outcome.verdict !== undefined) {
                     verdict = event.data.outcome.verdict
+                } else if (event.type === getConfidenceLevelEventName()) {
+                    verdict = event.data.value;
                 }
 
                 let conclusion = VALUE_UNDEFINED;
                 if (event.data.outcome !== undefined && event.data.outcome.conclusion !== undefined) {
                     conclusion = event.data.outcome.conclusion
+                } else if (event.type === getConfidenceLevelEventName()) {
+                    conclusion = event.data.name;
                 }
 
                 Rows.insert({
@@ -96,3 +101,164 @@ export const populateRowsCollection = new ValidatedMethod({
         console.log("Rows collection is populated. [" + print + "%] (" + done + "/" + total + ")");
     }
 });
+
+export const getDetailedPlots = new ValidatedMethod({
+    name: 'getDetailedPlots',
+    validate: null,
+    run({eventName, eventType, sequenceIds}){
+        if (Meteor.isServer) {
+            if (eventName === undefined || eventType === undefined || sequenceIds === undefined) {
+                return undefined;
+            }
+
+            let rows = Rows.find({name: eventName, sequenceId: {$in: (sequenceIds)}}).fetch();
+
+            rows = rows.sort(function (a, b) {
+                return a.time.finished - b.time.finished;
+            });
+
+            return {
+                plotPassFail: getPassFailPlot(rows, eventType),
+                plotExecTime: undefined,
+            }
+        }
+    }
+});
+
+function getPassFailPlot(rows, eventType) {
+
+    let passString = undefined;
+    let failString = undefined;
+
+    if (eventType === getTestCaseEventName() || eventType === getTestSuiteEventName()) {
+        passString = 'PASSED';
+        failString = 'FAILED';
+    } else if (eventType === getConfidenceLevelEventName()) {
+        passString = 'SUCCESS';
+        failString = 'FAILURE';
+    } else {
+        return undefined;
+    }
+
+    let data = {
+        time: {
+            start: getTimeString(rows[0].time.started),
+            end: getTimeString(rows[rows.length - 1].time.finished),
+        }
+    };
+    // console.log(data);
+
+    let gP = 0;
+    let gF = 1;
+    let gG = 2;
+    let gR = 3;
+
+    let items = [];
+    let pass = undefined;
+    let fail = undefined;
+    let lastPass = undefined;
+    let lastFail = undefined;
+
+    items.push({
+        x: getTimeString(data.time.start),
+        y: 0,
+        group: gG,
+    });
+
+    _.each(rows, (row) => {
+        let y;
+        switch (row.verdict) {
+            case passString:
+                y = 1;
+                pass = 1;
+                fail = 0;
+                break;
+            case failString:
+                y = -1;
+                pass = 0;
+                fail = -1;
+                break;
+            default:
+                y = 0;
+                pass = 0;
+                fail = 0;
+                break;
+        }
+        if (lastPass === undefined) {
+            lastPass = pass;
+            items.push({
+                x: getTimeString(row.time.finished),
+                y: lastPass,
+                group: gP
+            });
+        }
+        if (lastFail === undefined) {
+            lastFail = fail;
+            items.push({
+                x: getTimeString(row.time.finished),
+                y: lastFail,
+                group: gF
+            });
+        }
+
+        items.push({
+            x: getTimeString(row.time.finished),
+            y: y,
+            group: gR
+        });
+
+        if (pass !== lastPass) {
+            items.push({
+                x: getTimeString(row.time.finished),
+                y: lastPass,
+                group: gP
+            });
+            items.push({
+                x: getTimeString(row.time.finished),
+                y: pass,
+                group: gP
+            });
+            lastPass = pass;
+        }
+        if (fail !== lastFail) {
+            items.push({
+                x: getTimeString(row.time.finished),
+                y: lastFail,
+                group: gF
+            });
+            items.push({
+                x: getTimeString(row.time.finished),
+                y: fail,
+                group: gF
+            });
+            lastFail = fail;
+        }
+    });
+
+    items.push({
+        x: getTimeString(data.time.end),
+        y: lastPass,
+        group: gP
+    });
+    items.push({
+        x: getTimeString(data.time.end),
+        y: lastFail,
+        group: gF
+    });
+
+    items.push({
+        x: getTimeString(data.time.end),
+        y: 0,
+        group: gG,
+    });
+
+    data.items = items;
+    // console.log(data);
+    return data;
+}
+
+function getTimeString(long) {
+    // return moment(long).format();
+    // return '2014-06-11';
+    return new Date(long);
+}

@@ -1,20 +1,20 @@
 'use strict';
 
 /*export const isActivityCanceledEvent = function (eventType) {
-    return eventType === 'EiffelActivityCanceledEvent';
-};
+ return eventType === 'EiffelActivityCanceledEvent';
+ };
 
-export const isActivityFinishedEvent = function (eventType) {
-    return eventType === 'EiffelActivityFinishedEvent';
-};
+ export const isActivityFinishedEvent = function (eventType) {
+ return eventType === 'EiffelActivityFinishedEvent';
+ };
 
-export const isActivityStartedEvent = function (eventType) {
-    return eventType === 'EiffelActivityStartedEvent';
-};
+ export const isActivityStartedEvent = function (eventType) {
+ return eventType === 'EiffelActivityStartedEvent';
+ };
 
-export const isActivityTriggeredEvent = function (eventType) {
-    return eventType === 'EiffelActivityTriggeredEvent';
-};*/
+ export const isActivityTriggeredEvent = function (eventType) {
+ return eventType === 'EiffelActivityTriggeredEvent';
+ };*/
 
 export const isActivityEvent = function (eventType) {
     let eventTypes = [
@@ -89,6 +89,10 @@ export const getTestSuiteEventName = function () {
 
 export const getActivityEventName = function () {
     return "ActivityEvent"
+};
+
+export const getConfidenceLevelEventName = function () {
+    return "EiffelConfidenceLevelModifiedEvent"
 };
 
 export const getRedirectName = function () {
