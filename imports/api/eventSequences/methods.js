@@ -9,8 +9,17 @@ import {
     getRedirectName,
     isActivityEvent,
     isAnnouncementPublishedEvent,
+    isArtifactCreatedEvent,
+    isArtifactPublishedEvent,
+    isArtifactReusedEvent,
+    isCompositionDefinedEvent,
     isConfidenceLevelEvent,
+    isConfigurationAppliedEvent,
+    isEnvironmentDefinedEvent,
+    isFlowContextDefinedEvent,
     isIssueVerifiedEvent,
+    isSourceChangeCreatedEvent,
+    isSourceChangeSubmittedEvent,
     isTestEvent
 } from "../events/event-types";
 
@@ -513,28 +522,42 @@ export const getEventChainGraph = new ValidatedMethod({
                     }
                 };
 
-                if (isTestEvent(node.data.type)) {
-                    let verdict = event.data.outcome.verdict;
-
-                    let passedCount = 0;
-                    let failedCount = 0;
-                    let inconclusiveCount = 0;
-
-                    if (verdict === 'PASSED') {
-                        passedCount++;
-                    } else if (verdict === 'FAILED') {
-                        failedCount++;
-                    } else {
-                        inconclusiveCount++;
-                    }
-                    node.data.inconclusive = inconclusiveCount;
-                    node.data.passed = passedCount;
-                    node.data.failed = failedCount;
+                if (isActivityEvent(node.data.type)) {
+                    // Required Eiffel data
+                    node.data.timeTriggered = event.time.triggered;
                     node.data.timeStarted = event.time.started;
                     node.data.timeFinished = event.time.finished;
-                }
+                    node.data.conclusion =  event.data.outcome.conclusion;
 
-                if (isConfidenceLevelEvent(node.data.type)) {
+                    // Non-required Eiffel data
+                    if (event.data.triggers !== undefined) {
+                        node.data.triggerType = event.data.triggers.type;
+                    } else {
+                        node.data.triggerType = "No data";
+                    }
+
+                    if (event.data.executionType !== undefined) {
+                        node.data.executionType = event.data.executionType;
+                    } else {
+                        node.data.executionType = "No data";
+                    }
+                }
+                else if (isAnnouncementPublishedEvent(node.data.type)) {
+
+                }
+                else if (isArtifactCreatedEvent(node.data.type)) {
+
+                }
+                else if (isArtifactPublishedEvent(node.data.type)) {
+
+                }
+                else if (isArtifactReusedEvent(node.data.type)) {
+
+                }
+                else if (isCompositionDefinedEvent(node.data.type)) {
+
+                }
+                else if (isConfidenceLevelEvent(node.data.type)) {
                     let value = event.data.value;
 
                     let passedCount = 0;
@@ -559,16 +582,53 @@ export const getEventChainGraph = new ValidatedMethod({
                     else {
                         node.data.issuer_id = "No data";
                     }
-
                     node.data.inconclusive = inconclusiveCount;
                     node.data.passed = passedCount;
                     node.data.failed = failedCount;
                     node.data.name = event.name;
                     node.data.value = value;
+                }
+                else if (isConfigurationAppliedEvent(node.data.type)) {
 
                 }
+                else if (isEnvironmentDefinedEvent(node.data.type)) {
 
-                nodes.push(node);
+                }
+                else if (isFlowContextDefinedEvent(node.data.type)) {
+
+                }
+                else if (isIssueVerifiedEvent(node.data.type)) {
+
+                }
+                else if (isSourceChangeCreatedEvent(node.data.type)) {
+
+                }
+                else if (isSourceChangeSubmittedEvent(node.data.type)) {
+
+                }
+                else if (isTestEvent(node.data.type)) {
+                    let verdict = event.data.outcome.verdict;
+
+                    let passedCount = 0;
+                    let failedCount = 0;
+                    let inconclusiveCount = 0;
+
+                    if (verdict === 'PASSED') {
+                        passedCount++;
+                    } else if (verdict === 'FAILED') {
+                        failedCount++;
+                    } else {
+                        inconclusiveCount++;
+                    }
+                    node.data.inconclusive = inconclusiveCount;
+                    node.data.passed = passedCount;
+                    node.data.failed = failedCount;
+                    node.data.timeStarted = event.time.started;
+                    node.data.timeFinished = event.time.finished;
+                }
+
+
+                    nodes.push(node);
 
                 //.concat(event.dangerousTargets)
 

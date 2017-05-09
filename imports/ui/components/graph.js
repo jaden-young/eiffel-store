@@ -242,22 +242,20 @@ function renderGraph(graph, container, level) {
         let nodeLabel = nodeData.label;
         let possible_jenkins = nodeData.eventData.executionUri;
         switch (true) {
-            case /Act/.test(nodeLabel):                                              // Checks if node_id starts with 'TSF'
+            case /Act/.test(nodeLabel):
+                let html = '<h4>' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Conclusion</td><td>' + nodeData.conclusion + '</td></tr>' +
+                    '<tr><td>Trigger type</td><td>' + nodeData.triggerType + '</td></tr>' +
+                    '<tr><td>Execution type</td><td>' + nodeData.executionType + '</td></tr>' +
+                    '<tr><td>Queue time</td><td>' + toHMS(nodeData.timeStarted - nodeData.timeTriggered) + '</td></tr>' +
+                    '<tr><td>Execution time</td><td>' + toHMS(nodeData.timeFinished - nodeData.timeStarted) + '</td></tr>';
                 if (typeof possible_jenkins === 'string' || possible_jenkins instanceof String) {
-                    return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
-                        getTooltipButton(nodeData.id) +          // Button will take user to level 2 - ‘details’
-                        '<table class="table table-bordered">' +
-                        '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
-                        '<tr><td>Jenkins:</td><td>' + possible_jenkins + '</td></tr>' + //this should show a stringified link to a homepage once data exists
-                        '</table>'; // Row 3 - OTHER
+                    //this should show a stringified link to a homepage once data exists
+                    html = html + '<tr><td>Jenkins:</td><td>' + possible_jenkins + '</td></tr>';
                 }
-                else {
-                    return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
-                        getTooltipButton(nodeData.id) +          // Button will take user to level 2 - ‘details’
-                        '<table class="table table-bordered">' +
-                        '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
-                        '</table>'; // Row 3 - OTHER
-                }
+                 html = html + '</table>'; // Row 3 - OTHER
+                return html;
             case /CLM/.test(nodeLabel):
                 return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
                     //getTooltipButton(nodeData.id) +
@@ -268,7 +266,7 @@ function renderGraph(graph, container, level) {
 
             default:
                 return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
-                    getTooltipButton(nodeData.id) +
+                    //getTooltipButton(nodeData.id) +
                     '<table class="table table-bordered">' +
                     '<tr><td>Total no. of events</td><td class="td-right">' + nodeData.length + '</td></tr>' +
                     '</table>';
