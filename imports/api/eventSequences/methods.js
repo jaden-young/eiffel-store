@@ -530,6 +530,8 @@ export const getEventChainGraph = new ValidatedMethod({
                     node.data.inconclusive = inconclusiveCount;
                     node.data.passed = passedCount;
                     node.data.failed = failedCount;
+                    node.data.timeStarted = event.time.started;
+                    node.data.timeFinished = event.time.finished;
                 }
 
                 if (isConfidenceLevelEvent(node.data.type)) {
@@ -546,11 +548,24 @@ export const getEventChainGraph = new ValidatedMethod({
                     } else {
                         inconclusiveCount++;
                     }
+                    if (event.data.issuer !== undefined){
+                        if (event.data.issuer.id !== undefined) {
+                            node.data.issuer_id = event.data.issuer.id;
+                        }
+                        else {
+                            node.data.issuer_id = "No data";
+                        }
+                    }
+                    else {
+                        node.data.issuer_id = "No data";
+                    }
 
                     node.data.inconclusive = inconclusiveCount;
                     node.data.passed = passedCount;
                     node.data.failed = failedCount;
                     node.data.name = event.name;
+                    node.data.value = value;
+
                 }
 
                 nodes.push(node);

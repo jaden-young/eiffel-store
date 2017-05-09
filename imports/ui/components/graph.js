@@ -258,6 +258,14 @@ function renderGraph(graph, container, level) {
                         '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
                         '</table>'; // Row 3 - OTHER
                 }
+            case /CLM/.test(nodeLabel):
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    //getTooltipButton(nodeData.id) +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Value</td><td class="td-right">' + nodeData.value + '</td></tr>' +
+                    '<tr><td>Issuer ID</td><td class="td-right">' + nodeData.issuer_id + '</td></tr>' +
+                    '</table>';
+
             default:
                 return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
                     getTooltipButton(nodeData.id) +
