@@ -26,21 +26,11 @@ Template.aggregation.rendered = () => {
             fromTimeline = 1420070400000,// from: 1420070400000 2015
             toTimeline = 1514764800000;// to: 1514764800000 2018
 
-        // Gets the time span for sequences.
-        getTimeSpan.call({}, function (error, time) {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log(time.started);
-                console.log(time.finished);
-                console.log(time);
-            }
-        });
-
         // Set default input values
         fromInput.val(defaultFrom);
         toInput.val(defaultTo);
         limitInput.val(defaultLimit);
+
 
         // Set up datepicker;
         datepickers.datepicker({
@@ -61,49 +51,95 @@ Template.aggregation.rendered = () => {
             content: 'End',
             start: defaultTo
         }]);
-
         let options = {
             height: '150px',
             zoomMin: 3600000, // Setting 10 minutes as minimum zoom
-            max: '2020-01-01',//new Date(Date.now()).toLocaleDateString(), //Todays date
-            min: '2010-01-01',
             itemsAlwaysDraggable: true,
             editable: {updateTime: true},
             selectable: true,
+            onMoving: function(item,callback){
+                item.content = item.content.replace(/\./g,' ')
+                callback(item);
+            },
             onMove: function (item, callback) {
                 let limit = parseInt(limitInput.val());
-                if (item.id === 1) {
+                if (item.id === 1 ) {
+                    if(item.start > options.max || item.start < options.min){
+                        item.start = options.min;
+                        item.content = '.......Start';
+                    }
+                    if(item.start.toLocaleDateString('sv') === fromInput.val()){
+                        callback(item);
+                        return;                 //doesnt aggregate if it was changed to the same date
+                    }
                     let from = Date.parse(item.start),
                         to = toTimeline;
                     fromInput.val(new Date(item.start).toLocaleDateString('sv'));
                     fromTimeline = Date.parse(item.start);
                     showAggregation(from, to, limit);
                 } else if (item.id === 2) {
+                    if(item.start > options.max || item.start < options.min){
+                        item.start = options.max;
+                        item.content = 'End.......';
+                    }
+                    if(item.start.toLocaleDateString('sv') === toInput.val()){
+                        callback(item);
+                        return;                 //doesnt aggregate if it was changed to the same date
+                    }
                     let from = fromTimeline,
                         to = Date.parse(item.start);
                     toInput.val(new Date(item.start).toLocaleDateString('sv'));
                     toTimeline = Date.parse(item.start);
                     showAggregation(from, to, limit);
                 }
+                callback(item);
             }
         };
         let timeline = new vis.Timeline(container, data, options);
         /*---------------*/
 
+        // Gets the time span for sequences.
+        getTimeSpan.call({}, function (error, times) {
+            if (error) {
+                console.log(error);
+            } else {
+                options.min = new Date(times.started);
+                options.max = new Date(times.finished);
+                data.clear();
+                data.add({id: 1,
+                            content: '.......Start',
+                            start: options.min});
+                data.add({id: 2,
+                            content: 'End.......',
+                            start: options.max});
+                timeline.destroy();
+                timeline = new vis.Timeline(container, data, options);
+                fromInput.val((options.min).toLocaleDateString('sv'));
+                toInput.val((options.max).toLocaleDateString('sv'));
+            }
+        });
+
         //Aggregates new graph when datepicker changes values
         $('#date-from').change(
             function () {
                 let limit = parseInt(limitInput.val());
-                fromTimeline = Date.parse(fromInput.val())
-                timeline.setItems(new vis.DataSet([{
+                fromTimeline = Date.parse(fromInput.val());
+                if((fromTimeline > options.max.getTime()) || (options.min.getTime() > fromTimeline)){
+                    fromTimeline = options.min.getTime();
+                    fromInput.val(options.min.toLocaleDateString('sv'));
+                }
+                let lastToTimeline = data.get(2).start;
+                data.clear();
+                data = new vis.DataSet([{
                     id: 1,
                     content: 'Start',
                     start: fromTimeline
                 }, {
                     id: 2,
                     content: 'End',
-                    start: toTimeline
-                }]));
+                    start: lastToTimeline
+                }]);
+                timeline.setItems(data);
                 showAggregation(fromTimeline, toTimeline, limit);
             });
 
@@ -111,15 +147,22 @@ Template.aggregation.rendered = () => {
             function () {
                 let limit = parseInt(limitInput.val());
                 toTimeline = Date.parse(toInput.val());
-                timeline.setItems(new vis.DataSet([{
+                if((options.max.getTime() < toTimeline) || (toTimeline < options.min.getTime())){
+                    toTimeline = options.max.getTime();
+                    toInput.val(options.max.toLocaleDateString('sv'));
+                }
+                let lastFromTimeline = data.get(1).start;
+                data.clear();
+                data = new vis.DataSet([{
                     id: 1,
                     content: 'Start',
-                    start: fromTimeline
+                    start: lastFromTimeline
                 }, {
                     id: 2,
                     content: 'End',
                     start: toTimeline
-                }]));
+                }]);
+                timeline.setItems(data);
                 showAggregation(fromTimeline, toTimeline, limit);
             });
 
@@ -133,10 +176,10 @@ Template.aggregation.rendered = () => {
             to = Date.parse(toInput.val()),
             limit = parseInt(limitInput.val());
 
-        //showAggregation(from, to, limit);
+        showAggregation(from, to, limit);
 
         // Trigger on change to fetch and render graph
-        fromInput.trigger('change');
+        //fromInput.trigger('change');
     });
 };
 
@@ -182,7 +225,6 @@ function showAggregation(from, to, limit) {
         if (error) {
             console.log(error);
         } else {
-
             let container = $('#cy-aggregation');
             Session.set('displayedSequenceIds', graph.sequences);
             renderGraph(graph, container, 'aggregation');
