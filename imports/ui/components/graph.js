@@ -239,7 +239,6 @@ function renderGraph(graph, container, level) {
     }
 
     function getLevelThreeContent(nodeData) {
-        console.log(nodeData);
         let nodeLabel = nodeData.label;
         let possible_jenkins = nodeData.eventData.executionUri;
         switch (true) {
@@ -256,10 +255,10 @@ function renderGraph(graph, container, level) {
                         possible_jenkins + '"> ' + possible_jenkins + '</a>' + '</td></tr>';
                 }
                 html += '<tr><td>No of triggers</td><td>' + nodeData.triggersLength + '</td></tr>' +
-                _.reduce(nodeData.triggers, (memo, trigger) => {
-                    return memo + '<tr><td>Trigger type</td><td>' + trigger.type + '</td></tr>';
-                }, "");
-                 html += '</table>'; // Row 3 - OTHER
+                    _.reduce(nodeData.triggers, (memo, trigger) => {
+                        return memo + '<tr><td>Trigger type</td><td>' + trigger.type + '</td></tr>';
+                    }, "");
+                html += '</table>'; // Row 3 - OTHER
                 return html;
             case /AP/.test(nodeLabel):
                 return '<h4 id="tt_header">' + nodeLabel + '</h4>' +

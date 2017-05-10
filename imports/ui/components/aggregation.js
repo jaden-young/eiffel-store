@@ -9,6 +9,9 @@ import {getAggregatedGraph, getSequenceCount, getTimeSpan} from "/imports/api/ev
 import {Session} from "meteor/session";
 import vis from "vis";
 
+let aggregationLock = false;
+let aggregationQueued = undefined;
+
 
 Template.aggregation.rendered = () => {
 
@@ -57,18 +60,18 @@ Template.aggregation.rendered = () => {
             itemsAlwaysDraggable: true,
             editable: {updateTime: true},
             selectable: true,
-            onMoving: function(item,callback){
-                item.content = item.content.replace(/\./g,' ')
+            onMoving: function (item, callback) {
+                item.content = item.content.replace(/\./g, ' ')
                 callback(item);
             },
             onMove: function (item, callback) {
                 let limit = parseInt(limitInput.val());
-                if (item.id === 1 ) {
-                    if(item.start > options.max || item.start < options.min){
+                if (item.id === 1) {
+                    if (item.start > options.max || item.start < options.min) {
                         item.start = options.min;
                         item.content = '.......Start';
                     }
-                    if(item.start.toLocaleDateString('sv') === fromInput.val()){
+                    if (item.start.toLocaleDateString('sv') === fromInput.val()) {
                         callback(item);
                         return;                 //doesnt aggregate if it was changed to the same date
                     }
@@ -78,11 +81,11 @@ Template.aggregation.rendered = () => {
                     fromTimeline = Date.parse(item.start);
                     showAggregation(from, to, limit);
                 } else if (item.id === 2) {
-                    if(item.start > options.max || item.start < options.min){
+                    if (item.start > options.max || item.start < options.min) {
                         item.start = options.max;
                         item.content = 'End.......';
                     }
-                    if(item.start.toLocaleDateString('sv') === toInput.val()){
+                    if (item.start.toLocaleDateString('sv') === toInput.val()) {
                         callback(item);
                         return;                 //doesnt aggregate if it was changed to the same date
                     }
@@ -106,12 +109,16 @@ Template.aggregation.rendered = () => {
                 options.min = new Date(times.started);
                 options.max = new Date(times.finished);
                 data.clear();
-                data.add({id: 1,
-                            content: '.......Start',
-                            start: options.min});
-                data.add({id: 2,
-                            content: 'End.......',
-                            start: options.max});
+                data.add({
+                    id: 1,
+                    content: '.......Start',
+                    start: options.min
+                });
+                data.add({
+                    id: 2,
+                    content: 'End.......',
+                    start: options.max
+                });
                 timeline.destroy();
                 timeline = new vis.Timeline(container, data, options);
                 fromInput.val((options.min).toLocaleDateString('sv'));
@@ -124,7 +131,7 @@ Template.aggregation.rendered = () => {
             function () {
                 let limit = parseInt(limitInput.val());
                 fromTimeline = Date.parse(fromInput.val());
-                if((fromTimeline > options.max.getTime()) || (options.min.getTime() > fromTimeline)){
+                if ((fromTimeline > options.max.getTime()) || (options.min.getTime() > fromTimeline)) {
                     fromTimeline = options.min.getTime();
                     fromInput.val(options.min.toLocaleDateString('sv'));
                 }
@@ -147,7 +154,7 @@ Template.aggregation.rendered = () => {
             function () {
                 let limit = parseInt(limitInput.val());
                 toTimeline = Date.parse(toInput.val());
-                if((options.max.getTime() < toTimeline) || (toTimeline < options.min.getTime())){
+                if ((options.max.getTime() < toTimeline) || (toTimeline < options.min.getTime())) {
                     toTimeline = options.max.getTime();
                     toInput.val(options.max.toLocaleDateString('sv'));
                 }
@@ -217,6 +224,17 @@ function show(state) {
 
 // Attempt to asynchronously fetch graph from server
 function showAggregation(from, to, limit) {
+    if (aggregationLock) {
+        aggregationQueued = {
+            from: from,
+            to: to,
+            limit: limit,
+        };
+        return;
+    } else {
+        aggregationQueued = undefined;
+    }
+    aggregationLock = true;
     show(2);
     $('html, body').animate({
         scrollTop: $("#aggregation").offset().top - 10
@@ -230,6 +248,10 @@ function showAggregation(from, to, limit) {
             renderGraph(graph, container, 'aggregation');
             showSequenceCount(from, to, graph.sequences.length);
             show(3);
+        }
+        aggregationLock = false;
+        if (aggregationQueued !== undefined) {
+            showAggregation(aggregationQueued.from, aggregationQueued.to, aggregationQueued.limit);
         }
     });
 }
