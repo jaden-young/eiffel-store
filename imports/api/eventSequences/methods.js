@@ -22,11 +22,12 @@ import {
     isSourceChangeSubmittedEvent,
     isTestEvent,
     isTestCaseEvent,
-    isTestSuiteEvent
+    isTestSuiteEvent,
+    getConfidenceLevelEventName
 } from "../events/event-types";
 
 function getEventSequenceVersion() {
-    return '1.4';
+    return '1.5';
 }
 function getEventSequenceVersionPropertyName() {
     return 'eventSequences.version';
@@ -279,10 +280,10 @@ export const populateEventSequences = new ValidatedMethod({
         done = 0;
         lastPrint = ((done / total) * 100);
         _.each(sequences, (sequence) => {
-            if (latestTime === undefined || latestTime < sequence.timeFinish) {
+            if (latestTime === undefined || latestTime < sequence.time.finished) {
                 latestTime = sequence.time.finished;
             }
-            if (earliestTime === undefined || earliestTime > sequence.timeStart) {
+            if (earliestTime === undefined || earliestTime > sequence.time.started) {
                 earliestTime = sequence.time.started;
             }
 
@@ -930,5 +931,7 @@ export const getSequenceCount = new ValidatedMethod({
             {"time.started": {$gte: parseInt(from), $lte: parseInt(to)}})
             .count();
     }
+
+
 });
 
