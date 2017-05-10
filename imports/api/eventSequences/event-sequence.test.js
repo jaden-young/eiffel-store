@@ -101,7 +101,7 @@ if (Meteor.isServer) {
                 events: []
             }));
 
-            let eventCount = getSequenceCount.call({from: from, to: to});
+            let eventCount = getSequenceCount.call();
             assert.equal(eventCount, expectedEventCount);
         });
 

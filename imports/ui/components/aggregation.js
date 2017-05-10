@@ -246,7 +246,7 @@ function showAggregation(from, to, limit) {
             let container = $('#cy-aggregation');
             Session.set('displayedSequenceIds', graph.sequences);
             renderGraph(graph, container, 'aggregation');
-            showSequenceCount(from, to, graph.sequences.length);
+            showSequenceCount(graph.sequences.length);
             show(3);
         }
         aggregationLock = false;
@@ -256,9 +256,9 @@ function showAggregation(from, to, limit) {
     });
 }
 
-function showSequenceCount(from, to, limit) {
+function showSequenceCount(limit) {
     let container = $('#additional-sequences');
-    getSequenceCount.call({from: from, to: to}, function (error, count) {
+    getSequenceCount.call({}, function (error, count) {
         if (error) {
             console.log(error);
         } else {

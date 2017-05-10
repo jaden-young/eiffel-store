@@ -20,10 +20,9 @@ import {
     isIssueVerifiedEvent,
     isSourceChangeCreatedEvent,
     isSourceChangeSubmittedEvent,
-    isTestEvent,
     isTestCaseEvent,
-    isTestSuiteEvent,
-    getConfidenceLevelEventName
+    isTestEvent,
+    isTestSuiteEvent
 } from "../events/event-types";
 
 function getEventSequenceVersion() {
@@ -530,14 +529,14 @@ export const getEventChainGraph = new ValidatedMethod({
                     node.data.timeTriggered = event.time.triggered;
                     node.data.timeStarted = event.time.started;
                     node.data.timeFinished = event.time.finished;
-                    node.data.conclusion =  event.data.outcome.conclusion;
+                    node.data.conclusion = event.data.outcome.conclusion;
 
                     // Non-required Eiffel data
                     if (event.data.triggers !== undefined) {
                         node.data.triggers = event.data.triggers;
-                        node.data.triggersLength = _.reduce(node.data.triggers, function(memo) {
-                            return memo +1;
-                        },0);
+                        node.data.triggersLength = _.reduce(node.data.triggers, function (memo) {
+                            return memo + 1;
+                        }, 0);
                     } else {
                         node.data.triggers = "No data";
                     }
@@ -558,7 +557,7 @@ export const getEventChainGraph = new ValidatedMethod({
                     node.data.gav_artifactId = event.data.gav.artifactId;
                     node.data.gav_version = event.data.gav.version;
 
-                    if(event.data.name !== undefined) {
+                    if (event.data.name !== undefined) {
                         node.data.name = event.data.name;
                     } else {
                         node.data.name = "No data";
@@ -566,9 +565,9 @@ export const getEventChainGraph = new ValidatedMethod({
                 }
                 else if (isArtifactPublishedEvent(node.data.type)) {
                     node.data.locations = event.data.locations;
-                    let locationCount = _.reduce(node.data.locations, function(memo) {
-                        return memo +1;
-                    },0);
+                    let locationCount = _.reduce(node.data.locations, function (memo) {
+                        return memo + 1;
+                    }, 0);
                     node.data.location_length = locationCount;
                 }
                 else if (isArtifactReusedEvent(node.data.type)) {
@@ -576,7 +575,7 @@ export const getEventChainGraph = new ValidatedMethod({
                 }
                 else if (isCompositionDefinedEvent(node.data.type)) {
                     node.data.name = event.data.name;
-                    if(event.data.version !== undefined) {
+                    if (event.data.version !== undefined) {
                         node.data.version = event.data.version;
                     } else {
                         node.data.version = "No data";
@@ -597,7 +596,7 @@ export const getEventChainGraph = new ValidatedMethod({
                     } else {
                         inconclusiveCount++;
                     }
-                    if (event.data.issuer !== undefined){
+                    if (event.data.issuer !== undefined) {
                         if (event.data.issuer.id !== undefined) {
                             node.data.issuer_id = event.data.issuer.id;
                         } else {
@@ -613,9 +612,9 @@ export const getEventChainGraph = new ValidatedMethod({
                 }
                 else if (isConfigurationAppliedEvent(node.data.type)) {
                     node.data.items = event.data.items;
-                    let itemCount = _.reduce(node.data.items, function(memo) {
-                        return memo +1;
-                    },0);
+                    let itemCount = _.reduce(node.data.items, function (memo) {
+                        return memo + 1;
+                    }, 0);
                     node.data.items_length = itemCount;
                 }
                 else if (isEnvironmentDefinedEvent(node.data.type)) {
@@ -824,7 +823,7 @@ export const getEventChainGraph = new ValidatedMethod({
                         node.data.timeFinished = event.time.finished;
 
                         // Data from finishedEvent
-                        if (event.data.outcome !== undefined){
+                        if (event.data.outcome !== undefined) {
                             if (event.data.outcome.verdict !== undefined) {
                                 node.data.verdict = event.data.outcome.verdict;
                             } else {
@@ -849,7 +848,7 @@ export const getEventChainGraph = new ValidatedMethod({
                     }
                 }
 
-                    nodes.push(node);
+                nodes.push(node);
 
                 //.concat(event.dangerousTargets)
 
@@ -935,12 +934,8 @@ export const getEventChainGraph = new ValidatedMethod({
 export const getSequenceCount = new ValidatedMethod({
     name: 'getSequenceCount',
     validate: null,
-    run({from, to}) {
-        return EventSequences.find(
-            {"time.started": {$gte: parseInt(from), $lte: parseInt(to)}})
-            .count();
+    run() {
+        return EventSequences.find().count();
     }
-
-
 });
 
