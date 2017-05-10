@@ -7,74 +7,74 @@ import {$} from "meteor/jquery";
 import dataTablesBootstrap from "datatables.net-bs";
 import "datatables.net-bs/css/dataTables.bootstrap.css";
 import {Session} from "meteor/session";
-import Chart from "chart.js";
+import {getDetailedPlots} from "../../api/rows/methods";
+import {renderExecTimePlot, renderPassFailPlot} from "./detailed-plots";
+
 
 dataTablesBootstrap(window, $);
+
+let table = undefined;
+let plotPassFail = undefined;
+let plotExecTime = undefined;
+let plotContainer = undefined;
+let loader = undefined;
+let graph2dPassFail = undefined;
+let graph2dExecTime = undefined;
+let waitLock = false;
+let plotsLoaded = false;
 
 Template.details.rendered = () => {
     // Runs when document is ready
     $(() => {
-        let ctx = $('#details_chart');
-        $('#details_table').show();
-        ctx.hide();
+        table = $('#details_table');
+
+        plotContainer = $('#plot_container');
+        plotPassFail = $('#plot_pass_fail');
+        plotExecTime = $('#plot_exec_time');
+
+        loader = $('#details_loader');
+
+        table.show();
+        plotContainer.hide();
+
+        loader.hide();
 
         $(function () {
             $('#details_toggle').change(function () {
                 if ($(this).prop('checked')) {
-                    $('#details_table').hide();
-                    ctx.show();
+                    table.hide();
+                    plotContainer.show();
+
+                    if (waitLock === false && plotsLoaded === false) {
+                        renderPlots();
+                    }
                 } else {
-                    $('#details_table').show();
-                    ctx.hide();
+                    table.show();
+                    plotContainer.hide();
                 }
             });
-        })
-
-        let detailsChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
         });
     });
 };
 
 Template.aggregation.events({
     'click .aggregation-tt-btn': function (event) {
-
-        Session.set('nodeNameFilter', event.target.value);
+        let eventSplit = (event.target.value).split(';');
+        Session.set('nodeNameFilter', eventSplit[0]);
+        Session.set('nodeTypeFilter', eventSplit[1]);
         $('#table-level2-heading').html(Session.get('nodeNameFilter'));
 
+        if (graph2dPassFail !== undefined) {
+            graph2dPassFail.destroy();
+            graph2dPassFail = undefined;
+        }
+        if (graph2dExecTime !== undefined) {
+            graph2dExecTime.destroy();
+            graph2dExecTime = undefined;
+        }
+        plotsLoaded = false;
+
+        $('#details_toggle').prop('checked', false).change();
 
         $('html, body').animate({
             scrollTop: $("#details").offset().top - 10
@@ -83,6 +83,7 @@ Template.aggregation.events({
 });
 
 Template.details.onCreated(function () {
+    Session.set('nodeTypeFilter');
     Session.set('nodeNameFilter');
     Session.set('displayedSequenceIds');
 });
@@ -91,3 +92,41 @@ Template.details.helpers({
         return {name: Session.get('nodeNameFilter'), sequenceId: {$in: (Session.get('displayedSequenceIds'))}}
     }
 });
+
+function renderPlots() {
+    // console.log(Session.get('nodeTypeFilter'));
+    waitLock = true;
+
+    plotPassFail.hide();
+    plotExecTime.hide();
+    loader.show();
+
+    getDetailedPlots.call({
+        eventName: Session.get('nodeNameFilter'),
+        eventType: Session.get('nodeTypeFilter'),
+        sequenceIds: Session.get('displayedSequenceIds')
+    }, function (error, data) {
+        if (error) {
+            console.log(error);
+            waitLock = false;
+            plotsLoaded = false;
+        } else {
+            // console.log(data);
+            if (data !== undefined) {
+                graph2dPassFail = renderPassFailPlot(plotPassFail, data.plotPassFail);
+                graph2dExecTime = renderExecTimePlot(plotExecTime, data.plotExecTime);
+
+                if (graph2dPassFail !== undefined) {
+                    plotPassFail.show();
+                }
+                if (graph2dExecTime !== undefined) {
+                    plotExecTime.show();
+                }
+            }
+            loader.hide();
+
+            waitLock = false;
+            plotsLoaded = true;
+        }
+    });
+}

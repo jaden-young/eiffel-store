@@ -218,7 +218,7 @@ function renderGraph(graph, container, level) {
         switch (true) {
             case /Act/.test(nodeLabel):
                 return '<h4>' + nodeLabel + '</h4>' +
-                    getTooltipButton(nodeData.id) +
+                    getTooltipButton(nodeData) +
                     '<table class="table table-bordered">' +
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
                     '<tr class="success"><td>Successful</td><td class="td-right">' + nodeData.successful + '</td><td class="td-right">' + Math.round(10 * (nodeData.successful / nodeData.length * 100) / 10) + '%</td></tr>' +
@@ -233,7 +233,7 @@ function renderGraph(graph, container, level) {
                     '</table>';
             case /AP/.test(nodeLabel):
                 return '<h4>' + nodeLabel + '</h4>' +
-                    getTooltipButton(nodeData.id) +
+                    getTooltipButton(nodeData) +
                     '<table class="table table-bordered">' +
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
                     '<tr><td>Minor</td><td class="td-right">' + nodeData.minor + '</td><td class="td-right">' + Math.round(10 * (nodeData.minor / nodeData.length * 100) / 10) + '%</td></tr>' +
@@ -246,18 +246,18 @@ function renderGraph(graph, container, level) {
                     '</table>';
             case /CLM/.test(nodeLabel):
                 return '<h4>' + nodeLabel + '</h4>' +
-                    getTooltipButton(nodeData.id) +
+                    getTooltipButton(nodeData) +
                     '<table class="table table-bordered">' +
                     '<tr><td colspan="3"><em>' + nodeData.name + '</em></td></tr>' +
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
-                    '<tr class="success"><td>Passed</td><td class="td-right">' + nodeData.passed + '</td><td class="td-right">' + Math.floor(nodeData.passed / nodeData.length * 100) + '%</td></tr>' +
-                    '<tr class="danger"><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.floor(nodeData.failed / nodeData.length * 100) + '%</td></tr>' +
-                    '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.floor(nodeData.inconclusive / nodeData.length) + '%</td></tr>' +
+                    '<tr class="success"><td>Passed</td><td class="td-right">' + nodeData.passed + '</td><td class="td-right">' + Math.round(10 * (nodeData.passed / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr class="danger"><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.round(10 * (nodeData.failed / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.round(10 * (nodeData.inconclusive / nodeData.length) / 10) + '%</td></tr>' +
                     '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
                     '</table>';
             case /IV/.test(nodeLabel):
                 return '<h4>' + nodeLabel + '</h4>' +
-                    getTooltipButton(nodeData.id) +
+                    getTooltipButton(nodeData) +
                     '<table class="table table-bordered">' +
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
                     '<tr class="info"><td>Success</td><td class="td-right">' + nodeData.success + '</td><td class="td-right">' + Math.round(10 * (nodeData.passed / nodeData.length * 100) / 10) + '%</td></tr>' +
@@ -273,7 +273,7 @@ function renderGraph(graph, container, level) {
                     '</table>';
             case /TC/.test(nodeLabel):                                              // Checks if node_id starts with 'TSF'
                 return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
-                    getTooltipButton(nodeData.id) +          // Button will take user to level 2 - 'details'
+                    getTooltipButton(nodeData) +          // Button will take user to level 2 - 'details'
                     '<table class="table table-bordered">' +
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
                     '<tr class="success"><td>Passed</td><td class="td-right">' + nodeData.passed + '</td><td class="td-right">' + Math.round(10 * (nodeData.passed / nodeData.length * 100) / 10) + '%</td></tr>' +
@@ -284,9 +284,8 @@ function renderGraph(graph, container, level) {
                     '</table>'; // Row 3 - OTHER
             case /TS/.test(nodeLabel):                                              // Checks if node_id starts with 'TSF'
                 return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
-                    getTooltipButton(nodeData.id) +          // Button will take user to level 2 - 'details'
+                    getTooltipButton(nodeData) +          // Button will take user to level 2 - 'details'
                     '<table class="table table-bordered">' +
-                    '<tr><td colspan="3"><em>' + nodeData.name + '</em></td></tr>' +
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
                     '<tr class="success"><td>Passed</td><td class="td-right">' + nodeData.passed + '</td><td class="td-right">' + Math.round(10 * (nodeData.passed / nodeData.length * 100) / 10) + '%</td></tr>' +
                     '<tr class="danger"><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.round(10 * (nodeData.failed / nodeData.length * 100) / 10) + '%</td></tr>' +
@@ -296,7 +295,7 @@ function renderGraph(graph, container, level) {
                     '</table>'; // Row 3 - OTHER
             default:
                 return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
-                    getTooltipButton(nodeData.id) +
+                    getTooltipButton(nodeData) +
                     '<table class="table table-bordered">' +
                     '<tr><td>Total no. of events</td><td class="td-right">' + nodeData.length + '</td></tr>' +
                     '</table>';
@@ -311,22 +310,22 @@ function renderGraph(graph, container, level) {
             case /Act/.test(nodeLabel):                                              // Checks if node_id starts with 'TSF'
                 if (typeof possible_jenkins === 'string' || possible_jenkins instanceof String) {
                     return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
-                        getTooltipButton(nodeData.id) +          // Button will take user to level 2 - ‘details’
+                        getTooltipButton(nodeData) +          // Button will take user to level 2 - ‘details’
                         '<table class="table table-bordered">' +
                         '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
-                        '<tr><td>Jenkins:</td><td>' + possible_jenkins + '</td></tr>' + //this should show a stringified link to a homepage once data exists
+                        '<tr><td>Jenkins:</td><td>' + '<a target="_blank" href= "http://' + possible_jenkins + '"> ' + possible_jenkins + '</a>' + '</td></tr>' + //this should show a stringified link to a homepage once data exists
                         '</table>'; // Row 3 - OTHER
                 }
                 else {
                     return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
-                        getTooltipButton(nodeData.id) +          // Button will take user to level 2 - ‘details’
+                        getTooltipButton(nodeData) +          // Button will take user to level 2 - ‘details’
                         '<table class="table table-bordered">' +
                         '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
                         '</table>'; // Row 3 - OTHER
                 }
             default:
                 return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
-                    getTooltipButton(nodeData.id) +
+                    getTooltipButton(nodeData) +
                     '<table class="table table-bordered">' +
                     '<tr><td>Total no. of events</td><td class="td-right">' + nodeData.length + '</td></tr>' +
                     '</table>';
@@ -334,8 +333,8 @@ function renderGraph(graph, container, level) {
         }
     }
 
-    function getTooltipButton(eiffelId) {
-        return '<button type="button" class="btn btn-block btn-info aggregation-tt-btn" value="' + eiffelId + '"> Show all events </button>'
+    function getTooltipButton(nodeData) {
+        return '<button type="button" class="btn btn-block btn-info aggregation-tt-btn" value="' + nodeData.id + ';' + nodeData.type + '"> Show all events </button>'
     }
 
     cy.nodes().qtip({
