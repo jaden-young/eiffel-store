@@ -239,28 +239,132 @@ function renderGraph(graph, container, level) {
     }
 
     function getLevelThreeContent(nodeData) {
+        console.log(nodeData);
         let nodeLabel = nodeData.label;
         let possible_jenkins = nodeData.eventData.executionUri;
         switch (true) {
-            case /Act/.test(nodeLabel):                                              // Checks if node_id starts with 'TSF'
+            case /Act/.test(nodeLabel):
+                let html = '<h4>' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Conclusion</td><td>' + nodeData.conclusion + '</td></tr>' +
+                    '<tr><td>Execution type</td><td>' + nodeData.executionType + '</td></tr>' +
+                    '<tr><td>Queue time</td><td>' + toHMS(nodeData.timeStarted - nodeData.timeTriggered) + '</td></tr>' +
+                    '<tr><td>Execution time</td><td>' + toHMS(nodeData.timeFinished - nodeData.timeStarted) + '</td></tr>';
                 if (typeof possible_jenkins === 'string' || possible_jenkins instanceof String) {
-                    return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
-                        getTooltipButton(nodeData) +          // Button will take user to level 2 - ‘details’
-                        '<table class="table table-bordered">' +
-                        '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
-                        '<tr><td>Jenkins:</td><td>' + '<a target="_blank" href= "http://' + possible_jenkins + '"> ' + possible_jenkins + '</a>' + '</td></tr>' + //this should show a stringified link to a homepage once data exists
-                        '</table>'; // Row 3 - OTHER
+                    //this should show a stringified link to a homepage once data exists
+                    html += '<tr><td>Execution page</td><td>' + '<a target="_blank" href= "http://' +
+                        possible_jenkins + '"> ' + possible_jenkins + '</a>' + '</td></tr>';
                 }
-                else {
-                    return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
-                        getTooltipButton(nodeData) +          // Button will take user to level 2 - ‘details’
-                        '<table class="table table-bordered">' +
-                        '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
-                        '</table>'; // Row 3 - OTHER
-                }
+                html += '<tr><td>No of triggers</td><td>' + nodeData.triggersLength + '</td></tr>' +
+                _.reduce(nodeData.triggers, (memo, trigger) => {
+                    return memo + '<tr><td>Trigger type</td><td>' + trigger.type + '</td></tr>';
+                }, "");
+                 html += '</table>'; // Row 3 - OTHER
+                return html;
+            case /AP/.test(nodeLabel):
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><th colspan="2">nodeData.heading</th></tr>' +
+                    '<tr><td>Severity</td><td class="td-right">' + nodeData.severity + '</td></tr>' +
+                    '<tr><td colspan="2">nodeData.body</td></tr>' +
+                    '</table>';
+            case /ArtC/.test(nodeLabel):
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Name</td><td class="td-right">' + nodeData.name + '</td></tr>' +
+                    '<tr><td>GAV Group ID</td><td class="td-right">' + nodeData.gav_groupId + '</td></tr>' +
+                    '<tr><td>GAV Artifact ID</td><td class="td-right">' + nodeData.gav_artifactId + '</td></tr>' +
+                    '<tr><td>GAV Version</td><td class="td-right">' + nodeData.gav_version + '</td></tr>' +
+                    '</table>';
+            case /ArtP/.test(nodeLabel):
+                html = '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><th colspan="2">Locations</th></tr>';
+                html += _.reduce(nodeData.locations, (memo, location) => {
+                    return memo + '<tr><td>Type</td><td class="td-right">' + location.type + '</td></tr>';
+                }, "");
+                html += '<tr><td>No of locations</td><td class="td-right">' + nodeData.location_length + '</td></tr>'
+                    + '</table>';
+                return html;
+            case /CDef/.test(nodeLabel):
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Name</td><td class="td-right">' + nodeData.name + '</td></tr>' +
+                    '<tr><td>Version</td><td class="td-right">' + nodeData.version + '</td></tr>' +
+                    '</table>';
+            case /CLM/.test(nodeLabel):
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Name</td><td class="td-right">' + nodeData.name + '</td></tr>' +
+                    '<tr><td>Value</td><td class="td-right">' + nodeData.value + '</td></tr>' +
+                    '<tr><td>Issuer ID</td><td class="td-right">' + nodeData.issuer_id + '</td></tr>' +
+                    '</table>';
+            case /CA/.test(nodeLabel):
+                html = '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><th colspan="2">Items</th></tr>' +
+                    '<tr><th>Name</th><th>Type</th></tr>';
+                html += _.each(nodeData.items, (item) => {
+                    return '<tr><td>' + item.name + '</td><td>' + item.type + '</td></tr>';
+                });
+                html += '<tr><td>No of items</td><td class="td-right">' + nodeData.items_length + '</td></tr>'
+                    + '</table>';
+                return html;
+            case /EDef/.test(nodeLabel):
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Name</td><td class="td-right">' + nodeData.name + '</td></tr>' +
+                    '<tr><td>Version</td><td class="td-right">' + nodeData.version + '</td></tr>' +
+                    '</table>';
+            case /SCC/.test(nodeLabel):
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Author name</td><td class="td-right">' + nodeData.authorName + '</td></tr>' +
+                    '<tr><td>Author ID</td><td class="td-right">' + nodeData.authorId + '</td></tr>' +
+                    '<tr><td>Author group</td><td class="td-right">' + nodeData.authorGroup + '</td></tr>' +
+                    '<tr><td>Change tracker</td><td class="td-right">' + nodeData.changeTracker + '</td></tr>' +
+                    '<tr><td>Change ID</td><td class="td-right">' + nodeData.changeId + '</td></tr>' +
+                    '<tr><td>Git repository</td><td class="td-right">' + nodeData.gitRepoName + '</td></tr>' +
+                    '<tr><td>Git branch</td><td class="td-right">' + nodeData.gitBranch + '</td></tr>' +
+                    //'<tr><td>Git commit ID</td><td class="td-right">' + nodeData.gitCommitId + '</td></tr>' +
+                    '</table>';
+            case /SCS/.test(nodeLabel):
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Submitter name</td><td class="td-right">' + nodeData.submitterName + '</td></tr>' +
+                    '<tr><td>Submitter ID</td><td class="td-right">' + nodeData.submitterId + '</td></tr>' +
+                    '<tr><td>Submitter group</td><td class="td-right">' + nodeData.submitterGroup + '</td></tr>' +
+                    '<tr><td>Change tracker</td><td class="td-right">' + nodeData.changeTracker + '</td></tr>' +
+                    '<tr><td>Change ID</td><td class="td-right">' + nodeData.changeId + '</td></tr>' +
+                    '<tr><td>Git repository</td><td class="td-right">' + nodeData.gitRepoName + '</td></tr>' +
+                    '<tr><td>Git branch</td><td class="td-right">' + nodeData.gitBranch + '</td></tr>' +
+                    //'<tr><td>Git commit ID</td><td class="td-right">' + nodeData.gitCommitId + '</td></tr>' +
+                    '</table>';
+            case /TC/.test(nodeLabel):
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Test Case ID</td><td>' + nodeData.testCaseId + '</td></tr>' +
+                    '<tr><td>Verdict</td><td>' + nodeData.verdict + '</td></tr>' +
+                    '<tr><td>Conclusion</td><td>' + nodeData.conclusion + '</td></tr>' +
+                    '<tr><td>Executor</td><td>' + nodeData.executor + '</td></tr>' +
+                    '<tr><td>Tracker</td><td>' + nodeData.tracker + '</td></tr>' +
+                    '<tr><td>Execution type</td><td>' + nodeData.executionType + '</td></tr>' +
+                    '<tr><td>Execution time</td><td>' + toHMS(nodeData.timeFinished - nodeData.timeStarted) + '</td></tr>' +
+                    '<tr><td>Description</td><td>' + nodeData.outcomeDescription + '</td></tr>' +
+                    '</table>';
+            case /TS/.test(nodeLabel):
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Name</td><td>' + nodeData.name + '</td></tr>' +
+                    '<tr><td>Verdict</td><td>' + nodeData.verdict + '</td></tr>' +
+                    '<tr><td>Conclusion</td><td>' + nodeData.conclusion + '</td></tr>' +
+                    '<tr><td>Description</td><td>' + nodeData.outcomeDescription + '</td></tr>' +
+                    '<tr><td>Execution time</td><td>' + toHMS(nodeData.timeFinished - nodeData.timeStarted) + '</td></tr>' +
+                    '</table>';
+
             default:
                 return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
-                    getTooltipButton(nodeData) +
+                    //getTooltipButton(nodeData.id) +
                     '<table class="table table-bordered">' +
                     '<tr><td>Total no. of events</td><td class="td-right">' + nodeData.length + '</td></tr>' +
                     '</table>';
