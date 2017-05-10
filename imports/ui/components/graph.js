@@ -117,7 +117,7 @@ function renderGraph(graph, container, level) {
             },
 
             {
-                selector: 'node[id ^= "SCC"]', // All nodes with ID starting with CD (Composition Defined)
+                selector: 'node[id ^= "CA"]', // All nodes with ID starting with CD (Composition Defined)
                 style: {
                     'shape': 'polygon',
                     'shape-polygon-points': '-0.1 1 -0.17 0.77 -0.32 0.72 -0.53 0.87 -0.68 0.77 -0.6 0.53 -0.68 0.38 -0.94 0.39 -1 0.22 -0.79 0.08 -0.79 -0.08 -1 -0.22 -0.94 -0.39 -0.68 -0.38 -0.6 -0.53 -0.68 -0.77 -0.53 -0.87 -0.32 -0.72 -0.17 -0.77 -0.1 -1 0.1 -1 0.17 -0.77 0.32 -0.72 0.53 -0.87 0.68 -0.77 0.6 -0.53 0.68 -0.38 0.94 -0.39 1 -0.22 0.79 -0.08 0.79 0.08 1 0.22 0.94 0.39 0.68 0.38 0.6 0.53 0.68 0.77 0.53 0.87 0.32 0.72 0.17 0.77 0.1 1',
@@ -130,38 +130,54 @@ function renderGraph(graph, container, level) {
             },
 
             {
+                selector: 'node[id ^= "Act"]', // All nodes with ID starting with Act (Activity)
+                style: {
+                    'shape': 'rectangle',
+                    'height': 40,
+                    'width': 40,
+                    'background-color': FAIL_COLOR,
+                    'background-position-x': '0px',
+                    'background-image': '/images/green.png',
+                    'background-height': '100%',
+                    'background-width': function (ele) {
+                        return (ele.data("successful") * 100 / ele.data("length") ).toString() + '%';
+                    }
+                }
+            },
+
+            {
                 selector: 'node[id ^= "Art"]', // All nodes with ID starting with Act (Activity)
                 style: {
                     'shape': 'polygon',
-                    'shape-polygon-points': '0.9 -0.4 0 -0.8 -0.9 -0.4 -0.9 0.6 0 1 0.9 0.6 0.9 -0.4 0 0 -0.9 -0.4 0 0 0 0.2 -0.9 0.6 0 0.2 0.9 0.6 0 0.2 0 1 0.9 0.6 0.9 -0.4',
+                    'shape-polygon-points': '1 -0.4 0 -0.8 -1 -0.4 0 0 1 -0.4 1 0.6 0 1 0 0 0 1 -1 0.6 -1 -0.4 0 0 1 -0.4',
                     'height': 60,
-                    'width': 60,
+                    'width': 50,
                 }
             },
 
             {
                 selector: 'node[id ^= "ArtC"]', // All nodes with ID starting with Act (Activity)
                 style: {
-                    'background-color': '#0F0',
+                    'background-color': '#557e62',
                 }
             },
 
             {
                 selector: 'node[id ^= "ArtP"]', // All nodes with ID starting with Act (Activity)
                 style: {
-                    'background-color': '#0000ff',
+                    'background-color': '#5a617e',
                 }
             },
 
             {
                 selector: 'node[id ^= "ArtR"]', // All nodes with ID starting with Act (Activity)
                 style: {
-                    'background-color': '#ff0000',
+                    'background-color': '#7e5344',
                 }
             },
 
             {
-                selector: 'node[id ^= "SCS"]', // All nodes with ID Sourcs Change Submitted
+                selector: 'node[id ^= "IssV"]', // All nodes with ID Sourcs Change Submitted
                 style: {
                     'background-color': '#ff7e37',
                     'shape': 'polygon',
