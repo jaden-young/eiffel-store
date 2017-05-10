@@ -583,15 +583,16 @@ export const getEventChainGraph = new ValidatedMethod({
                     }
                 }
                 else if (isConfidenceLevelEvent(node.data.type)) {
-                    let value = event.data.value;
+                    node.data.name = event.data.name;
+                    node.data.value = event.data.value;
 
                     let passedCount = 0;
                     let failedCount = 0;
                     let inconclusiveCount = 0;
 
-                    if (value === 'SUCCESS') {
+                    if (node.data.value === 'SUCCESS') {
                         passedCount++;
-                    } else if (value === 'FAILURE') {
+                    } else if (node.data.value === 'FAILURE') {
                         failedCount++;
                     } else {
                         inconclusiveCount++;
@@ -608,8 +609,7 @@ export const getEventChainGraph = new ValidatedMethod({
                     node.data.inconclusive = inconclusiveCount;
                     node.data.passed = passedCount;
                     node.data.failed = failedCount;
-                    node.data.name = event.data.name;
-                    node.data.value = value;
+
                 }
                 else if (isConfigurationAppliedEvent(node.data.type)) {
                     node.data.items = event.data.items;
@@ -763,11 +763,20 @@ export const getEventChainGraph = new ValidatedMethod({
                 }
                 else if (isTestEvent(node.data.type)) {
                     let verdict = event.data.outcome.verdict;
+                    let passedCount = 0;
+                    let failedCount = 0;
+                    let inconclusiveCount = 0;
+
                     if (verdict === 'PASSED') {
-                        node.data.passed = 1;
+                        passedCount++;
+                    } else if (verdict === 'FAILED') {
+                        failedCount++;
                     } else {
-                        node.data.passed = 0;
+                        inconclusiveCount++;
                     }
+                    node.data.passed = passedCount;
+                    node.data.failed = failedCount;
+                    node.data.inconclusive = inconclusiveCount;
 
                     if (isTestCaseEvent(node.data.type)) {
                         node.data.timeStarted = event.time.started;
