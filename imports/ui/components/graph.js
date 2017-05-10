@@ -37,6 +37,9 @@ function renderGraph(graph, container, level) {
                 selector: 'node',
                 style: {
                     'background-color': ELSE_COLOR,
+                    'border-color': '#000',
+                    'border-width': '1px',
+                    'border-style': 'solid',
                     'label': 'data(label)'
                 }
             },
@@ -62,8 +65,6 @@ function renderGraph(graph, container, level) {
                 selector: 'node[label ^= "CLM"]', // All nodes with ID == CLM (Confidence level)
                 style: {
                     'background-color': '#fff',
-                    'border-width': '1px', // The size of the node’s border.
-                    'border-color': '#000',
                     'width': '70px',
                     'height': '70x',
                     'pie-size': '100%',
@@ -103,7 +104,6 @@ function renderGraph(graph, container, level) {
                     'shape': 'rectangle',
                     'border-style': 'double', // solid, dotted, dashed, or double.
                     'border-width': '6px', // The size of the node’s border.
-                    'border-color': '#000',
                     'height': 50,
                     'width': 100,
                     'background-color': FAIL_COLOR,
@@ -113,6 +113,87 @@ function renderGraph(graph, container, level) {
                     'background-width': function (ele) {
                         return (ele.data("passed") * 100 / ele.data("length") ).toString() + '%';
                     },
+                }
+            },
+
+            {
+                selector: 'node[id ^= "CA"]', // All nodes with ID starting with CD (Composition Defined)
+                style: {
+                    'shape': 'polygon',
+                    'shape-polygon-points': '-0.1 1 -0.17 0.77 -0.32 0.72 -0.53 0.87 -0.68 0.77 -0.6 0.53 -0.68 0.38 -0.94 0.39 -1 0.22 -0.79 0.08 -0.79 -0.08 -1 -0.22 -0.94 -0.39 -0.68 -0.38 -0.6 -0.53 -0.68 -0.77 -0.53 -0.87 -0.32 -0.72 -0.17 -0.77 -0.1 -1 0.1 -1 0.17 -0.77 0.32 -0.72 0.53 -0.87 0.68 -0.77 0.6 -0.53 0.68 -0.38 0.94 -0.39 1 -0.22 0.79 -0.08 0.79 0.08 1 0.22 0.94 0.39 0.68 0.38 0.6 0.53 0.68 0.77 0.53 0.87 0.32 0.72 0.17 0.77 0.1 1',
+                    'height': 70,
+                    'width': 70,
+                    'pie-size': '40%',
+                    'pie-1-background-size': '100%',
+                    'pie-1-background-color': '#fff',
+                }
+            },
+
+            {
+                selector: 'node[id ^= "Act"]', // All nodes with ID starting with Act (Activity)
+                style: {
+                    'shape': 'rectangle',
+                    'height': 40,
+                    'width': 40,
+                    'background-color': FAIL_COLOR,
+                    'background-position-x': '0px',
+                    'background-image': '/images/green.png',
+                    'background-height': '100%',
+                    'background-width': function (ele) {
+                        return (ele.data("successful") * 100 / ele.data("length") ).toString() + '%';
+                    }
+                }
+            },
+
+            {
+                selector: 'node[id ^= "Art"]', // All nodes with ID starting with Act (Activity)
+                style: {
+                    'shape': 'polygon',
+                    'shape-polygon-points': '1 -0.4 0 -0.8 -1 -0.4 0 0 1 -0.4 1 0.6 0 1 0 0 0 1 -1 0.6 -1 -0.4 0 0 1 -0.4',
+                    'height': 60,
+                    'width': 50,
+                }
+            },
+
+            {
+                selector: 'node[id ^= "ArtC"]', // All nodes with ID starting with Act (Activity)
+                style: {
+                    'background-color': '#557e62',
+                }
+            },
+
+            {
+                selector: 'node[id ^= "ArtP"]', // All nodes with ID starting with Act (Activity)
+                style: {
+                    'background-color': '#5a617e',
+                }
+            },
+
+            {
+                selector: 'node[id ^= "ArtR"]', // All nodes with ID starting with Act (Activity)
+                style: {
+                    'background-color': '#7e5344',
+                }
+            },
+
+            {
+                selector: 'node[id ^= "IssV"]', // All nodes with ID Sourcs Change Submitted
+                style: {
+                    'background-color': '#ff7e37',
+                    'shape': 'polygon',
+                    'shape-polygon-points': '-0.2 0.98 -0.39 0.92 -0.56 0.83 -0.71 0.7 -0.83 0.55 -0.92 0.38 -0.98 0.19 -1 0 -0.98 -0.2 -0.92 -0.38 -0.83 -0.56 -0.71 -0.71 -0.55 -0.83 -0.38 -0.92 -0.19 -0.98 0 -1 0.19 -0.98 0.38 -0.92 0.55 -0.83 0.71 -0.71 0.83 -0.56 0.92 -0.38 0.98 -0.2 1 0 1 0 0.98 0.19 0.92 0.38 0.83 0.55 0.71 0.71 0.56 0.83 0.38 0.92 0.2 0.98 0.2 0.1 0.5 0.1 0 -0.5 -0.5 0.1 -0.2 0.1',
+                    'height': 70,
+                    'width': 70,
+                }
+            },
+
+            {
+                selector: 'node[id ^= "CDef"]', // All nodes with ID Sourcs Change Submitted
+                style: {
+                    'shape': 'polygon',
+                    'shape-polygon-points': '1 0 1 0.6 0.5 0.8 0 0.6 -0.5 0.8 -1 0.6 -1 0 -0.5 -0.2 -0.5 -0.8 0 -1 0.5 -0.8 0.5 -0.2 1 0  0.5 0.2 0.5 0.8 0.5 0.2 0 0 0 0.6 0 0 -0.5 0.2 -0.5 0.8 -0.5 0.2 -1 0 -0.5 -0.2 0 0 0.5 -0.2 0 0 0 -0.6 -0.5 -0.8 0 -0.6 0.5 -0.8 0.5 -0.2 1 0',
+                    'height': 90,
+                    'width': 90,
                 }
             },
             {
@@ -125,7 +206,7 @@ function renderGraph(graph, container, level) {
             {
                 selector: 'node[extra = "hidden"]', // All nodes with ID starting with TSF(Test Suite Finished)
                 style: {
-                    opacity: 0
+                    'opacity': 0
                 }
             }
         ],
