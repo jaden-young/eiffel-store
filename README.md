@@ -31,10 +31,10 @@ This is so you will be able to import the eiffel data.
 https://docs.mongodb.com/manual/installation/
 
 ### Import data to MongoDB
-If you have the data (named **events.json**) and the server is running, run the following command:
+If you have the data (named **eiffelevents.json**) and the server is running, run the following command:
 
 ```
-mongoimport --host localhost:3001 --jsonArray --drop --db meteor --collection eiffel-events --file "events.json"
+mongoimport --host localhost:3001 --jsonArray --drop --db meteor --collection eiffel-events --file "eiffelevents.json"
 ```
 If you want to download sample data, you can find it [here](https://gitlab.ida.liu.se/tddd96/visualization/blob/development/public/examples/eiffelevents.zip).
 
