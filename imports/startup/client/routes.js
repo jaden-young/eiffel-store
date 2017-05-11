@@ -1,3 +1,4 @@
+'use strict';
 import "../../ui/layout/layout.js";
 import "../../ui/pages/home.js";
 

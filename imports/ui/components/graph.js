@@ -1,3 +1,4 @@
+'use strict';
 import cytoscape from "cytoscape";
 import cydagre from "cytoscape-dagre";
 
@@ -8,6 +9,7 @@ import cyqtip from "cytoscape-qtip";
 cydagre(cytoscape); // register extension
 panzoom(cytoscape, $); // register extension
 cyqtip(cytoscape); // register extension
+
 
 /**
  * Renders a graph using Cytoscape, with provided graph
@@ -20,7 +22,7 @@ cyqtip(cytoscape); // register extension
 const PASS_COLOR = '#22b14c';
 const FAIL_COLOR = '#af0020';
 const ELSE_COLOR = '#666';
-function renderGraph(graph, container) {
+function renderGraph(graph, container, level) {
     let cy = cytoscape({
 
         container: container,
@@ -35,7 +37,10 @@ function renderGraph(graph, container) {
                 selector: 'node',
                 style: {
                     'background-color': ELSE_COLOR,
-                    'label': 'data(id)'
+                    'border-color': '#000',
+                    'border-width': '1px',
+                    'border-style': 'solid',
+                    'label': 'data(label)'
                 }
             },
 
@@ -49,13 +54,17 @@ function renderGraph(graph, container) {
                     'target-arrow-shape': 'triangle'
                 }
             },
+            {
+                selector: 'edge[label = "dangerous"]',
+                style: {
+                    'line-style': 'dashed',
+                }
+            },
 
             {
-                selector: 'node[id ^= "CLM"]', // All nodes with ID == CLM (Confidence level)
+                selector: 'node[label ^= "CLM"]', // All nodes with ID == CLM (Confidence level)
                 style: {
                     'background-color': '#fff',
-                    'border-width': '1px', // The size of the node’s border.
-                    'border-color': '#000',
                     'width': '70px',
                     'height': '70x',
                     'pie-size': '100%',
@@ -75,18 +84,12 @@ function renderGraph(graph, container) {
             },
 
             {
-                selector: 'node[id ^= "TC"]', // All nodes with ID starting with TC(Test Case)
+                selector: 'node[label ^= "TC"]', // All nodes with ID starting with TC(Test Case)
                 style: {
                     'background-color': FAIL_COLOR,
                     'shape': 'rectangle',
                     'height': 50,
-                    'width': 100
-                }
-            },
-
-            {
-                selector: 'node[id ^= "TCF"]', // All nodes with ID starting with TCF(Test Case Finished)
-                style: {
+                    'width': 100,
                     'background-image': '/images/green.png',
                     'background-height': '100%',
                     'background-width': function (ele) {
@@ -95,29 +98,115 @@ function renderGraph(graph, container) {
                     'background-position-x': '0px'
                 }
             },
-
             {
-                selector: 'node[id ^= "TS"]', // All nodes with ID starting with TS(Test Suite)
+                selector: 'node[label ^= "TS"]', // All nodes with ID starting with TSF(Test Suite Finished)
                 style: {
-                    'background-color': FAIL_COLOR,
                     'shape': 'rectangle',
                     'border-style': 'double', // solid, dotted, dashed, or double.
                     'border-width': '6px', // The size of the node’s border.
-                    'border-color': '#000',
                     'height': 50,
-                    'width': 100
-                }
-            },
-
-            {
-                selector: 'node[id ^= "TSF"]', // All nodes with ID starting with TSF(Test Suite Finished)
-                style: {
+                    'width': 100,
+                    'background-color': FAIL_COLOR,
                     'background-position-x': '0px',
                     'background-image': '/images/green.png',
                     'background-height': '100%',
                     'background-width': function (ele) {
                         return (ele.data("passed") * 100 / ele.data("length") ).toString() + '%';
                     },
+                }
+            },
+
+            {
+                selector: 'node[id ^= "CA"]', // All nodes with ID starting with CD (Composition Defined)
+                style: {
+                    'shape': 'polygon',
+                    'shape-polygon-points': '-0.1 1 -0.17 0.77 -0.32 0.72 -0.53 0.87 -0.68 0.77 -0.6 0.53 -0.68 0.38 -0.94 0.39 -1 0.22 -0.79 0.08 -0.79 -0.08 -1 -0.22 -0.94 -0.39 -0.68 -0.38 -0.6 -0.53 -0.68 -0.77 -0.53 -0.87 -0.32 -0.72 -0.17 -0.77 -0.1 -1 0.1 -1 0.17 -0.77 0.32 -0.72 0.53 -0.87 0.68 -0.77 0.6 -0.53 0.68 -0.38 0.94 -0.39 1 -0.22 0.79 -0.08 0.79 0.08 1 0.22 0.94 0.39 0.68 0.38 0.6 0.53 0.68 0.77 0.53 0.87 0.32 0.72 0.17 0.77 0.1 1',
+                    'height': 70,
+                    'width': 70,
+                    'pie-size': '40%',
+                    'pie-1-background-size': '100%',
+                    'pie-1-background-color': '#fff',
+                }
+            },
+
+            {
+                selector: 'node[id ^= "Act"]', // All nodes with ID starting with Act (Activity)
+                style: {
+                    'shape': 'rectangle',
+                    'height': 40,
+                    'width': 40,
+                    'background-color': FAIL_COLOR,
+                    'background-position-x': '0px',
+                    'background-image': '/images/green.png',
+                    'background-height': '100%',
+                    'background-width': function (ele) {
+                        return (ele.data("successful") * 100 / ele.data("length") ).toString() + '%';
+                    }
+                }
+            },
+
+            {
+                selector: 'node[id ^= "Art"]', // All nodes with ID starting with Act (Activity)
+                style: {
+                    'shape': 'polygon',
+                    'shape-polygon-points': '1 -0.4 0 -0.8 -1 -0.4 0 0 1 -0.4 1 0.6 0 1 0 0 0 1 -1 0.6 -1 -0.4 0 0 1 -0.4',
+                    'height': 60,
+                    'width': 50,
+                }
+            },
+
+            {
+                selector: 'node[id ^= "ArtC"]', // All nodes with ID starting with Act (Activity)
+                style: {
+                    'background-color': '#557e62',
+                }
+            },
+
+            {
+                selector: 'node[id ^= "ArtP"]', // All nodes with ID starting with Act (Activity)
+                style: {
+                    'background-color': '#5a617e',
+                }
+            },
+
+            {
+                selector: 'node[id ^= "ArtR"]', // All nodes with ID starting with Act (Activity)
+                style: {
+                    'background-color': '#7e5344',
+                }
+            },
+
+            {
+                selector: 'node[id ^= "IssV"]', // All nodes with ID Sourcs Change Submitted
+                style: {
+                    'background-color': '#ff7e37',
+                    'shape': 'polygon',
+                    'shape-polygon-points': '-0.2 0.98 -0.39 0.92 -0.56 0.83 -0.71 0.7 -0.83 0.55 -0.92 0.38 -0.98 0.19 -1 0 -0.98 -0.2 -0.92 -0.38 -0.83 -0.56 -0.71 -0.71 -0.55 -0.83 -0.38 -0.92 -0.19 -0.98 0 -1 0.19 -0.98 0.38 -0.92 0.55 -0.83 0.71 -0.71 0.83 -0.56 0.92 -0.38 0.98 -0.2 1 0 1 0 0.98 0.19 0.92 0.38 0.83 0.55 0.71 0.71 0.56 0.83 0.38 0.92 0.2 0.98 0.2 0.1 0.5 0.1 0 -0.5 -0.5 0.1 -0.2 0.1',
+                    'height': 70,
+                    'width': 70,
+                }
+            },
+
+            {
+                selector: 'node[id ^= "CDef"]', // All nodes with ID Sourcs Change Submitted
+                style: {
+                    'shape': 'polygon',
+                    'shape-polygon-points': '1 0 1 0.6 0.5 0.8 0 0.6 -0.5 0.8 -1 0.6 -1 0 -0.5 -0.2 -0.5 -0.8 0 -1 0.5 -0.8 0.5 -0.2 1 0  0.5 0.2 0.5 0.8 0.5 0.2 0 0 0 0.6 0 0 -0.5 0.2 -0.5 0.8 -0.5 0.2 -1 0 -0.5 -0.2 0 0 0.5 -0.2 0 0 0 -0.6 -0.5 -0.8 0 -0.6 0.5 -0.8 0.5 -0.2 1 0',
+                    'height': 90,
+                    'width': 90,
+                }
+            },
+            {
+                selector: 'node[extra = "highlight"]', // All nodes with ID starting with TSF(Test Suite Finished)
+                style: {
+                    'border-width': '8px', // The size of the node’s border.
+                    'border-color': '#ffea22',
+                }
+            },
+            {
+                selector: 'node[extra = "hidden"]', // All nodes with ID starting with TSF(Test Suite Finished)
+                style: {
+                    'opacity': 0
                 }
             }
         ],
@@ -131,61 +220,249 @@ function renderGraph(graph, container) {
         wheelSensitivity: 0.075,
     });
 
-    function getTooltipContent(node_data) {
-        let node_id = node_data.id;
+    function toHMS(ms_num) {
+        let hours = Math.floor(ms_num / 3600000);
+        let minutes = Math.floor((ms_num - (hours * 3600000)) / 60000);
+        let seconds = Math.floor((ms_num - (hours * 3600000) - (minutes * 60000)) / 1000);
+        let ms = Math.floor(ms_num - (hours * 3600000) - (minutes * 60000) - (seconds * 1000));
 
+        return hours + 'h ' + minutes + 'm ' + seconds + 's ' + ms + 'ms';
+    }
+
+    function getTooltipContent(nodeData) {
+        let nodeLabel = nodeData.label;
         switch (true) {
-            case /TSF/.test(node_id):                                              // Checks if node_id starts with 'TSF'
-                return '<h4>' + node_id + '</h4>' +           // Tooltip-header (Node-ID)
-                    getTooltipButton(node_id) +          // Button will take user to level 2 - 'details'
+            case /Act/.test(nodeLabel):
+                return '<h4>' + nodeLabel + '</h4>' +
+                    getTooltipButton(nodeData) +
                     '<table class="table table-bordered">' +
-                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
-                    '<tr class="success"><td>Passed</td><td class="td-right">' + node_data.passed + '</td><td class="td-right">' + Math.floor(node_data.passed / node_data.length * 100) + '%</td></tr>' +
-                    '<tr class="danger"><td>Failed</td><td class="td-right">' + node_data.failed + '</td><td class="td-right">' + Math.floor(node_data.failed / node_data.length * 100) + '%</td></tr>' +
-                    '<tr><td>Inconclusive</td><td class="td-right">' + node_data.inconclusive + '</td><td class="td-right">' + Math.floor(node_data.inconclusive / node_data.length) + '%</td></tr>' +
-                    '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + node_data.length + '</td></tr>' +
-                    '</table>'; // Row 3 - OTHER
-
-            case /TCF/.test(node_id):                                              // Checks if node_id starts with 'TSF'
-                return '<h4>' + node_id + '</h4>' +           // Tooltip-header (Node-ID)
-                    getTooltipButton(node_id) +          // Button will take user to level 2 - 'details'
-                    '<table class="table table-bordered">' +
-                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
-                    '<tr class="success"><td>Passed</td><td class="td-right">' + node_data.passed + '</td><td class="td-right">' + Math.floor(node_data.passed / node_data.length * 100) + '%</td></tr>' +
-                    '<tr class="danger"><td>Failed</td><td class="td-right">' + node_data.failed + '</td><td class="td-right">' + Math.floor(node_data.failed / node_data.length * 100) + '%</td></tr>' +
-                    '<tr><td>Inconclusive</td><td class="td-right">' + node_data.inconclusive + '</td><td class="td-right">' + Math.floor(node_data.inconclusive / node_data.length) + '%</td></tr>' +
-                    '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + node_data.length + '</td></tr>' +
-                    '</table>'; // Row 3 - OTHER
-
-            case /CLM/.test(node_id):
-                return '<h4>' + node_id + '</h4>' +
-                    getTooltipButton(node_id) +
-                    '<table class="table table-bordered">' +
-                    '<tr><td colspan="3"><em>' + node_data.name + '</em></td></tr>' +
                     '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
-                    '<tr class="success"><td>Passed</td><td class="td-right">' + node_data.passed + '</td><td class="td-right">' + Math.floor(node_data.passed / node_data.length * 100) + '%</td></tr>' +
-                    '<tr class="danger"><td>Failed</td><td class="td-right">' + node_data.failed + '</td><td class="td-right">' + Math.floor(node_data.failed / node_data.length * 100) + '%</td></tr>' +
-                    '<tr><td>Inconclusive</td><td class="td-right">' + node_data.inconclusive + '</td><td class="td-right">' + Math.floor(node_data.inconclusive / node_data.length) + '%</td></tr>' +
-                    '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + node_data.length + '</td></tr>' +
+                    '<tr class="success"><td>Successful</td><td class="td-right">' + nodeData.successful + '</td><td class="td-right">' + Math.round(10 * (nodeData.successful / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Unsuccessful</td><td class="td-right">' + nodeData.unsuccessful + '</td><td class="td-right">' + Math.round(10 * (nodeData.unsuccessful / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.round(10 * (nodeData.failed / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Aborted</td><td class="td-right">' + nodeData.aborted + '</td><td class="td-right">' + Math.round(10 * (nodeData.aborted / nodeData.length) / 10) + '%</td></tr>' +
+                    '<tr><td>Timed out</td><td class="td-right">' + nodeData.timedOut + '</td><td class="td-right">' + Math.round(10 * (nodeData.timedOut / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.round(10 * (nodeData.inconclusive / nodeData.length) / 10) + '%</td></tr>' +
+                    '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
+                    '<tr class="info"><td>Avg queue time</td><td colspan="2" class="td-right">' + toHMS(nodeData.avgQueueTime) + '</td></tr>' +
+                    '<tr class="info"><td>Avg run time</td><td colspan="2" class="td-right">' + toHMS(nodeData.avgRunTime) + '</td></tr>' +
                     '</table>';
-            default:
-                return '<h4 id="tt_header">' + node_id + '</h4>' +
-                    getTooltipButton(node_id) +
+            case /AP/.test(nodeLabel):
+                return '<h4>' + nodeLabel + '</h4>' +
+                    getTooltipButton(nodeData) +
                     '<table class="table table-bordered">' +
-                    '<tr><td>Total no. of events</td><td class="td-right">' + node_data.length + '</td></tr>' +
+                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
+                    '<tr><td>Minor</td><td class="td-right">' + nodeData.minor + '</td><td class="td-right">' + Math.round(10 * (nodeData.minor / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Major</td><td class="td-right">' + nodeData.major + '</td><td class="td-right">' + Math.round(10 * (nodeData.major / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Critical</td><td class="td-right">' + nodeData.critical + '</td><td class="td-right">' + Math.round(10 * (nodeData.critical / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Blocker</td><td class="td-right">' + nodeData.blocker + '</td><td class="td-right">' + Math.round(10 * (nodeData.blocker / nodeData.length) / 10) + '%</td></tr>' +
+                    '<tr><td>Closed</td><td class="td-right">' + nodeData.closed + '</td><td class="td-right">' + Math.round(10 * (nodeData.closed / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Canceled</td><td class="td-right">' + nodeData.canceled + '</td><td class="td-right">' + Math.round(10 * (nodeData.canceled / nodeData.length) / 10) + '%</td></tr>' +
+                    '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
+                    '</table>';
+            case /CLM/.test(nodeLabel):
+                return '<h4>' + nodeLabel + '</h4>' +
+                    getTooltipButton(nodeData) +
+                    '<table class="table table-bordered">' +
+                    '<tr><td colspan="3"><em>' + nodeData.name + '</em></td></tr>' +
+                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
+                    '<tr class="success"><td>Passed</td><td class="td-right">' + nodeData.passed + '</td><td class="td-right">' + Math.round(10 * (nodeData.passed / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr class="danger"><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.round(10 * (nodeData.failed / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.round(10 * (nodeData.inconclusive / nodeData.length) / 10) + '%</td></tr>' +
+                    '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
+                    '</table>';
+            case /IV/.test(nodeLabel):
+                return '<h4>' + nodeLabel + '</h4>' +
+                    getTooltipButton(nodeData) +
+                    '<table class="table table-bordered">' +
+                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
+                    '<tr class="info"><td>Success</td><td class="td-right">' + nodeData.success + '</td><td class="td-right">' + Math.round(10 * (nodeData.passed / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr class="info"><td>Failure</td><td class="td-right">' + nodeData.failure + '</td><td class="td-right">' + Math.round(10 * (nodeData.failure / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr class="info"><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.round(10 * (nodeData.inconclusive / nodeData.length) / 10) + '%</td></tr>' +
+                    '<tr><td>Bug</td><td class="td-right">' + nodeData.bug + '</td><td class="td-right">' + Math.round(10 * (nodeData.bug / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Improvement</td><td class="td-right">' + nodeData.improvement + '</td><td class="td-right">' + Math.round(10 * (nodeData.improvement / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Feature</td><td class="td-right">' + nodeData.feature + '</td><td class="td-right">' + Math.round(10 * (nodeData.feature / nodeData.length) / 10) + '%</td></tr>' +
+                    '<tr><td>Work Item</td><td class="td-right">' + nodeData.workItem + '</td><td class="td-right">' + Math.round(10 * (nodeData.workItem / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Requirement</td><td class="td-right">' + nodeData.requirement + '</td><td class="td-right">' + Math.round(10 * (nodeData.requirement / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Other</td><td class="td-right">' + nodeData.other + '</td><td class="td-right">' + Math.round(10 * (nodeData.other / nodeData.length) / 10) + '%</td></tr>' +
+                    '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
+                    '</table>';
+            case /TC/.test(nodeLabel):                                              // Checks if node_id starts with 'TSF'
+                return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
+                    getTooltipButton(nodeData) +          // Button will take user to level 2 - 'details'
+                    '<table class="table table-bordered">' +
+                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' +    // Table-header
+                    '<tr class="success"><td>Passed</td><td class="td-right">' + nodeData.passed + '</td><td class="td-right">' + Math.round(10 * (nodeData.passed / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr class="danger"><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.round(10 * (nodeData.failed / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.round(10 * (nodeData.inconclusive / nodeData.length) / 10) + '%</td></tr>' +
+                    '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
+                    '<tr class="info"><td>Avg run time</td><td colspan="2" class="td-right">' + toHMS(nodeData.avgRunTime) + '</td></tr>' +
+                    '</table>'; // Row 3 - OTHER
+            case /TS/.test(nodeLabel):                                              // Checks if node_id starts with 'TSF'
+                return '<h4>' + nodeLabel + '</h4>' +           // Tooltip-header (Node-ID)
+                    getTooltipButton(nodeData) +          // Button will take user to level 2 - 'details'
+                    '<table class="table table-bordered">' +
+                    '<tr><th>Status</th><th colspan="2">No. of</th></tr>' + // table header
+                    '<tr class="success"><td>Passed</td><td class="td-right">' + nodeData.passed + '</td><td class="td-right">' + Math.round(10 * (nodeData.passed / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr class="danger"><td>Failed</td><td class="td-right">' + nodeData.failed + '</td><td class="td-right">' + Math.round(10 * (nodeData.failed / nodeData.length * 100) / 10) + '%</td></tr>' +
+                    '<tr><td>Inconclusive</td><td class="td-right">' + nodeData.inconclusive + '</td><td class="td-right">' + Math.round(10 * (nodeData.inconclusive / nodeData.length) / 10) + '%</td></tr>' +
+                    '<tr><td>Total no. of events</td><td colspan="2" class="td-right">' + nodeData.length + '</td></tr>' +
+                    '<tr class="info"><td>Avg run time</td><td colspan="2" class="td-right">' + toHMS(nodeData.avgRunTime) + '</td></tr>' +
+                    '</table>'; // Row 3 - OTHER
+            default:
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    getTooltipButton(nodeData) +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Total no. of events</td><td class="td-right">' + nodeData.length + '</td></tr>' +
                     '</table>';
 
         }
     }
 
-    function getTooltipButton(eiffelId) {
-        return '<button type="button" class="btn btn-block btn-info aggregation-tt-btn" value="' + eiffelId + '"> Show all events </button>'
+    function getLevelThreeContent(nodeData) {
+        let nodeLabel = nodeData.label;
+        let possible_jenkins = nodeData.eventData.executionUri;
+        switch (true) {
+            case /Act/.test(nodeLabel):
+                let html = '<h4>' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Conclusion</td><td>' + nodeData.conclusion + '</td></tr>' +
+                    '<tr><td>Execution type</td><td>' + nodeData.executionType + '</td></tr>' +
+                    '<tr><td>Queue time</td><td>' + toHMS(nodeData.timeStarted - nodeData.timeTriggered) + '</td></tr>' +
+                    '<tr><td>Execution time</td><td>' + toHMS(nodeData.timeFinished - nodeData.timeStarted) + '</td></tr>';
+                if (typeof possible_jenkins === 'string' || possible_jenkins instanceof String) {
+                    //this should show a stringified link to a homepage once data exists
+                    html += '<tr><td>Execution page</td><td>' + '<a target="_blank" href= "http://' +
+                        possible_jenkins + '"> ' + possible_jenkins + '</a>' + '</td></tr>';
+                }
+                html += '<tr><td>No of triggers</td><td>' + nodeData.triggersLength + '</td></tr>' +
+                    _.reduce(nodeData.triggers, (memo, trigger) => {
+                        return memo + '<tr><td>Trigger type</td><td>' + trigger.type + '</td></tr>';
+                    }, "");
+                html += '</table>'; // Row 3 - OTHER
+                return html;
+            case /AP/.test(nodeLabel):
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><th colspan="2">nodeData.heading</th></tr>' +
+                    '<tr><td>Severity</td><td class="td-right">' + nodeData.severity + '</td></tr>' +
+                    '<tr><td colspan="2">nodeData.body</td></tr>' +
+                    '</table>';
+            case /ArtC/.test(nodeLabel):
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Name</td><td class="td-right">' + nodeData.name + '</td></tr>' +
+                    '<tr><td>GAV Group ID</td><td class="td-right">' + nodeData.gav_groupId + '</td></tr>' +
+                    '<tr><td>GAV Artifact ID</td><td class="td-right">' + nodeData.gav_artifactId + '</td></tr>' +
+                    '<tr><td>GAV Version</td><td class="td-right">' + nodeData.gav_version + '</td></tr>' +
+                    '</table>';
+            case /ArtP/.test(nodeLabel):
+                html = '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><th colspan="2">Locations</th></tr>';
+                html += _.reduce(nodeData.locations, (memo, location) => {
+                    return memo + '<tr><td>Type</td><td class="td-right">' + location.type + '</td></tr>';
+                }, "");
+                html += '<tr><td>No of locations</td><td class="td-right">' + nodeData.location_length + '</td></tr>'
+                    + '</table>';
+                return html;
+            case /CDef/.test(nodeLabel):
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Name</td><td class="td-right">' + nodeData.name + '</td></tr>' +
+                    '<tr><td>Version</td><td class="td-right">' + nodeData.version + '</td></tr>' +
+                    '</table>';
+            case /CLM/.test(nodeLabel):
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Name</td><td class="td-right">' + nodeData.name + '</td></tr>' +
+                    '<tr><td>Value</td><td class="td-right">' + nodeData.value + '</td></tr>' +
+                    '<tr><td>Issuer ID</td><td class="td-right">' + nodeData.issuer_id + '</td></tr>' +
+                    '</table>';
+            case /CA/.test(nodeLabel):
+                html = '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><th colspan="2">Items</th></tr>' +
+                    '<tr><th>Name</th><th>Type</th></tr>';
+                html += _.each(nodeData.items, (item) => {
+                    return '<tr><td>' + item.name + '</td><td>' + item.type + '</td></tr>';
+                });
+                html += '<tr><td>No of items</td><td class="td-right">' + nodeData.items_length + '</td></tr>'
+                    + '</table>';
+                return html;
+            case /EDef/.test(nodeLabel):
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Name</td><td class="td-right">' + nodeData.name + '</td></tr>' +
+                    '<tr><td>Version</td><td class="td-right">' + nodeData.version + '</td></tr>' +
+                    '</table>';
+            case /SCC/.test(nodeLabel):
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Author name</td><td class="td-right">' + nodeData.authorName + '</td></tr>' +
+                    '<tr><td>Author ID</td><td class="td-right">' + nodeData.authorId + '</td></tr>' +
+                    '<tr><td>Author group</td><td class="td-right">' + nodeData.authorGroup + '</td></tr>' +
+                    '<tr><td>Change tracker</td><td class="td-right">' + nodeData.changeTracker + '</td></tr>' +
+                    '<tr><td>Change ID</td><td class="td-right">' + nodeData.changeId + '</td></tr>' +
+                    '<tr><td>Git repository</td><td class="td-right">' + nodeData.gitRepoName + '</td></tr>' +
+                    '<tr><td>Git branch</td><td class="td-right">' + nodeData.gitBranch + '</td></tr>' +
+                    //'<tr><td>Git commit ID</td><td class="td-right">' + nodeData.gitCommitId + '</td></tr>' +
+                    '</table>';
+            case /SCS/.test(nodeLabel):
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Submitter name</td><td class="td-right">' + nodeData.submitterName + '</td></tr>' +
+                    '<tr><td>Submitter ID</td><td class="td-right">' + nodeData.submitterId + '</td></tr>' +
+                    '<tr><td>Submitter group</td><td class="td-right">' + nodeData.submitterGroup + '</td></tr>' +
+                    '<tr><td>Change tracker</td><td class="td-right">' + nodeData.changeTracker + '</td></tr>' +
+                    '<tr><td>Change ID</td><td class="td-right">' + nodeData.changeId + '</td></tr>' +
+                    '<tr><td>Git repository</td><td class="td-right">' + nodeData.gitRepoName + '</td></tr>' +
+                    '<tr><td>Git branch</td><td class="td-right">' + nodeData.gitBranch + '</td></tr>' +
+                    //'<tr><td>Git commit ID</td><td class="td-right">' + nodeData.gitCommitId + '</td></tr>' +
+                    '</table>';
+            case /TC/.test(nodeLabel):
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Test Case ID</td><td>' + nodeData.testCaseId + '</td></tr>' +
+                    '<tr><td>Verdict</td><td>' + nodeData.verdict + '</td></tr>' +
+                    '<tr><td>Conclusion</td><td>' + nodeData.conclusion + '</td></tr>' +
+                    '<tr><td>Executor</td><td>' + nodeData.executor + '</td></tr>' +
+                    '<tr><td>Tracker</td><td>' + nodeData.tracker + '</td></tr>' +
+                    '<tr><td>Execution type</td><td>' + nodeData.executionType + '</td></tr>' +
+                    '<tr><td>Execution time</td><td>' + toHMS(nodeData.timeFinished - nodeData.timeStarted) + '</td></tr>' +
+                    '<tr><td>Description</td><td>' + nodeData.outcomeDescription + '</td></tr>' +
+                    '</table>';
+            case /TS/.test(nodeLabel):
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Name</td><td>' + nodeData.name + '</td></tr>' +
+                    '<tr><td>Verdict</td><td>' + nodeData.verdict + '</td></tr>' +
+                    '<tr><td>Conclusion</td><td>' + nodeData.conclusion + '</td></tr>' +
+                    '<tr><td>Description</td><td>' + nodeData.outcomeDescription + '</td></tr>' +
+                    '<tr><td>Execution time</td><td>' + toHMS(nodeData.timeFinished - nodeData.timeStarted) + '</td></tr>' +
+                    '</table>';
+
+            default:
+                return '<h4 id="tt_header">' + nodeLabel + '</h4>' +
+                    //getTooltipButton(nodeData.id) +
+                    '<table class="table table-bordered">' +
+                    '<tr><td>Total no. of events</td><td class="td-right">' + nodeData.length + '</td></tr>' +
+                    '</table>';
+
+        }
+    }
+
+    function getTooltipButton(nodeData) {
+        return '<button type="button" class="btn btn-block btn-info aggregation-tt-btn" value="' + nodeData.id + ';' + nodeData.type + '"> Show all events </button>'
     }
 
     cy.nodes().qtip({
         content: function () {
-            return getTooltipContent(this.data()); // Ändra här för att ändra vad som ska vara i den
-            //return 'Example qTip on ele ' + this.id() + '<div class="alert alert-success" role="alert"><strong>Well done!</strong> You successfully read this important alert message. (bootstrap)</div>' // Ändra här för att ändra vad som ska vara i den
+            if (level === "aggregation") {
+                return getTooltipContent(this.data()); // Ändra här för att ändra vad som ska vara i den
+            } else if (level === "eventchain") {
+                return getLevelThreeContent(this.data());
+            }
         },
         position: {
             my: 'bottom center',

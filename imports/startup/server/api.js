@@ -1,2 +1,9 @@
-import "../../api/eiffelevents/methods.js";
-import "../../api/rows/methods.js";
+'use strict';
+import "../../api/initializer/methods";
+import "../../api/eiffelevents/methods";
+import "../../api/events/methods";
+import "../../api/rows/methods";
+
+//Commented out to force-fail server connection check
+import "../../api/utils/methods"
+
