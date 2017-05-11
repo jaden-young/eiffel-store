@@ -26,7 +26,7 @@ import {
 } from "../events/event-types";
 
 function getEventSequenceVersion() {
-    return '1.5';
+    return '2.0';
 }
 function getEventSequenceVersionPropertyName() {
     return 'eventSequences.version';
@@ -897,31 +897,7 @@ export const getEventChainGraph = new ValidatedMethod({
                             });
                     }
                 });
-                // _.each(event.dangerousTargetedBy, (source) => {
-                //     if (edgesMap[source + event.id] === undefined) {
-                //         edgesMap[source + event.id] = 1;
-                //         if (eventsMap[source] === undefined) {
-                //             eventsMap[source] = 1;
-                //             nodes.push({
-                //                 data: {
-                //                     id: source,
-                //                     extra: 'hidden'
-                //                 }
-                //             })
-                //         }
-                //         edges.push(
-                //             {
-                //                 data: {
-                //                     label: 'dangerous',
-                //                     source: source,
-                //                     target: event.id
-                //                 }
-                //             });
-                //     }
-                // });
             });
-            // console.log(nodes);
-            // console.log(edges);
             return {
                 nodes: nodes,
                 edges: edges,

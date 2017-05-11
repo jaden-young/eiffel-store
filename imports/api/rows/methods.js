@@ -6,7 +6,7 @@ import {setProperty} from "../properties/methods";
 import {getConfidenceLevelEventName, getTestCaseEventName, getTestSuiteEventName} from "../events/event-types";
 
 function getRowsVersion() {
-    return '1.6';
+    return '2.0';
 }
 
 function getRowsVersionPropertyName() {

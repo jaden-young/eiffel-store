@@ -17,8 +17,6 @@
   - [How to read the graphs](#how-to-read-the-graphs)
 - [How to develop](#how-to-develop)
 - [API](#api)
-  - [Events v1.6](#events-v16)
-  - [EventSequences v1.2](#eventsequences-v12)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -76,43 +74,44 @@ event created chronologically in the selected time-interval.
 
 ## API
 
-### Events v1.6
+### Events v2.0
 Events object example
 ```json
 {
-  "_id": "QnXeZ5pwqWy3MbDmh",
+  "_id": "89Eh5RkmnmLKFQGew",
   "type": "TestCaseEvent",
-  "version": "1.0.0",
-  "name": "TC1",
-  "id": "8565d6d0-29e2-4850-b3da-da2a6d99a877",
-  "timeStart": 1483906947198,
-  "timeFinish": 1483907000298,
+  "name": "TC2",
+  "id": "78a891f9-de5e-4329-8901-ef5cf1a3c45d",
   "links": [
     {
-      "target": "f9ee8cf8-3f11-4360-803e-cf8920494718",
+      "target": "a52186e6-f7da-4cdc-b814-3c313ce3f95b",
       "type": "CONTEXT"
     },
     {
-      "target": "508f703d-148b-4bd1-92b8-36de209fa2b2",
+      "target": "35003b9d-cdec-47d7-bb8c-102b6fe09f80",
       "type": "IUT"
     }
   ],
   "source": {
     "domainId": "example.domain"
   },
+  "time": {
+    "started": 1484006256072,
+    "finished": 1484006306072
+  },
   "data": {
     "testCase": {
-      "id": "TC1",
-      "uri": "http://tm.company.com/browse/TC1",
+      "id": "TC2",
+      "uri": "http://tm.company.com/browse/TC2",
       "tracker": "My First Test Management System"
     },
     "customData": [
       {
-        "value": "TCF1",
+        "value": "TCF2",
         "key": "name"
       },
       {
-        "value": 4644,
+        "value": 4869,
         "key": "iteration"
       }
     ],
@@ -122,37 +121,39 @@ Events object example
     }
   },
   "dev": {
-    "version": "1.6"
   },
-  "startEvent": "1c6f63d5-1cf0-4aa7-951f-c7d63d0b0a75",
-  "finishEvent": "8565d6d0-29e2-4850-b3da-da2a6d99a877"
+  "startEvent": "9b5b5acb-2858-4564-8711-968f3b14a9eb",
+  "finishEvent": "78a891f9-de5e-4329-8901-ef5cf1a3c45d"
 }
 ```
 
-### EventSequences v1.2
+### EventSequences v2.0
 EventSequences object example
 
 ```json
 {
-  "_id": "Ywj7f6sTnhgCoaoAR",
-  "id": 7977,
-  "timeStart": 1482770357489,
-  "timeFinish": 1482770357490,
+  "_id": "kjPcYgrSmjNzDPena",
+  "id": 3,
+  "time": {
+    "started": 1484006941277,
+    "finished": 1484006941278
+  },
   "size": 2,
   "dev": {
   },
   "events": [
     {
-      "_id": "p9cMds9at9YpaNEq3",
+      "_id": "7iYT53w7uYE7nf6CD",
       "type": "EiffelSourceChangeCreatedEvent",
-      "version": "1.0.0",
       "name": "SCC1",
-      "id": "0fe50e39-f074-4176-a85d-6b39af246118",
-      "timeStart": 1482770357489,
-      "timeFinish": 1482770357489,
+      "id": "b4f7774b-6d66-425a-8e12-d87eda06c939",
+      "time": {
+        "started": 1484006941277,
+        "finished": 1484006941277
+      },
       "links": [
         {
-          "target": "1db302b4-ad5e-4b9f-a0bd-70050a991819",
+          "target": "6504e5d5-dbfe-403e-8e76-03244e9c24d6",
           "type": "BASE"
         }
       ],
@@ -162,7 +163,7 @@ EventSequences object example
       "data": {
         "gitIdentifier": {
           "repoUri": "https://repo.com",
-          "branch": "topic-branch-2041",
+          "branch": "topic-branch-4871",
           "repoName": "myRepo",
           "commitId": "fd090b60a4aedc5161da9c035a49b14a319829c5"
         },
@@ -178,14 +179,14 @@ EventSequences object example
             "key": "name"
           },
           {
-            "value": 2041,
+            "value": 4871,
             "key": "iteration"
           }
         ],
         "change": {
-          "files": "https://filelist.com/2041",
-          "insertions": 182,
-          "deletions": 342
+          "files": "https://filelist.com/4871",
+          "insertions": 316,
+          "deletions": 491
         }
       },
       "dev": {
@@ -193,29 +194,30 @@ EventSequences object example
       },
       "targets": [],
       "dangerousTargets": [
-        "1db302b4-ad5e-4b9f-a0bd-70050a991819"
+        "6504e5d5-dbfe-403e-8e76-03244e9c24d6"
       ],
       "targetedBy": [
-        "65ede655-c9c8-472d-876d-00c07d8ef700"
+        "73baeb04-175a-43e0-aeac-68f3a888e1e3"
       ],
       "dangerousTargetedBy": [],
-      "sequenceId": 7977
+      "sequenceId": 3
     },
     {
-      "_id": "8xiQEzy5RYm7QzLzP",
+      "_id": "3ygynmt6k63cxZNgi",
       "type": "EiffelSourceChangeSubmittedEvent",
-      "version": "1.0.0",
       "name": "SCS1",
-      "id": "65ede655-c9c8-472d-876d-00c07d8ef700",
-      "timeStart": 1482770357490,
-      "timeFinish": 1482770357490,
+      "id": "73baeb04-175a-43e0-aeac-68f3a888e1e3",
+      "time": {
+        "started": 1484006941278,
+        "finished": 1484006941278
+      },
       "links": [
         {
-          "target": "1db302b4-ad5e-4b9f-a0bd-70050a991819",
+          "target": "6504e5d5-dbfe-403e-8e76-03244e9c24d6",
           "type": "PREVIOUS_VERSION"
         },
         {
-          "target": "0fe50e39-f074-4176-a85d-6b39af246118",
+          "target": "b4f7774b-6d66-425a-8e12-d87eda06c939",
           "type": "CHANGE"
         }
       ],
@@ -235,7 +237,7 @@ EventSequences object example
             "key": "name"
           },
           {
-            "value": 2041,
+            "value": 4871,
             "key": "iteration"
           }
         ],
@@ -250,21 +252,43 @@ EventSequences object example
         "checked": true
       },
       "targets": [
-        "0fe50e39-f074-4176-a85d-6b39af246118"
+        "b4f7774b-6d66-425a-8e12-d87eda06c939"
       ],
       "dangerousTargets": [],
       "targetedBy": [],
       "dangerousTargetedBy": [
-        "2d6da37c-f923-4115-a943-16be2e656653",
-        "9f6bf06c-224f-4991-8430-0a1439c50155"
+        "ab8bc045-1395-46c2-8d0e-dc8df7f12b37",
+        "c293d64a-0c81-4acb-99b7-9626bb89947d"
       ],
-      "sequenceId": 7977
+      "sequenceId": 3
     }
   ],
   "connections": [
-    7976,
-    5040,
-    7978
+    1,
+    4,
+    5
   ]
+}
+```
+
+### Rows v2.0
+Rows object example
+```json
+{
+  "_id": "h5bsLZR3jZu2GRX7G",
+  "name": "Act2",
+  "type": "ActivityEvent",
+  "id": "75777798-797f-4d28-b0bb-bc999a6655e8",
+  "sequenceId": 4497,
+  "time": {
+    "triggered": 1483374816797,
+    "started": 1483374970997,
+    "finished": 1483375101317
+  },
+  "timeExecution": 130320,
+  "verdict": "-",
+  "conclusion": "SUCCESSFUL",
+  "dev": {
+  }
 }
 ```

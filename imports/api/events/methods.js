@@ -18,7 +18,7 @@ import {
 import {setProperty} from "../properties/methods";
 
 function getEventVersion() {
-    return '1.9';
+    return '2.0';
 }
 function getEventVersionPropertyName() {
     return 'events.version';
