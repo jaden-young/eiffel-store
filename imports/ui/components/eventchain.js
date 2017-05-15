@@ -7,6 +7,7 @@ import {getEventChainGraph} from "/imports/api/eventSequences/methods";
 import {renderGraph} from "./graph.js";
 
 import "./eventchain.html";
+import moment from "moment";
 
 
 // import {Session} from "meteor/session";
@@ -78,9 +79,9 @@ function updateSequenceGraph(sequenceId, eventId) {
         } else {
             let container = $('#cy-event-chain');
             if (graph !== undefined) {
-                $('#level3_footer_updated').html('Showing a sequence with time span ' +
-                    formatDate(new Date(graph.time.started)) + ' - ' +
-                    formatDate(new Date(graph.time.finished)) + " and its connected sequences.").show();
+                $('#level3_footer_updated').html('Showing a sequence with time span from <b>' +
+                    formatDate(new Date(graph.time.started)) + '</b> to <b>' +
+                    formatDate(new Date(graph.time.finished)) + "</b> and its connected sequences.").show();
                 renderGraph(graph, container, 'eventchain');
                 show(3);
             } else {
@@ -91,8 +92,5 @@ function updateSequenceGraph(sequenceId, eventId) {
 }
 
 function formatDate(timestamp) {
-    let day = timestamp.getDate(),
-        month = timestamp.getMonth() + 1,
-        year = timestamp.getFullYear();
-    return year + "-" + month + "-" + day;
+    return moment(timestamp).format('YYYY-MM-DD, HH:mm:ss:SSS');
 }
