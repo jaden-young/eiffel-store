@@ -1,6 +1,7 @@
 'use strict';
 import Tabular from "meteor/aldeed:tabular";
 import {Rows} from "./rows";
+import moment from "moment";
 
 
 new Tabular.Table({
@@ -13,27 +14,25 @@ new Tabular.Table({
             tmpl: Meteor.isClient && Template.button_row
         },
         // {data: "name", title: "Name"},
-        {data: "type", title: "Type"},
+        // {data: "type", title: "Type"},
         {
             data: "time.started",
-            title: "Start time",
-            // render: function (val, type, doc) {
-            //     (new Date(val)).toString()
-            // }
+            title: "Start time (year-month-day, time)",
+            render: function (val, type, doc) {
+                return getTimeFormat(val);
+            }
         },
         {
             data: "time.finished",
-            title: "End time",
-            // render: function (val, type, doc) {
-            //     (new Date(val)).toString()
-            // }
+            title: "End time (year-month-day, time)",
+            render: function (val, type, doc) {
+                return getTimeFormat(val);
+            }
         },
         {
             data: "timeExecution",
             title: "Execution time (ms)",
-            // render: function (val, type, doc) {
-            //     (new Date(val)).toString()
-            // }
+
         },
         {data: "verdict", title: "Verdict"},
         {data: "conclusion", title: "Conclusion"},
@@ -55,3 +54,7 @@ new Tabular.Table({
         expireIn: 5
     })
 });
+
+function getTimeFormat(long) {
+    return moment(long).format('YYYY-MM-DD, HH:mm:ss:SSS');
+}

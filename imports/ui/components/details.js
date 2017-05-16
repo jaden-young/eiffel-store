@@ -62,7 +62,7 @@ Template.aggregation.events({
         let eventSplit = (event.target.value).split(';');
         Session.set('nodeNameFilter', eventSplit[0]);
         Session.set('nodeTypeFilter', eventSplit[1]);
-        $('#table-level2-heading').html(Session.get('nodeNameFilter'));
+        $('#table-level2-heading').html(Session.get('nodeNameFilter') + ' ' + Session.get('nodeTypeFilter'),);
 
         if (graph2dPassFail !== undefined) {
             graph2dPassFail.destroy();

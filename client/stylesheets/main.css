@@ -66,6 +66,10 @@ h2 {
     height: 15vh;
 }
 
+.qtip {
+    max-width: none !important;
+}
+
 /* Loader*/
 .loader {
     left: 50%;
