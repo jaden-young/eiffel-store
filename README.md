@@ -75,7 +75,7 @@ You can move between levels easily by using the navigation bar
 ### How to find help
 If you need information about what different components in the
 app mean or what they do, you can click the icon
-![alt text](https://gitlab.ida.liu.se/tddd96/visualization/tree/master/public/examples/smaller_info_logo.PNG "info_logo").
+![alt text](https://gitlab.ida.liu.se/tddd96/visualization/blob/readme_final/public/examples/smaller_info_logo.PNG "info_logo").
 This icon is found below the navigation bar that you 
 use to navigate between the different parts of the application.
 
