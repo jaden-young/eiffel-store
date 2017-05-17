@@ -12,11 +12,15 @@
 - [How to use the app](#how-to-use-the-app)
   - [How to select a node](#how-to-select-a-node)
   - [How to select a time-interval](#how-to-select-a-time-interval)
+  - [How to set the amount of events shown](#how-to-set-the-amount-of-events-shown)
   - [How to move between levels](#how-to-move-between-levels)
   - [How to find help](#how-to-find-help)
   - [How to read the graphs](#how-to-read-the-graphs)
 - [How to develop](#how-to-develop)
 - [API](#api)
+  - [Events v2.0](#events-v20)
+  - [EventSequences v2.0](#eventsequences-v20)
+  - [Rows v2.0](#rows-v20)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
