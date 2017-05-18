@@ -12,11 +12,15 @@
 - [How to use the app](#how-to-use-the-app)
   - [How to select a node](#how-to-select-a-node)
   - [How to select a time-interval](#how-to-select-a-time-interval)
+  - [How to set the amount of events shown](#how-to-set-the-amount-of-events-shown)
   - [How to move between levels](#how-to-move-between-levels)
   - [How to find help](#how-to-find-help)
   - [How to read the graphs](#how-to-read-the-graphs)
 - [How to develop](#how-to-develop)
 - [API](#api)
+  - [Events v2.0](#events-v20)
+  - [EventSequences v2.0](#eventsequences-v20)
+  - [Rows v2.0](#rows-v20)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -24,6 +28,7 @@
  
 ### Install Meteor
 https://www.meteor.com/install
+
 https://guide.meteor.com/
 
 ### Install MongoDB
@@ -49,7 +54,18 @@ pop-up will appear. The pop-up will display more details about the node.
 ### How to select a time-interval
 You select a time-interval by adjusting the start- and 
 end-controls located below the graph in the level called 
-"Aggregation".
+"Aggregation". You can also select a specific date-interval
+ in the **From**- and **To**-boxes.
+ 
+### How to set the amount of events shown
+I you are interested in adjusting the amount of events that are
+ shown at any given time you can adjust the number in the box
+  called **Soft limit**. This box is found below the graph in
+  **Aggregation**.
+  
+  *Note*: The soft limit is usually never the exact amount of
+  events that are shown. The box called **Sequences shown**
+  shows the exact amount.
 
 ### How to move between levels
 You can move between levels easily by using the navigation bar
@@ -58,7 +74,8 @@ You can move between levels easily by using the navigation bar
  
 ### How to find help
 If you need information about what different components in the
-app mean or what they do, you can click the icon 'i'.
+app mean or what they do, you can click the icon
+![alt text](https://gitlab.ida.liu.se/tddd96/visualization/raw/938b21d684f5356765fe7dab2516f544355e4fe8/public/examples/smaller_info_logo.PNG "info_logo")
 This icon is found below the navigation bar that you 
 use to navigate between the different parts of the application.
 
@@ -71,6 +88,15 @@ event created chronologically in the selected time-interval.
 
 
 ## How to develop
+The application was built following the Meteor standard 
+which can be found on the Meteor [website](https://www.meteor.com/tutorials/blaze/creating-an-app).
+
+This means for example that the creation and retrieval of graphs 
+is done in **imports/api** and the frontend code is handled in 
+**imports/ui**. So if you want to develop the application further,
+simply follow the Meteor standard.
+
+
 
 ## API
 

@@ -3,6 +3,8 @@ import "./layout.html";
 import "../components/aggregation.html";
 import "../components/details.html";
 import "../components/eventchain.html";
+import "../components/help.html";
+
 import {Meteor} from "meteor/meteor";
 
 $(document).ready(function () {
