@@ -79,7 +79,7 @@ function renderGraph(graph, container, level) {
             },
 
             {
-                selector: 'node[id ^= "AP"]', // All nodes with ID Announcement Published
+                selector: 'node[label ^= "AP"]', // All nodes with ID Announcement Published
                 style: {
                     'shape': 'polygon',
                     'shape-polygon-points': '-0.1 0.99 -0.27 0.96 -0.43 0.9 -0.58 0.81 -0.72 0.7 -0.83 0.56 -0.91 0.41 -0.97 0.25 -1 0.07 -0.99 -0.1 -0.96 -0.27 -0.9 -0.43 -0.81 -0.58 -0.7 -0.72 -0.56 -0.83 -0.41 -0.91 -0.25 -0.97 -0.07 -1 0.1 -0.99 0.27 -0.96 0.43 -0.9 0.58 -0.81 0.72 -0.7 0.83 -0.56 0.91 -0.41 0.97 -0.25 1 -0.07 1 0 0.98 0.17 0.94 0.34 0.87 0.5 0.77 0.64 0.64 0.77 0.5 0.87 0.34 0.94 0.17 0.98 0 1 -0.33 0.07 0.51 0.16 0.45 0.1 0.4 0.05 0.29 -0.16 0.22 -0.3 0.19 -0.42 0.17 -0.5 0.16 -0.6 0.17 -0.7 0.18 -0.78 0.26 -0.7 0.3 -0.66 0.35 -0.6 0.41 -0.5 0.47 -0.4 0.49 -0.3 0.52 -0.2 0.53 -0.1 0.54 0 0.52 0.1 0.51 0.16 0.45 0.1 0.4 0.05 0.29 -0.16 0.22 -0.3 0.19 -0.42 0.17 -0.5 0.16 -0.6 0.17 -0.7 0.18 -0.78 -0.46 -0.09 -0.61 -0.05 -0.57 0.13 -0.41 0.09',
@@ -89,7 +89,7 @@ function renderGraph(graph, container, level) {
             },
 
             {
-                selector: 'node[id ^= "Art"]', // All nodes with ID starting with Art (Artifact)
+                selector: 'node[label ^= "Art"]', // All nodes with ID starting with Art (Artifact)
                 style: {
                     'shape': 'polygon',
                     'shape-polygon-points': '1 -0.4 0 -0.8 -1 -0.4 0 0 1 -0.4 1 0.6 0 1 0 0 0 1 -1 0.6 -1 -0.4 0 0 1 -0.4',
@@ -99,28 +99,28 @@ function renderGraph(graph, container, level) {
             },
 
             {
-                selector: 'node[id ^= "ArtC"]', // All nodes with ID Artifact Created
+                selector: 'node[label ^= "ArtC"]', // All nodes with ID Artifact Created
                 style: {
                     'background-color': '#557e62',
                 }
             },
 
             {
-                selector: 'node[id ^= "ArtP"]', // All nodes with ID Artifact Published
+                selector: 'node[label ^= "ArtP"]', // All nodes with ID Artifact Published
                 style: {
                     'background-color': '#5a617e',
                 }
             },
 
             {
-                selector: 'node[id ^= "ArtR"]', // All nodes with ID Artifact Reused
+                selector: 'node[label ^= "ArtR"]', // All nodes with ID Artifact Reused
                 style: {
                     'background-color': '#7e5344',
                 }
             },
 
             {
-                selector: 'node[id ^= "CDef"]', // All nodes with ID Composition Defined
+                selector: 'node[label ^= "CDef"]', // All nodes with ID Composition Defined
                 style: {
                     'shape': 'polygon',
                     'shape-polygon-points': '1 0 1 0.6 0.5 0.8 0 0.6 -0.5 0.8 -1 0.6 -1 0 -0.5 -0.2 -0.5 -0.8 0 -1 0.5 -0.8 0.5 -0.2 1 0  0.5 0.2 0.5 0.8 0.5 0.2 0 0 0 0.6 0 0 -0.5 0.2 -0.5 0.8 -0.5 0.2 -1 0 -0.5 -0.2 0 0 0.5 -0.2 0 0 0 -0.6 -0.5 -0.8 0 -0.6 0.5 -0.8 0.5 -0.2 1 0',
@@ -152,7 +152,7 @@ function renderGraph(graph, container, level) {
             },
 
             {
-                selector: 'node[id ^= "CA"]', // All nodes with ID Configuration Applied
+                selector: 'node[label ^= "CA"]', // All nodes with ID Configuration Applied
                 style: {
                     'shape': 'polygon',
                     'shape-polygon-points': '-0.1 1 -0.17 0.77 -0.32 0.72 -0.53 0.87 -0.68 0.77 -0.6 0.53 -0.68 0.38 -0.94 0.39 -1 0.22 -0.79 0.08 -0.79 -0.08 -1 -0.22 -0.94 -0.39 -0.68 -0.38 -0.6 -0.53 -0.68 -0.77 -0.53 -0.87 -0.32 -0.72 -0.17 -0.77 -0.1 -1 0.1 -1 0.17 -0.77 0.32 -0.72 0.53 -0.87 0.68 -0.77 0.6 -0.53 0.68 -0.38 0.94 -0.39 1 -0.22 0.79 -0.08 0.79 0.08 1 0.22 0.94 0.39 0.68 0.38 0.6 0.53 0.68 0.77 0.53 0.87 0.32 0.72 0.17 0.77 0.1 1',
@@ -165,7 +165,7 @@ function renderGraph(graph, container, level) {
             },
 
             {
-                selector: 'node[id ^= "EDef"]', // All nodes with ID Environment Defined
+                selector: 'node[label ^= "EDef"]', // All nodes with ID Environment Defined
                 style: {
                     'shape': 'polygon',
                     'shape-polygon-points': '1 0 0.97 -0.26 0.87 -0.5 0.71 -0.71 0.5 -0.87 0.26 -0.97 ' +
@@ -179,7 +179,7 @@ function renderGraph(graph, container, level) {
             },
 
             {
-                selector: 'node[id ^= "SCC"]', // All nodes with ID Source Change Created
+                selector: 'node[label ^= "SCC"]', // All nodes with ID Source Change Created
                 style: {
                     'shape': 'polygon',
                     'shape-polygon-points': '-0.33 -0.8 -0.35 -0.81 -0.37 -0.83 -0.39 -0.85 -0.4 -0.87 -0.4 -0.9 -0.4 -0.93 -0.39 -0.95 -0.37 -0.97 -0.35 -0.99 -0.33 -1 -0.3 -1 -0.27 -1 -0.25 -0.99 -0.23 -0.97 -0.21 -0.95 -0.2 -0.93 -0.2 -0.9 -0.2 -0.9 -0.2 -0.87 -0.21 -0.85 -0.23 -0.83 -0.25 -0.81 -0.27 -0.8 -0.27 -0.64 0.25 -0.09 0.27 -0.1 0.3 -0.1 0.33 -0.1 0.35 -0.09 0.37 -0.07 0.39 -0.05 0.4 -0.03 0.4 0 0.4 0 0.4 0.03 0.39 0.05 0.37 0.07 0.35 0.09 0.33 0.1 0.3 0.1 0.27 0.1 0.25 0.09 0.23 0.07 0.21 0.05 0.2 0.03 0.2 0 -0.27 -0.5 -0.27 0.5 -0.12 0.5 -0.3 0.7 -0.48 0.5 -0.33 0.5',
@@ -189,7 +189,7 @@ function renderGraph(graph, container, level) {
             },
 
             {
-                selector: 'node[id ^= "SCS"]', // All nodes with ID Source Change Submitted
+                selector: 'node[label ^= "SCS"]', // All nodes with ID Source Change Submitted
                 style: {
                     'shape': 'polygon',
                     'shape-polygon-points': '-0.33 -0.8 -0.35 -0.81 -0.37 -0.83 -0.39 -0.85 -0.4 -0.87 -0.4 -0.9 -0.4 -0.93 -0.39 -0.95 -0.37 -0.97 -0.35 -0.99 -0.33 -1 -0.3 -1 -0.27 -1 -0.25 -0.99 -0.23 -0.97 -0.21 -0.95 -0.2 -0.93 -0.2 -0.9 -0.2 -0.9 -0.2 -0.87 -0.21 -0.85 -0.23 -0.83 -0.25 -0.81 -0.27 -0.8 -0.27 -0.64 0.25 -0.09 0.27 -0.1 0.3 -0.1 0.33 -0.1 0.35 -0.09 0.37 -0.07 0.39 -0.05 0.4 -0.03 0.4 0 0.4 0 0.4 0.03 0.39 0.05 0.37 0.07 0.35 0.09 0.33 0.1 0.3 0.1 0.27 0.1 0.25 0.09 0.25 0.09 -0.27 0.38 -0.27 0.28 0.2 0 -0.27 -0.5 -0.27 0.5 -0.12 0.5 -0.3 0.7 -0.48 0.5 -0.33 0.5',
@@ -232,17 +232,6 @@ function renderGraph(graph, container, level) {
                 }
             },
 
-            
-
-            
-
-            
-
-            
-
-            
-
-            
 
             {
                 selector: 'node[extra = "highlight"]', // Clicked node från navigation from table to event chain
@@ -564,7 +553,7 @@ function renderGraph(graph, container, level) {
 
     cy.panzoom(defaults);
 
-   // cy.nodes().ungrabify();     //Makes nodes ungrabbable
+    // cy.nodes().ungrabify();     //Makes nodes ungrabbable
     cy.maxZoom(10); //same setting as panzoom for Krav 2
     cy.minZoom(0.1); //same setting as panzoom for Krav 2
 }
