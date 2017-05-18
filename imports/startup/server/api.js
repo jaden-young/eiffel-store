@@ -3,7 +3,3 @@ import "../../api/initializer/methods";
 import "../../api/eiffelevents/methods";
 import "../../api/events/methods";
 import "../../api/rows/methods";
-
-//Commented out to force-fail server connection check
-import "../../api/utils/methods"
-
