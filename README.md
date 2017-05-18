@@ -99,9 +99,17 @@ simply follow the Meteor standard.
 
 
 ## API
+There is four major collection used by the application. The events are imported manually to the "eiffel-events" collections. At startup, if necessary, the application will take the eiffel-events from the collections and remake them into custom made events placed in the "events" collection. The events from the "events" collection will then be used to create custom event sequences, placed in the "eventsequences" collection. The event sequences are visualized in the aggregation and event chain graphs. The objects from the "eventsequences" is in turn used to generate rows, placed in the "tablerows" collection. The rows are used for the detailed view, table and plots.
+
+The eiffel-events have been restructured to be able to combine for example TestCaseStarted with TestCaseFinished to one TestCase event, giving us access to start and end time immediately.
+
+All functional and "reusable" code is found in the imports folder. Stylesheets are found in the client folder if no other placement was required.
+
+Here comes information where the events, event sequences and rows are generated and examples on how they look.
 
 ### Events v2.0
-Events object example
+Events object placed in the "events" collection. 
+Events are generated in imports/api/events/methods.js by populateEventsCollection().
 ```json
 {
   "_id": "89Eh5RkmnmLKFQGew",
@@ -154,7 +162,8 @@ Events object example
 ```
 
 ### EventSequences v2.0
-EventSequences object example
+Event sequences placed in the "eventsequences" collection.
+Event sequences are generated in imports/api/eventSequences/methods.js by populateEventSequences().
 
 ```json
 {
@@ -298,7 +307,8 @@ EventSequences object example
 ```
 
 ### Rows v2.0
-Rows object example
+Rows placed in the "tablerows" collection.
+Rows are generated in imports/api/rows/methods.js by populateRowsCollection().
 ```json
 {
   "_id": "h5bsLZR3jZu2GRX7G",
