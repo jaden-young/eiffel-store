@@ -525,6 +525,11 @@ export const getEventChainGraph = new ValidatedMethod({
                 };
 
                 if (isActivityEvent(node.data.type)) {
+                    if (event.data.outcome.conclusion === 'SUCCESSFUL') {
+                        node.data.successful = 1;
+                    } else {
+                        node.data.successful = 0;
+                    }
                     // Required Eiffel data
                     node.data.timeTriggered = event.time.triggered;
                     node.data.timeStarted = event.time.started;
