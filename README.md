@@ -43,8 +43,19 @@ mongoimport --host localhost:3001 --jsonArray --drop --db meteor --collection ei
 ```
 If you want to download sample data, you can find it [here](https://gitlab.ida.liu.se/tddd96/visualization/blob/development/public/examples/eiffelevents.zip).
 
-
-
+## Application overview
+###Aggreation view
+<p align="center">
+<img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/fd0f67e94039a6daca553bbaee87f00a7718f6f9/images/gui_aggregation.png" width="25%" height="25%"/>
+</p>
+###Details view
+<p align="center">
+<img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/fd0f67e94039a6daca553bbaee87f00a7718f6f9/images/gui_details.png" width="25%" height="25%"/>
+</p>
+###Event chain
+<p align="center">
+<img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/fd0f67e94039a6daca553bbaee87f00a7718f6f9/images/gui_eventchain.png" width="25%" height="25%"/>
+</p>
 ## How to use the app
 
 ### How to select a node
