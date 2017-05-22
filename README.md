@@ -96,7 +96,56 @@ is done in **imports/api** and the frontend code is handled in
 **imports/ui**. So if you want to develop the application further,
 simply follow the Meteor standard.
 
+## File Structure
+```python
+imports/
+api/
+eiffelevents/
+eiffelevents.js
+eiffelevents.test.js
+eiffeleventTypes.js
+methods.js              # methods related to eiffelevents
+events/
+event-types.js
+events.js
+events.test.js
+methods.js              # methods related to events
+eventSequences/
+event-sequence.test.js
+event-sequences.js
+methods.js              # methods related to eventSequences
+initializer/
+methods.js              # methods related to initializer
+properties/
+methods.js
+properties.js
+rows/
+methods.js              # methods related to rows
+rows-table.js
+rows.js
+startup/
+client/
+index.js                # import client startup through a single index entry point
+routes.js               # set up all routes in the app
+server/
+api.js
+index.js                # import server startup through a single index entry point
+ui/
+components/                 # all reusable components in the application
+aggregation.js          # methods related to aggregation view
+detailed-plots.js       # methods related to detailed view
+details.js              # methods related to de
+eventchain.js           # methods related to event chain view
+graph.js                # methods related to graph rendering
+graph.test.js           # tests for graph.js
+help.js                 # related html-code for the help button
+layout/                     # wrapper components for behaviour and visuals
+layout.js
+layout.test.js
+pages/                      # entry points for rendering used by the router
+home.js
 
+```
 
 ## API
 
