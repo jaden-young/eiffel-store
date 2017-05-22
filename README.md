@@ -97,6 +97,7 @@ is done in **imports/api** and the frontend code is handled in
 simply follow the Meteor standard.
 
 ## File Structure
+The application follows the [file structure](https://guide.meteor.com/structure.html#javascript-structure) recommended by Meteor. Below is an overview of how the applications directory is structured.
 ```python
 imports/
     api/
