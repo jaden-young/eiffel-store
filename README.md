@@ -44,18 +44,14 @@ mongoimport --host localhost:3001 --jsonArray --drop --db meteor --collection ei
 If you want to download sample data, you can find it [here](https://gitlab.ida.liu.se/tddd96/visualization/blob/development/public/examples/eiffelevents.zip).
 
 ## Application overview
-###Aggreation view
-<p align="center">
-<img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/fd0f67e94039a6daca553bbaee87f00a7718f6f9/images/gui_aggregation.png" width="25%" height="25%"/>
-</p>
-###Details view
-<p align="center">
-<img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/fd0f67e94039a6daca553bbaee87f00a7718f6f9/images/gui_details.png" width="25%" height="25%"/>
-</p>
-###Event chain
-<p align="center">
-<img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/fd0f67e94039a6daca553bbaee87f00a7718f6f9/images/gui_eventchain.png" width="25%" height="25%"/>
-</p>
+
+### Aggregation view
+<img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/fd0f67e94039a6daca553bbaee87f00a7718f6f9/images/gui_aggregation.png" width="50%" height="50%"/>
+### Details view
+<img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/fd0f67e94039a6daca553bbaee87f00a7718f6f9/images/gui_details.png" width="50%" height="50%"/>
+### Event chain
+<img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/fd0f67e94039a6daca553bbaee87f00a7718f6f9/images/gui_eventchain.png" width="50%" height="50%"/>
+
 ## How to use the app
 
 ### How to select a node
@@ -107,9 +103,25 @@ is done in **imports/api** and the frontend code is handled in
 **imports/ui**. So if you want to develop the application further,
 simply follow the Meteor standard.
 
+## Modules
+<img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/1ccf520a9f90a92424c43510277e3baba4c0e1e4/images/modules.jpg" width="100%" height="100%"/>
+### aggregation.js
+
+### details.js
+
+### eventchain.js
+
+### graph.js
+
+### detailed-graph.js
+
+### eventSequences/methods.js
+
+### rows/methods.js
+
 ## File Structure
 The application follows the [file structure](https://guide.meteor.com/structure.html#javascript-structure) recommended by Meteor. Below is an overview of how the applications directory is structured.
-```python
+```
 imports/
     api/
         eiffelevents/
