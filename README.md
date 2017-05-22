@@ -49,7 +49,7 @@ If you want to download sample data, you can find it [here](https://gitlab.ida.l
 <img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/fd0f67e94039a6daca553bbaee87f00a7718f6f9/images/gui_aggregation.png" width="50%" height="50%"/>
 ### Details view
 <img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/fd0f67e94039a6daca553bbaee87f00a7718f6f9/images/gui_details.png" width="50%" height="50%"/>
-### Event chain
+### Event chain view
 <img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/fd0f67e94039a6daca553bbaee87f00a7718f6f9/images/gui_eventchain.png" width="50%" height="50%"/>
 
 ## How to use the app
@@ -104,17 +104,17 @@ is done in **imports/api** and the frontend code is handled in
 simply follow the Meteor standard.
 
 ## Modules
-<img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/1ccf520a9f90a92424c43510277e3baba4c0e1e4/images/modules.jpg" width="100%" height="100%"/>
+<img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/1ccf520a9f90a92424c43510277e3baba4c0e1e4/images/modules.jpg" width="50%" height="50%"/>
 ### aggregation.js
-
+Module containing function calls related to the aggregation view. It uses the external JavaScript library Vis.js for the timeline.
 ### details.js
-
+Module containing function calls related to the detailed view. It also uses the Vis.js library for plotting event sequences.
 ### eventchain.js
-
+Module containing function calls related to the detailed view. 
 ### graph.js
-
+Renders graphs related to the aggregation view and event chain view. The module uses two external JavaScript libraries: Cytoscape.js for rendering graphs and Dagre.js for graph layout.
 ### detailed-graph.js
-
+Module for the plotting the event sequences. It also uses the library Vis.js.
 ### eventSequences/methods.js
 
 ### rows/methods.js
