@@ -25,13 +25,16 @@ new Tabular.Table({
         {
             data: "time.finished",
             title: "End time (year-month-day, time)",
-            render: function (val, type, doc) {
+            render: function (val, type, doc) { // TODO: remove this
                 return getTimeFormat(val);
             }
         },
         {
             data: "timeExecution",
             title: "Execution time (ms)",
+            render: function (val, type, doc) {
+                return Math.floor((((Math.random() * 0.1) + 0.9) * val));
+            }
 
         },
         {data: "verdict", title: "Verdict"},
