@@ -116,9 +116,9 @@ Renders graphs related to the aggregation view and event chain view. The module 
 ### detailed-graph.js
 Module for the plotting the event sequences. It also uses the library Vis.js.
 ### eventSequences/methods.js
-
+Module containing server side function calls for the aggregation view and event chain view.
 ### rows/methods.js
-
+Module containing server side function calls for the detailed view.
 ## File Structure
 The application follows the [file structure](https://guide.meteor.com/structure.html#javascript-structure) recommended by Meteor. Below is an overview of how the applications directory is structured.
 ```
