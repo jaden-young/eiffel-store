@@ -1,5 +1,6 @@
 # ViCi
 
+
 ## Table of contents
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -32,10 +33,11 @@ https://www.meteor.com/install
 https://guide.meteor.com/
 
 ### Install MongoDB
-This is so you will be able to import the eiffel data.
+This is so you will be able to import the Eiffel data.
 https://docs.mongodb.com/manual/installation/
 
 ### Import data to MongoDB
+The application is based on data from Eiffel by Ericsson, at the state of [this commit (0303cf3 on 20 Dec 2016)](https://github.com/Ericsson/eiffel/tree/0303cf3f8da97726693ed4218f6ec549f3c10479).
 If you have the data (named **eiffelevents.json**) and the server is running, run the following command:
 
 ```
