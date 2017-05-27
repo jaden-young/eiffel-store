@@ -28,16 +28,18 @@
 ## Installation
  
 ### Install Meteor
+The application uses Meteor version 1.4.2.6.
 https://www.meteor.com/install
 
 https://guide.meteor.com/
 
 ### Install MongoDB
-This is so you will be able to import the Eiffel data.
+This is so you will be able to import the Eiffel data. If you encounter problems, make sure to use the same version of MongoDB specified in the version of Meteor that you are using.
 https://docs.mongodb.com/manual/installation/
 
 ### Import data to MongoDB
 The application is based on data from Eiffel by Ericsson, at the state of [this commit (0303cf3 on 20 Dec 2016)](https://github.com/Ericsson/eiffel/tree/0303cf3f8da97726693ed4218f6ec549f3c10479).
+
 If you have the data (named **eiffelevents.json**) and the server is running, run the following command:
 
 ```
