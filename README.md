@@ -1,6 +1,8 @@
 # ViCi
-
-
+A web application that aggregates data from continous 
+integration processes and visualizes this in interactive graphs.
+The application uses the Eiffel framework which you can read
+ more about at their GitHub[page](https://github.com/Ericsson/eiffel)
 ## Table of contents
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -28,7 +30,8 @@
 ## Installation
  
 ### Install Meteor
-The application uses Meteor version 1.4.2.6.
+The application uses Meteor v.1.4.3.2
+
 https://www.meteor.com/install
 
 https://guide.meteor.com/
@@ -45,7 +48,7 @@ If you have the data (named **eiffelevents.json**) and the server is running, ru
 ```
 mongoimport --host localhost:3001 --jsonArray --drop --db meteor --collection eiffel-events --file "eiffelevents.json"
 ```
-If you want to download sample data, you can find it [here](https://gitlab.ida.liu.se/tddd96/visualization/blob/development/public/examples/eiffelevents.zip).
+If you want to download sample data, you can find it[here](https://gitlab.ida.liu.se/tddd96/visualization/blob/development/public/examples/eiffelevents.zip).
 
 ## Application overview
 
@@ -86,7 +89,7 @@ You can move between levels easily by using the navigation bar
 ### How to find help
 If you need information about what different components in the
 app mean or what they do, you can click the icon
-![alt text](https://gitlab.ida.liu.se/tddd96/visualization/raw/938b21d684f5356765fe7dab2516f544355e4fe8/public/examples/smaller_info_logo.PNG "info_logo")
+![info_button_logo](https://gitlab.ida.liu.se/tddd96/visualization/raw/938b21d684f5356765fe7dab2516f544355e4fe8/public/examples/smaller_info_logo.PNG "info_logo")
 This icon is found below the navigation bar that you 
 use to navigate between the different parts of the application.
 
