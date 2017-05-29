@@ -1,5 +1,8 @@
 # ViCi
-
+A web application that aggregates data from continous 
+integration processes and visualizes this in interactive graphs.
+The application uses the Eiffel framework which you can read
+ more about at their GitHub[page](https://github.com/Ericsson/eiffel)
 ## Table of contents
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -27,6 +30,9 @@
 ## Installation
  
 ### Install Meteor
+The application uses Meteor v.1.4.3.2
+The application was developed and works with Meteor v.1.4.3.2
+
 https://www.meteor.com/install
 
 https://guide.meteor.com/
@@ -41,7 +47,7 @@ If you have the data (named **eiffelevents.json**) and the server is running, ru
 ```
 mongoimport --host localhost:3001 --jsonArray --drop --db meteor --collection eiffel-events --file "eiffelevents.json"
 ```
-If you want to download sample data, you can find it [here](https://gitlab.ida.liu.se/tddd96/visualization/blob/development/public/examples/eiffelevents.zip).
+If you want to download sample data, you can find it[here](https://gitlab.ida.liu.se/tddd96/visualization/blob/development/public/examples/eiffelevents.zip).
 
 
 
