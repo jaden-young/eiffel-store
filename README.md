@@ -31,7 +31,6 @@ The application uses the Eiffel framework which you can read
  
 ### Install Meteor
 The application uses Meteor v.1.4.3.2
-The application was developed and works with Meteor v.1.4.3.2
 
 https://www.meteor.com/install
 
@@ -81,7 +80,7 @@ You can move between levels easily by using the navigation bar
 ### How to find help
 If you need information about what different components in the
 app mean or what they do, you can click the icon
-![alt text](https://gitlab.ida.liu.se/tddd96/visualization/raw/938b21d684f5356765fe7dab2516f544355e4fe8/public/examples/smaller_info_logo.PNG "info_logo")
+![info_button_logo](https://gitlab.ida.liu.se/tddd96/visualization/raw/938b21d684f5356765fe7dab2516f544355e4fe8/public/examples/smaller_info_logo.PNG "info_logo")
 This icon is found below the navigation bar that you 
 use to navigate between the different parts of the application.
 
