@@ -1,9 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Julius+Sans+One');
+
 h1 {
-    font-family: Georgia, serif;
+    font-family: 'Julius Sans One', sans-serif;
     color: #4E443C;
-    font-variant: small-caps;
     text-transform: none;
-    font-weight: 100;
     margin-bottom: 0;
     margin-left: 25px;
 }
