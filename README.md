@@ -1,5 +1,6 @@
 # ViCi
 
+
 ## Table of contents
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -27,15 +28,18 @@
 ## Installation
  
 ### Install Meteor
+The application uses Meteor version 1.4.2.6.
 https://www.meteor.com/install
 
 https://guide.meteor.com/
 
 ### Install MongoDB
-This is so you will be able to import the eiffel data.
+This is so you will be able to import the Eiffel data. If you encounter problems, make sure to use the same version of MongoDB specified in the version of Meteor that you are using.
 https://docs.mongodb.com/manual/installation/
 
 ### Import data to MongoDB
+The application is based on data from Eiffel by Ericsson, at the state of [this commit (0303cf3 on 20 Dec 2016)](https://github.com/Ericsson/eiffel/tree/0303cf3f8da97726693ed4218f6ec549f3c10479).
+
 If you have the data (named **eiffelevents.json**) and the server is running, run the following command:
 
 ```
@@ -43,7 +47,14 @@ mongoimport --host localhost:3001 --jsonArray --drop --db meteor --collection ei
 ```
 If you want to download sample data, you can find it [here](https://gitlab.ida.liu.se/tddd96/visualization/blob/development/public/examples/eiffelevents.zip).
 
+## Application overview
 
+### Aggregation view
+<img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/fd0f67e94039a6daca553bbaee87f00a7718f6f9/images/gui_aggregation.png" width="50%" height="50%"/>
+### Details view
+<img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/fd0f67e94039a6daca553bbaee87f00a7718f6f9/images/gui_details.png" width="50%" height="50%"/>
+### Event chain view
+<img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/fd0f67e94039a6daca553bbaee87f00a7718f6f9/images/gui_eventchain.png" width="50%" height="50%"/>
 
 ## How to use the app
 
@@ -96,7 +107,73 @@ is done in **imports/api** and the frontend code is handled in
 **imports/ui**. So if you want to develop the application further,
 simply follow the Meteor standard.
 
+## Modules
+<img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/1ccf520a9f90a92424c43510277e3baba4c0e1e4/images/modules.jpg" width="50%" height="50%"/>
+### aggregation.js
+Module containing function calls related to the aggregation view. It uses the external JavaScript library Vis.js for the timeline.
+### details.js
+Module containing function calls related to the detailed view. It also uses the Vis.js library for plotting event sequences.
+### eventchain.js
+Module containing function calls related to the detailed view. 
+### graph.js
+Renders graphs related to the aggregation view and event chain view. The module uses two external JavaScript libraries: Cytoscape.js for rendering graphs and Dagre.js for graph layout.
+### detailed-graph.js
+Module for the plotting the event sequences. It also uses the library Vis.js.
+### eventSequences/methods.js
+Module containing server side function calls for the aggregation view and event chain view.
+### rows/methods.js
+Module containing server side function calls for the detailed view.
+## File Structure
+The application follows the [file structure](https://guide.meteor.com/structure.html#javascript-structure) recommended by Meteor. Below is an overview of how the applications directory is structured.
+```
+imports/
+    api/
+        eiffelevents/
+            eiffelevents.js
+            eiffelevents.test.js
+            eiffeleventTypes.js
+            methods.js              # methods related to eiffelevents
+        events/
+            event-types.js
+            events.js
+            events.test.js
+            methods.js              # methods related to events
+        eventSequences/
+            event-sequence.test.js
+            event-sequences.js
+            methods.js              # methods related to eventSequences
+        initializer/
+            methods.js              # methods related to initializer
+        properties/
+            methods.js
+            properties.js
+        rows/
+            methods.js              # methods related to rows
+            rows-table.js
+            rows.js
+    startup/
+        client/
+            index.js                # import client startup through a single index entry point
+            routes.js               # set up all routes in the app
+        server/
+            api.js
+            index.js                # import server startup through a single index entry point
+    ui/
+        components/                 # all reusable components in the application
+            aggregation.js          # methods related to aggregation view
+            detailed-plots.js       # methods related to detailed view
+            details.js
+            eventchain.js           # methods related to event chain view
+            graph.js                # methods related to graph rendering
+            graph.test.js           # tests for graph.js
+            help.js                 # related html-code for the help button
+        layout/                     # wrapper components for behaviour and visuals
+            layout.js
+            layout.test.js
+        pages/                      # entry points for rendering used by the router
+            home.js
 
+```
 
 ## API
 
