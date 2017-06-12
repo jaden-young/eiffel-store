@@ -275,8 +275,8 @@ function getExecTimePlot(rows) {
         }
         items.push({
             x: getTimeString(row.time.finished),
-            // y: Math.floor((Math.random() * avgTime)), // For testing
-            y: avgTime,
+            y: Math.floor((((Math.random() * 0.1) + 0.9) * avgTime)), // For testing // TODO: remove this
+            // y: avgTime,
             group: 0
         });
     });
