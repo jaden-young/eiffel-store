@@ -40,16 +40,6 @@ https://guide.meteor.com/
 This is so you will be able to import the Eiffel data. If you encounter problems, make sure to use the same version of MongoDB specified in the version of Meteor that you are using.
 https://docs.mongodb.com/manual/installation/
 
-### Import data to MongoDB
-The application is based on data from Eiffel by Ericsson, at the state of [this commit (0303cf3 on 20 Dec 2016)](https://github.com/Ericsson/eiffel/tree/0303cf3f8da97726693ed4218f6ec549f3c10479).
-
-If you have the data (named **eiffelevents.json**) and the server is running, run the following command:
-
-```
-mongoimport --host localhost:3001 --jsonArray --drop --db meteor --collection eiffel-events --file "eiffelevents.json"
-```
-If you want to download sample data, you can find it[here](https://gitlab.ida.liu.se/tddd96/visualization/blob/development/public/examples/eiffelevents.zip).
-
 ## Application overview
 
 ### Aggregation view
