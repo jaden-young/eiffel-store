@@ -50,8 +50,9 @@ https://www.meteor.com/install
 https://guide.meteor.com/
 
 ### Install MongoDB
-This is so you will be able to import the Eiffel data. If you encounter problems, make sure to use the same version of MongoDB specified in the version of Meteor that you are using.
+This is so you will be able to insert the Eiffel data. If you encounter problems, make sure to use the same version of MongoDB specified in the version of Meteor that you are using.
 https://docs.mongodb.com/manual/installation/
+please note, meteor has its own mongodb instance, in which we save events.
 
 ## Application overview
 
