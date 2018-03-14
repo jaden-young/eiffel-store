@@ -8,7 +8,7 @@
 
 ## eiffel-store: 
 1. It is integrated with MongoDB. Everytime, new event is added into database, the visualization is updated. 
-2. It is connected to RabbitMQ. Download the source code from https://github.com/azeem59/rabbitmq-eiffel-store.git and run the the program which connects current eiffel-store to RabbitMQ. Publish the event on Bus and this program will connect RabbitMQ to visualization. The queue name is vici. I will put a jar file shorlty. 
+2. It is connected to RabbitMQ. Download the source code from https://github.com/azeem59/rabbitmq-eiffel-store.git and run the the program which connects current eiffel-store to RabbitMQ. Publish the event on Bus and this program will connect RabbitMQ to visualization. The queue name is vici. I will put a jar file shorlty which will allow you more flexibility for configurations. 
 
 At this moment, you need to refresh the client side to get the changes. I will update this soon.
 
