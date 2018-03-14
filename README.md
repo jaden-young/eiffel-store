@@ -1,5 +1,20 @@
-# ViCi
-A web application that aggregates data from continous 
+# eiffel-store (the readme file is not ready)
+
+## NOTE: This repo. is different then original eiffel vici due to following reasons:
+
+Orginal Eiffel Vici *
+Eiffel-Store +
+
+* It imports bulk events from JSON file and generate visualization at once. You cannot add event during run-time to database to reflect your changes to users.
++ eiffel-store is integrated with MongoDB. Everytime, new event is added into database, the visualization is updated. 
+
+* It is not connected to RabbitMQ
++ It is connected to RabbitMQ. Download the source code from https://github.com/azeem59/rabbitmq-eiffel-store.git and run the the program which connects current eiffel-store to RabbitMQ. Publish the event on Bus and this program will connect RabbitMQ to visualization. The queue name is vici. I will put a jar file shorlty. 
+
+At this moment, you need to refresh the client side to get the changes. I will update this soon.
+
+## Introduction
+A web application that extracts data from Mongo DB and aggregates data from continous 
 integration processes and visualizes this in interactive graphs.
 The application uses the Eiffel framework which you can read
  more about at their GitHub[page](https://github.com/Ericsson/eiffel)
@@ -11,7 +26,6 @@ The application uses the Eiffel framework which you can read
 - [Installation](#installation)
   - [Install Meteor](#install-meteor)
   - [Install MongoDB](#install-mongodb)
-  - [Import data to MongoDB](#import-data-to-mongodb)
 - [How to use the app](#how-to-use-the-app)
   - [How to select a node](#how-to-select-a-node)
   - [How to select a time-interval](#how-to-select-a-time-interval)
