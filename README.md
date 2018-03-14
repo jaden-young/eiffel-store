@@ -2,14 +2,11 @@
 
 ## NOTE: This repo. is different then original eiffel vici due to following reasons:
 
-Orginal Eiffel Vici *
-Eiffel-Store +
+Orginal Eiffel Vici: It imports bulk events from JSON file and generate visualization at once. You cannot add event during run-time to database to reflect your changes to users.
+eiffel-store: is integrated with MongoDB. Everytime, new event is added into database, the visualization is updated. 
 
-* It imports bulk events from JSON file and generate visualization at once. You cannot add event during run-time to database to reflect your changes to users.
-+ eiffel-store is integrated with MongoDB. Everytime, new event is added into database, the visualization is updated. 
-
-* It is not connected to RabbitMQ
-+ It is connected to RabbitMQ. Download the source code from https://github.com/azeem59/rabbitmq-eiffel-store.git and run the the program which connects current eiffel-store to RabbitMQ. Publish the event on Bus and this program will connect RabbitMQ to visualization. The queue name is vici. I will put a jar file shorlty. 
+Orginal Eiffel Vici: It is not connected to RabbitMQ
+eiffel-store: It is connected to RabbitMQ. Download the source code from https://github.com/azeem59/rabbitmq-eiffel-store.git and run the the program which connects current eiffel-store to RabbitMQ. Publish the event on Bus and this program will connect RabbitMQ to visualization. The queue name is vici. I will put a jar file shorlty. 
 
 At this moment, you need to refresh the client side to get the changes. I will update this soon.
 
