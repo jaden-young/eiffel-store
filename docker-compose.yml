@@ -1,0 +1,64 @@
+version: '3'
+
+services: 
+  rabbit:
+    restart: always
+    image: 'rabbitmq:3.7.4-management'
+    ports:
+      - "15672:15672"
+    networks:
+      eiffel-store-net:
+          aliases:
+            - rabbit
+
+  store:
+    restart: always
+    image: eiffel-community/eiffel-store:devbuild
+    build:
+      context: .
+      dockerfile: docker/dev.Dockerfile
+      args:
+        INSTALL_MONGO: "false"
+        INSTALL_PHANTOM_JS: "false"
+        INSTALL_GRAPHICSMAGIK: "false"
+    environment: 
+      MONGO_URL: mongodb://mongo:27017/meteor
+    ports: 
+      - "3000:3000"
+    volumes:
+      - .:/app
+    depends_on: 
+      - mongo
+    networks:
+      eiffel-store-net:
+        aliases:
+          - store
+  
+  mongo:
+    restart: always
+    image: mongo:3.7
+    volumes:
+      - .meteor/local/db:/data/db
+    networks:
+      eiffel-store-net:
+        aliases:
+          - mongo
+
+  mongo-rabbit-consumer:
+    restart: always
+    image: jadyoung/mongo-rabbit-consumer:1.0-SNAPSHOT
+    depends_on:
+      - rabbit
+    environment:
+      MONGO_URI: mongodb://mongo
+      MONGO_DATABASE: meteor
+      MONGO_COLLECTION: eiffel-events
+      RABBIT_URI: amqp://guest:guest@rabbit
+      RABBIT_QUEUE_NAME: vici
+    networks:
+      eiffel-store-net:
+        aliases:
+          - mongo-rabbit-consumer
+
+networks:
+  eiffel-store-net:
