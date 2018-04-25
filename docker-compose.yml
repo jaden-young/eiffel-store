@@ -16,7 +16,7 @@ services:
     image: eiffel-community/eiffel-store:devbuild
     build:
       context: .
-      dockerfile: docker/dev.Dockerfile
+      dockerfile: docker/dev.dockerfile
       args:
         INSTALL_MONGO: "false"
         INSTALL_PHANTOM_JS: "false"
