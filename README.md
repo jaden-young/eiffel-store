@@ -116,6 +116,7 @@ simply follow the Meteor standard.
 
 ## Modules
 <img src="https://gitlab.ida.liu.se/tddd96/visualization-docs/raw/1ccf520a9f90a92424c43510277e3baba4c0e1e4/images/modules.jpg" width="50%" height="50%"/>
+
 ### aggregation.js
 Module containing function calls related to the aggregation view. It uses the external JavaScript library Vis.js for the timeline.
 ### details.js
