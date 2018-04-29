@@ -12,6 +12,7 @@ import {
     isEiffelActivityTriggered,
     isEiffelTestCaseFinished,
     isEiffelTestCaseStarted,
+    isEiffelTestCaseTriggered,
     isEiffelTestSuiteFinished,
     isEiffelTestSuiteStarted
 } from "../eiffelevents/eiffeleventTypes";
@@ -66,7 +67,7 @@ export const populateEventsCollection = new ValidatedMethod({
         let toBePared = {};
 
         function isToBePared(type) {
-            return isEiffelTestCaseStarted(type) || isEiffelTestSuiteStarted(type) || isEiffelActivityTriggered(type);
+            return isEiffelTestCaseTriggered(type) || isEiffelTestSuiteStarted(type) || isEiffelActivityTriggered(type);
         }
 
         _.each(events, (event) => {

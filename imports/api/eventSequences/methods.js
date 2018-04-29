@@ -106,7 +106,7 @@ export const populateEventSequences = new ValidatedMethod({
             // 'BASE', // RangeError: Maximum call stack size exceeded
             'CHANGE',
             'TEST_SUITE_EXECUTION',
-            'TEST_CASE_EXECUTION',
+            // 'TEST_CASE_EXECUTION',
             'IUT',
             'TERC',
             'MODIFIED_ANNOUNCEMENT',
