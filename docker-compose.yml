@@ -17,10 +17,6 @@ services:
     build:
       context: .
       dockerfile: docker/dev.dockerfile
-      args:
-        INSTALL_MONGO: "false"
-        INSTALL_PHANTOM_JS: "false"
-        INSTALL_GRAPHICSMAGIK: "false"
     environment: 
       MONGO_URL: mongodb://mongo:27017/meteor
     ports: 
@@ -33,6 +29,7 @@ services:
       default:
         aliases:
           - store
+    command: meteor run
   
   mongo:
     restart: always
@@ -47,8 +44,12 @@ services:
   publish:
     image: jadyoung/publish-file-to-rabbit
     environment:
-      AMQP_HOST: "rabbit"
-      QUEUE_NAME: "vici"
+      RABBIT_HOST: rabbit
+      QUEUE_NAME: vici
+      EVENTS_FILE: data/events.json
+      EVENTS_LIMIT: 99999999
+    volumes:
+      - .:/root/data/
     networks:
       default:
         aliases:
@@ -71,3 +72,14 @@ services:
       default:
         aliases:
           - plumb-rabbit-to-mongo
+
+  mongo-express:
+    restart: always
+    image: mongo-express
+    command: ./app.js -H mongo
+    ports:
+      - "8081:8081"
+    networks:
+      default:
+        aliases:
+          - mongo-express
