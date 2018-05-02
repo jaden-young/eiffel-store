@@ -10,3 +10,7 @@ Router.configure({
 Router.route('/', {
     template: 'home'
 });
+
+Router.route(Meteor.absoluteUrl(), {
+    template: 'home'
+});

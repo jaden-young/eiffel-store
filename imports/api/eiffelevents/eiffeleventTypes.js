@@ -86,3 +86,11 @@ export const isEiffelActivityExecution = function (eventType) {
     ];
     return _.contains(eventTypes, eventType);
 };
+
+
+export const isEiffelIssueDefined = (eventType) => {
+    const eventTypes = [
+        'EiffelIssueDefinedEvent'
+    ];
+    return _.contains(eventTypes, eventType);
+}

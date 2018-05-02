@@ -3,7 +3,14 @@
 import {ValidatedMethod} from "meteor/mdg:validated-method";
 import {EiffelEvents} from "../eiffelevents/eiffelevents";
 import {Events} from "../events/events";
-import {getActivityEventName, getRedirectName, getTestCaseEventName, getTestSuiteEventName} from "./event-types";
+import {
+    getActivityEventName, 
+    getRedirectName, 
+    getTestCaseEventName, 
+    getTestSuiteEventName,
+    getIssueEventName,
+    isIssueEvent
+} from "./event-types";
 import {
     isEiffelActivityCanceled,
     isEiffelActivityExecution,
@@ -14,7 +21,8 @@ import {
     isEiffelTestCaseStarted,
     isEiffelTestCaseTriggered,
     isEiffelTestSuiteFinished,
-    isEiffelTestSuiteStarted
+    isEiffelTestSuiteStarted,
+    isEiffelIssueDefined
 } from "../eiffelevents/eiffeleventTypes";
 import {setProperty} from "../properties/methods";
 
@@ -67,7 +75,18 @@ export const populateEventsCollection = new ValidatedMethod({
         let toBePared = {};
 
         function isToBePared(type) {
-            return isEiffelTestCaseTriggered(type) || isEiffelTestSuiteStarted(type) || isEiffelActivityTriggered(type);
+            return isEiffelTestCaseTriggered(type) || isEiffelTestSuiteStarted(type) || isEiffelActivityTriggered(type) || isEiffelIssueDefined(type);
+        }
+
+        function tryParseName(event, fallback) {
+            try {
+                const regex = /^(\D+)\D(\d)+$/g;
+                const str = event.data.customData[0].value;
+                const match = regex.exec(str);
+                return match[1] + match[2];
+            } catch (e) {
+                return fallback;
+            }
         }
 
         _.each(events, (event) => {
@@ -77,7 +96,29 @@ export const populateEventsCollection = new ValidatedMethod({
         });
 
         _.each(events, (event) => {
-            if (isEiffelTestCaseFinished(event.meta.type)) {
+            if (isIssueEvent (event.meta.type)) {
+                let startEvent = toBePared[event.links[0].target];
+                if (startEvent === undefined) {
+                    console.log(startEvent);
+                }
+
+                Events.insert({
+                    type: getIssueEventName(), // *
+                    name: tryParseName(event, "ID"),
+                    id: event.meta.id, // *
+                    links: startEvent.links, // *
+                    source: startEvent.meta.source, //*
+                    time: {
+                        started: startEvent.meta.time,
+                        finished: event.meta.time,
+                    },
+                    data: Object.assign(startEvent.data, event.data), // *
+                    dev: {},
+
+                    startEvent: startEvent.meta.id,
+                    finishEvent: event.meta.id,
+                })
+            } else if (isEiffelTestCaseFinished(event.meta.type)) {
                 let startEvent = toBePared[event.links[0].target];
                 if (startEvent === undefined) {
                     console.log(startEvent);

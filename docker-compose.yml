@@ -13,7 +13,7 @@ services:
 
   store:
     restart: always
-    image: eiffel-community/eiffel-store:devbuild
+    image: jadyoung/eiffel-store:devbuild
     build:
       context: .
       dockerfile: docker/dev.dockerfile

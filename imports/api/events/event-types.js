@@ -79,6 +79,13 @@ export const isTestEvent = function (eventType) {
     return _.contains(eventTypes, eventType);
 };
 
+export const isIssueEvent = (eventType) => {
+    const eventTypes = [
+        getIssueEventName()
+    ]
+    return _.contains(eventTypes, eventType);
+}
+
 export const isTestCaseEvent = function (eventType) {
     return eventType === 'TestCaseEvent';
 };
@@ -93,6 +100,10 @@ export const getTestCaseEventName = function () {
 export const getTestSuiteEventName = function () {
     return "TestSuiteEvent"
 };
+
+export const getIssueEventName = () => {
+    return "IssueEvent";
+}
 
 export const getActivityEventName = function () {
     return "ActivityEvent"
